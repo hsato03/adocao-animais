@@ -81,20 +81,7 @@ class AdotanteController:
         if len(self.__adotantes) <= 0:
             raise EntidadeNaoEncontradaException("Nenhum adotante cadastrado.")
 
-        for i in range(len(self.__adotantes)):
-            adotante = self.__adotantes[i]
-            self.__tela_adotante.mostrar_mensagem(f"\nADOTANTE #{i + 1:02d}")
-            self.__tela_adotante.mostrar_adotante(
-                {
-                    "cpf": adotante.cpf,
-                    "nome": adotante.nome,
-                    "data_nascimento": adotante.data_nascimento,
-                    "tipo_habitacao": adotante.tipo_habitacao,
-                    "tamanho_habitacao": adotante.tamanho_habitacao,
-                    "possui_animal": adotante.possui_animal,
-                    "endereco": adotante.endereco,
-                }
-            )
+        self.__tela_adotante.mostrar_adotantes(self.__adotantes)
 
     def excluir_adotante(self):
         if len(self.__adotantes) <= 0:

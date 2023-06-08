@@ -52,8 +52,9 @@ class AdotanteView:
             [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
             [sg.Text("CPF:", size=(15, 1)), sg.InputText("", key="cpf")],
             [sg.Text("Nome:", size=(15, 1)), sg.InputText("", key="nome")],
-            [sg.CalendarButton("Data de nascimento:", target="data_nascimento", format="%d/%m/%Y"),
-             sg.Input(size=(20, 1), key="data_nascimento")],
+            [sg.Text("Data de nascimento", size=(15, 1)),
+             sg.Input(size=(28, 1), key="data_nascimento"),
+             sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
             [sg.Text("Logradouro:", size=(15, 1)), sg.InputText('', key='logradouro')],
             [sg.Text("Numero:", size=(15, 1)), sg.InputText('', key='numero')],
             [
@@ -80,7 +81,7 @@ class AdotanteView:
             [sg.Button("Confirmar", key="confirmar"), sg.Cancel("Cancelar", key="cancelar")]
         ]
 
-        self.__window = sg.Window("Sistema de livros", layout, enable_close_attempted_event=True)
+        self.__window = sg.Window("Layout", layout, enable_close_attempted_event=True)
 
         while True:
             try:
@@ -127,19 +128,30 @@ class AdotanteView:
             }
 
     def mostrar_adotante(self, dados_adotante: dict):
-        print("\t- CPF:", dados_adotante["cpf"])
-        print("\t- NOME:", dados_adotante["nome"])
-        print(
-            "\t- DATA DE NASCIMENTO:",
-            dados_adotante["data_nascimento"].strftime("%d/%m/%Y"),
-        )
-        print("\t- TIPO DE HABITACAO:", dados_adotante["tipo_habitacao"].name)
-        print(
-            "\t- TAMANHO DE HABITACAO:",
-            dados_adotante["tamanho_habitacao"].name,
-        )
-        print("\t- POSSUI ANIMAL:", dados_adotante["possui_animal"])
-        print(f"\t- ENDERECO: {dados_adotante['endereco']}\n")
+        nome = dados_adotante["nome"]
+        index_endfirstname = nome.index(" ")
+        output_adotante = f"\t - CPF: {dados_adotante['cpf']}\n"
+        output_adotante += f"\t - Nome: {nome}\n"
+        output_adotante += f"\t - Data de nascimento: {dados_adotante['data_nascimento'].strftime('%d/%m/%Y')}\n"
+        output_adotante += f"\t - Tipo de habitacao: {dados_adotante['tipo_habitacao'].name}\n"
+        output_adotante += f"\t - Tamanho da habitacao: {dados_adotante['tamanho_habitacao'].name}\n"
+        output_adotante += f"\t - Possui animal: {'Sim' if dados_adotante['possui_animal'] else 'Nao'}\n"
+        output_adotante += f"\t - Endereco: {dados_adotante['endereco']}\n"
+
+        sg.Popup(f"Dados do adotante {nome[0:index_endfirstname]}:", output_adotante)
+
+    def mostrar_adotantes(self, adotantes: list):
+        toprow = ["CPF", "Nome", "Data nascimento", "Tipo habitacao", "Tamanho habitacao", "Possui animal", "Endereco"]
+        dados_adotantes = [[adotante.cpf, adotante.nome, str(adotante.data_nascimento), adotante.tipo_habitacao.name, adotante.tamanho_habitacao.name, "Sim" if adotante.possui_animal else "Nao", str(adotante.endereco)] for adotante in adotantes]
+        layout = [
+            [sg.Table(headings=toprow, values=dados_adotantes, auto_size_columns=True)],
+            [sg.Button("Fechar", key="fechar", button_color="red")]
+        ]
+
+        self.__window = sg.Window("Layout", layout)
+        button, values = self.__window.read()
+        self.__window.close()
+
 
     def cpf_invalido(self, cpf: str):
         return len(cpf) != 11
