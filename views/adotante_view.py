@@ -47,40 +47,6 @@ class AdotanteView:
         ]
         self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
 
-    def telar_opcoes_tipo_habitacao(self):
-        print("TIPO HABITACAO:")
-        print("\t[1] -> Casa")
-        print("\t[2] -> Apartamento")
-
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(1, 3):
-            raise OpcaoInvalidaException()
-
-        return opcao
-
-    def telar_opcoes_tamanho_habitacao(self):
-        print("TAMANHO HABITACAO:")
-        print("\t[1] -> Pequeno")
-        print("\t[2] -> Medio")
-        print("\t[3] -> Grande")
-
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(1, 4):
-            raise OpcaoInvalidaException()
-
-        return opcao
-
-    def telar_opcoes_possui_animal(self):
-        print("POSSUI ANIMAL:")
-        print("\t[1] -> Sim")
-        print("\t[2] -> Nao")
-
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(1, 3):
-            raise OpcaoInvalidaException()
-
-        return opcao
-
     def pegar_dados_adotante(self):
         layout = [
             [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
@@ -124,26 +90,38 @@ class AdotanteView:
             except CampoObrigatorioException as e:
                 sg.popup(e)
 
-        cpf = values["cpf"]
-        nome = values["nome"]
-        data_nascimento_convertida = values["data_nascimento"]
-        tipo_habitacao = values["tipo_habitacao"]
-        tamanho_habitacao = values["tamanho_habitacao"]
-        possui_animal = values["possui_animal"]
-        logradouro = values["logradouro"]
-        numero = values["numero"]
-
         self.__window.close()
-        return {
-            "cpf": cpf,
-            "nome": nome,
-            "data_nascimento": data_nascimento_convertida,
-            "tipo_habitacao": tipo_habitacao,
-            "tamanho_habitacao": tamanho_habitacao,
-            "possui_animal": possui_animal,
-            "logradouro": logradouro,
-            "numero": numero,
-        }
+
+        if button == "confirmar":
+            cpf = values["cpf"]
+            nome = values["nome"]
+            data_nascimento_convertida = values["data_nascimento"]
+            if values["apartamento"]:
+                tipo_habitacao = 1
+            else:
+                tipo_habitacao = 2
+
+            if values["pequeno"]:
+                tamanho_habitacao = 1
+            elif values["medio"]:
+                tamanho_habitacao = 2
+            else:
+                tamanho_habitacao = 3
+
+            possui_animal = True if values["possui"] else False
+            logradouro = values["logradouro"]
+            numero = values["numero"]
+
+            return {
+                "cpf": cpf,
+                "nome": nome,
+                "data_nascimento": data_nascimento_convertida,
+                "tipo_habitacao": tipo_habitacao,
+                "tamanho_habitacao": tamanho_habitacao,
+                "possui_animal": possui_animal,
+                "logradouro": logradouro,
+                "numero": numero,
+            }
 
     def mostrar_adotante(self, dados_adotante: dict):
         print("\t- CPF:", dados_adotante["cpf"])
@@ -183,7 +161,7 @@ class AdotanteView:
 
         try:
             data_nascimento = self.__window["data_nascimento"].get().strip()
-            data_nascimento_convertida = datetime.strptime(
+            datetime.strptime(
                 data_nascimento, "%d/%m/%Y"
             ).date()
         except ValueError:
