@@ -69,6 +69,7 @@ class AdotanteView:
                     [sg.Radio("Pequeno", "RD2", key="pequeno")],
                     [sg.Radio("Medio", "RD2", key="medio")],
                     [sg.Radio("Grande", "RD2", key="grande")],
+                    [sg.HorizontalSeparator()],
                 ])],
                 [sg.Column(
                     [
@@ -100,7 +101,7 @@ class AdotanteView:
                 values["data_nascimento"], "%d/%m/%Y"
             ).date()
 
-            if values["apartamento"]:
+            if values["casa"]:
                 tipo_habitacao = 1
             else:
                 tipo_habitacao = 2
@@ -129,7 +130,7 @@ class AdotanteView:
 
     def mostrar_adotante(self, dados_adotante: dict):
         nome = dados_adotante["nome"]
-        index_endfirstname = nome.index(" ")
+        index_endfirstname = nome.find(" ")
         output_adotante = f"\t - CPF: {dados_adotante['cpf']}\n"
         output_adotante += f"\t - Nome: {nome}\n"
         output_adotante += f"\t - Data de nascimento: {dados_adotante['data_nascimento'].strftime('%d/%m/%Y')}\n"
@@ -138,18 +139,18 @@ class AdotanteView:
         output_adotante += f"\t - Possui animal: {'Sim' if dados_adotante['possui_animal'] else 'Nao'}\n"
         output_adotante += f"\t - Endereco: {dados_adotante['endereco']}\n"
 
-        sg.Popup(f"Dados do adotante {nome[0:index_endfirstname]}:", output_adotante)
+        sg.Popup(f"Dados do adotante {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:", output_adotante)
 
     def mostrar_adotantes(self, adotantes: list):
         toprow = ["CPF", "Nome", "Data nascimento", "Tipo habitacao", "Tamanho habitacao", "Possui animal", "Endereco"]
         dados_adotantes = [[adotante.cpf, adotante.nome, str(adotante.data_nascimento), adotante.tipo_habitacao.name, adotante.tamanho_habitacao.name, "Sim" if adotante.possui_animal else "Nao", str(adotante.endereco)] for adotante in adotantes]
         layout = [
-            [sg.Table(headings=toprow, values=dados_adotantes, auto_size_columns=True)],
+            [sg.Table(headings=toprow, values=dados_adotantes, auto_size_columns=True, expand_y=True, expand_x=True, justification="center")],
             [sg.Button("Fechar", key="fechar", button_color="red")]
         ]
 
         self.__window = sg.Window("Layout", layout)
-        button, values = self.__window.read()
+        self.__window.read()
         self.__window.close()
 
 
