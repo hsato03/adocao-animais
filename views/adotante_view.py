@@ -87,7 +87,7 @@ class AdotanteView:
                 button, values = self.__window.read()
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
-            except CampoObrigatorioException as e:
+            except (CampoObrigatorioException, CpfInvalidoException) as e:
                 sg.popup(e)
 
         self.__window.close()
@@ -95,7 +95,10 @@ class AdotanteView:
         if button == "confirmar":
             cpf = values["cpf"]
             nome = values["nome"]
-            data_nascimento_convertida = values["data_nascimento"]
+            data_nascimento_convertida = datetime.strptime(
+                values["data_nascimento"], "%d/%m/%Y"
+            ).date()
+
             if values["apartamento"]:
                 tipo_habitacao = 1
             else:
@@ -138,14 +141,14 @@ class AdotanteView:
         print("\t- POSSUI ANIMAL:", dados_adotante["possui_animal"])
         print(f"\t- ENDERECO: {dados_adotante['endereco']}\n")
 
-    def validar_cpf(self, cpf: str):
-        return len(cpf) == 11
+    def cpf_invalido(self, cpf: str):
+        return len(cpf) != 11
 
     def selecionar_adotante(self):
         cpf = input("CPF do adotante que deseja selecionar: ")
-        if self.validar_cpf(cpf):
-            return cpf
-        raise CpfInvalidoException(cpf)
+        if self.cpf_invalido(cpf):
+            raise CpfInvalidoException(cpf)
+        return cpf
 
     def mostrar_mensagem(self, msg):
         sg.popup("", msg)
@@ -180,5 +183,8 @@ class AdotanteView:
 
         if len(campos_nao_preenchidos) > 0:
             raise CampoObrigatorioException(campos_nao_preenchidos)
+
+        if self.cpf_invalido(cpf):
+            raise CpfInvalidoException(cpf)
 
         return True

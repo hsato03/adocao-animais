@@ -23,6 +23,9 @@ class AdotanteController:
     def incluir_adotante(self):
         dados_adotante = self.__tela_adotante.pegar_dados_adotante()
 
+        if not dados_adotante:
+            return
+
         self.validar_digitos_cpf(dados_adotante["cpf"])
         self.verificar_cpf_adotante_ja_cadastrado(dados_adotante["cpf"])
         self.__controlador_sistema.controlador_doadores.verificar_cpf_doador_ja_cadastrado(
