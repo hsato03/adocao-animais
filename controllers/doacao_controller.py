@@ -90,31 +90,6 @@ class DoacaoController:
         identificador = self.__tela_doacao.selecionar_doacao(tipo_id)
         doacao = self.buscar_doacao_por_identificador(identificador, tipo_id)
         self.__doacoes.remove(doacao)
-        self.__tela_doacao.mostrar_mensagem("Doacao removida com sucesso.")
-
-    def listar_doacao_por_identificador(self):
-        if self.verificar_nenhuma_doacao_cadastrada():
-            return
-
-        while True:
-            try:
-                tipo_id = self.__tela_doacao.telar_opcoes_identificador()
-                break
-            except OpcaoInvalidaException as e:
-                self.__tela_doacao.mostrar_mensagem(e)
-
-        identificador = self.__tela_doacao.selecionar_doacao(tipo_id)
-
-        doacao = self.buscar_doacao_por_identificador(identificador, tipo_id)
-
-        self.__tela_doacao.mostrar_doacao(
-            {
-                "cpf_doador": doacao.doador.cpf,
-                "numero_chip": doacao.animal.numero_chip,
-                "data": doacao.data,
-                "motivo": doacao.motivo,
-            }
-        )
 
     def listar_doacoes_por_periodo(self):
         contador = 1
@@ -164,8 +139,7 @@ class DoacaoController:
             2: self.alterar_doacao,
             3: self.listar_doacoes,
             4: self.excluir_doacao,
-            5: self.listar_doacao_por_identificador,
-            6: self.listar_doacoes_por_periodo,
+            5: self.listar_doacoes_por_periodo,
             0: self.retornar,
         }
 

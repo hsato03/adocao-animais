@@ -1,21 +1,45 @@
 from exceptions import OpcaoInvalidaException
+import PySimpleGUI as sg
 
 
 class SistemaView:
+    def __init__(self):
+        self.__window = None
+        self.init_components()
+
     def telar_opcoes(self):
-        print("\n--------------------------------")
-        print("|        MENU PRINCIPAL        |")
-        print("--------------------------------")
-        print("[1] -> Adotantes")
-        print("[2] -> Adocoes")
-        print("[3] -> Animais")
-        print("[4] -> Doadores")
-        print("[5] -> Doacoes")
-        print("[6] -> Vacinas")
-        print("[0] -> Finalizar sistema")
-        opcao = int(input("Escolha a opcao: "))
-
-        if opcao not in range(0, 7):
-            raise OpcaoInvalidaException()
-
+        self.init_components()
+        button, values = self.__window.read()
+        if button == "adotantes":
+            opcao = 1
+        elif button == "adocoes":
+            opcao = 2
+        elif button == "animais":
+            opcao = 3
+        elif button == "doadores":
+            opcao = 4
+        elif button == "doacoes":
+            opcao = 5
+        elif button == "vacinas":
+            opcao = 6
+        else:
+            opcao = 0
+        self.__window.close()
         return opcao
+
+    def init_components(self):
+        layout = [
+            [sg.Text("Donadoption", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
+                     pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
+            [sg.Column([
+                [sg.Button("Adotantes", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="adotantes")],
+                [sg.Button("Adocoes", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="adocoes")],
+                [sg.Button("Animais", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="animais")],
+                [sg.Button("Doadores", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="doadores")],
+                [sg.Button("Doacoes", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="doacoes")],
+                [sg.Button("Vacinas", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="vacinas")],
+                [sg.Button("Finalizar Sistema", size=(20, 2), button_color="red", font=("Inter", 12), key="sair")]
+            ], justification="center", background_color="#3F3F3F")]
+        ]
+
+        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")

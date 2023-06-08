@@ -1,26 +1,47 @@
 from datetime import datetime
 from model import TIPO_CPF
 from exceptions import OpcaoInvalidaException
+import PySimpleGUI as sg
 
 
 class DoacaoView:
+    def __init__(self):
+        self.__window = None
+        self.init_components()
+
     def telar_opcoes(self):
-        print("\n---------------------------------")
-        print("|            DOACOES            |")
-        print("---------------------------------")
-        print("[1] -> Incluir Doacao")
-        print("[2] -> Alterar Doacao")
-        print("[3] -> Listar Doacoes")
-        print("[4] -> Excluir Doacao")
-        print("[5] -> Listar Doacao por id")
-        print("[6] -> Listar Doacoes por periodo")
-        print("[0] -> Retornar")
+        self.init_components()
+        button, values = self.__window.read()
 
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(0, 7):
-            raise OpcaoInvalidaException()
-
+        if button == "incluir":
+            opcao = 1
+        elif button == "alterar":
+            opcao = 2
+        elif button == "listar":
+            opcao = 3
+        elif button == "excluir":
+            opcao = 4
+        elif button == "doacoes_periodo":
+            opcao = 5
+        else:
+            opcao = 0
+        self.__window.close()
         return opcao
+
+    def init_components(self):
+        layout = [
+            [sg.Text("Doacoes", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
+                     pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
+            [sg.Column([
+                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="incluir")],
+                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="alterar")],
+                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="listar")],
+                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="excluir")],
+                [sg.Button("Doacoes por periodo", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="doacoes_periodo")],
+                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12), key="retornar", pad=((0, 0), (50, 0)))],
+            ], justification="center", background_color="#3F3F3F")]
+        ]
+        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
 
     def telar_opcoes_identificador(self):
         print("BUSCAR POR:")
@@ -124,4 +145,4 @@ class DoacaoView:
         return identificador
 
     def mostrar_mensagem(self, msg: str):
-        print(msg)
+        sg.popup("", msg)

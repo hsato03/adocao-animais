@@ -1,24 +1,45 @@
 from exceptions import OpcaoInvalidaException
 from datetime import datetime
+import PySimpleGUI as sg
 
 
 class VacinaView:
+    def __init__(self):
+        self.__window = None
+        self.init_components()
+
     def telar_opcoes(self):
-        print("\n---------------------------------")
-        print("|            VACINAS            |")
-        print("---------------------------------")
-        print("[1] -> Incluir Vacina")
-        print("[2] -> Alterar Vacina")
-        print("[3] -> Listar Vacinas")
-        print("[4] -> Excluir Vacina")
-        print("[5] -> Buscar Vacina por ID")
-        print("[0] -> Retornar")
-
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(0, 6):
-            raise OpcaoInvalidaException()
-
+        self.init_components()
+        button, values = self.__window.read()
+        if button == "incluir":
+            opcao = 1
+        elif button == "alterar":
+            opcao = 2
+        elif button == "listar":
+            opcao = 3
+        elif button == "excluir":
+            opcao = 4
+        elif button == "buscar_por_id":
+            opcao = 5
+        else:
+            opcao = 0
+        self.__window.close()
         return opcao
+
+    def init_components(self):
+        layout = [
+            [sg.Text("Vacinas", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
+                     pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
+            [sg.Column([
+                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="incluir")],
+                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="alterar")],
+                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="listar")],
+                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="excluir")],
+                [sg.Button("Buscar por CPF", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="buscar_por_id")],
+                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12), key="retornar", pad=((0, 0), (50, 0)))],
+            ], justification="center", background_color="#3F3F3F")]
+        ]
+        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
 
     def pegar_dados_vacina(self):
         print("\n-------- DADOS VACINA ----------")
@@ -45,4 +66,4 @@ class VacinaView:
             print("Somente numeros. Tente novamente")
 
     def mostrar_mensagem(self, msg: str):
-        print(msg)
+        sg.popup("", msg)

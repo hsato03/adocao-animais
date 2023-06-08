@@ -108,32 +108,6 @@ class AdocaoController:
         self.__adocoes.remove(adocao)
         self.__tela_adocao.mostrar_mensagem("Adocao removida com sucesso.")
 
-    def listar_adocao_por_identificador(self):
-        if self.verificar_nenhuma_adocao_cadastrada():
-            return
-
-        while True:
-            try:
-                tipo_id = self.__tela_adocao.telar_opcoes_identificador()
-                break
-            except OpcaoInvalidaException as e:
-                self.__tela_adocao.mostrar_mensagem(e)
-            except ValueError:
-                self.__tela_adocao.mostrar_mensagem("Somente numeros. Tente novamente.")
-
-        identificador = self.__tela_adocao.selecionar_adocao(tipo_id)
-
-        adocao = self.buscar_adocao_por_identificador(identificador, tipo_id)
-
-        self.__tela_adocao.mostrar_adocao(
-            {
-                "cpf_adotante": adocao.adotante.cpf,
-                "numero_chip": adocao.animal.numero_chip,
-                "data": adocao.data,
-                "termo_assinado": True if adocao.termo_assinado == 1 else False,
-            }
-        )
-
     def listar_animais_disponiveis_para_adocao(self):
         self.__controlador_sistema.controlador_animais.listar_animais_disponiveis_para_adocao()
 
@@ -231,9 +205,8 @@ class AdocaoController:
             2: self.alterar_adocao,
             3: self.listar_adocoes,
             4: self.excluir_adocao,
-            5: self.listar_adocao_por_identificador,
-            6: self.listar_animais_disponiveis_para_adocao,
-            7: self.listar_adocoes_por_periodo,
+            5: self.listar_animais_disponiveis_para_adocao,
+            6: self.listar_adocoes_por_periodo,
             0: self.retornar,
         }
 

@@ -1,26 +1,50 @@
 from exceptions import OpcaoInvalidaException
 from model import TIPO_CACHORRO
 from datetime import datetime
+import PySimpleGUI as sg
 
 
 class AnimalView:
+    def __init__(self):
+        self.__window = None
+        self.init_components()
+
     def telar_opcoes(self):
-        print("\n---------------------------------")
-        print("|            ANIMAIS            |")
-        print("---------------------------------")
-        print("[1] -> Incluir Animal")
-        print("[2] -> Alterar Animal")
-        print("[3] -> Listar Animais")
-        print("[4] -> Excluir Animal")
-        print("[5] -> Buscar Animal por N° chip")
-        print("[6] -> Aplicar vacina Animal")
-        print("[0] -> Retornar")
+        self.init_components()
+        button, values = self.__window.read()
 
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(0, 7):
-            raise OpcaoInvalidaException()
-
+        if button == "incluir":
+            opcao = 1
+        elif button == "alterar":
+            opcao = 2
+        elif button == "listar":
+            opcao = 3
+        elif button == "excluir":
+            opcao = 4
+        elif button == "buscar_por_nchip":
+            opcao = 5
+        elif button == "vacinar":
+            opcao = 6
+        else:
+            opcao = 0
+        self.__window.close()
         return opcao
+
+    def init_components(self):
+        layout = [
+            [sg.Text("Animais", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
+                     pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
+            [sg.Column([
+                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="incluir")],
+                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="alterar")],
+                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="listar")],
+                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="excluir")],
+                [sg.Button("Buscar por N° Chip", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="buscar_por_nchip")],
+                [sg.Button("Aplicar Vacina", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="vacinar")],
+                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12), key="retornar")],
+            ], justification="center", background_color="#3F3F3F")]
+        ]
+        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
 
     def telar_opcoes_tipo_animal(self):
         print("TIPO ANIMAL:")
@@ -152,4 +176,4 @@ class AnimalView:
             print("Somente numeros. Tente novamente")
 
     def mostrar_mensagem(self, msg: str):
-        print(msg)
+        sg.popup("",msg)
