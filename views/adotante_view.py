@@ -1,4 +1,4 @@
-from exceptions import OpcaoInvalidaException, CpfInvalidoException
+from exceptions import OpcaoInvalidaException, CpfInvalidoException, CampoObrigatorioException
 from datetime import datetime
 import PySimpleGUI as sg
 
@@ -31,12 +31,18 @@ class AdotanteView:
             [sg.Text("Adotantes", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
                      pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
             [sg.Column([
-                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="incluir")],
-                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="alterar")],
-                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="listar")],
-                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="excluir")],
-                [sg.Button("Buscar por CPF", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="buscar_por_cpf")],
-                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12), key="retornar", pad=((0, 0), (50, 0)))],
+                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
+                           key="incluir")],
+                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
+                           key="alterar")],
+                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
+                           key="listar")],
+                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
+                           key="excluir")],
+                [sg.Button("Buscar por CPF", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
+                           key="buscar_por_cpf")],
+                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12),
+                           key="retornar", pad=((0, 0), (50, 0)))],
             ], justification="center", background_color="#3F3F3F")]
         ]
         self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
@@ -76,52 +82,58 @@ class AdotanteView:
         return opcao
 
     def pegar_dados_adotante(self):
-        tipo_habitacao, tamanho_habitacao, possui_animal = (
-            None,
-            None,
-            None,
-        )
-        print("\n-------- DADOS ADOTANTE ----------")
-        cpf = input("CPF: ")
-        if not self.validar_cpf(cpf):
-            raise CpfInvalidoException(cpf)
-        nome = input("Nome: ")
+        layout = [
+            [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
+            [sg.Text("CPF:", size=(15, 1)), sg.InputText("", key="cpf")],
+            [sg.Text("Nome:", size=(15, 1)), sg.InputText("", key="nome")],
+            [sg.CalendarButton("Data de nascimento:", target="data_nascimento", format="%d/%m/%Y"),
+             sg.Input(size=(20, 1), key="data_nascimento")],
+            [sg.Text("Logradouro:", size=(15, 1)), sg.InputText('', key='logradouro')],
+            [sg.Text("Numero:", size=(15, 1)), sg.InputText('', key='numero')],
+            [
+                [sg.Column([
+                    [sg.Text("Tipo de habitacao: ")],
+                    [sg.Radio("Casa", "RD1", key="casa")],
+                    [sg.Radio("Apartamento", "RD1", key="apartamento")],
+                    [sg.HorizontalSeparator()]
+                ])],
+                [sg.Column([
+                    [sg.Text("Tipo de habitacao: ")],
+                    [sg.Radio("Pequeno", "RD2", key="pequeno")],
+                    [sg.Radio("Medio", "RD2", key="medio")],
+                    [sg.Radio("Grande", "RD2", key="grande")],
+                ])],
+                [sg.Column(
+                    [
+                        [sg.Text("Possui animal?")],
+                        [sg.Radio("Sim", "RD3", key="possui")],
+                        [sg.Radio("Nao", "RD3", key="nao_possui")],
+                    ])],
+            ],
+
+            [sg.Button("Confirmar", key="confirmar"), sg.Cancel("Cancelar", key="cancelar")]
+        ]
+
+        self.__window = sg.Window("Sistema de livros", layout, enable_close_attempted_event=True)
+
         while True:
             try:
-                data_nascimento = input("Data de nascimento (dd/mm/yyyy): ")
-                data_nascimento_convertida = datetime.strptime(
-                    data_nascimento, "%d/%m/%Y"
-                ).date()
-                break
-            except ValueError:
-                print("ERRO: Data em formato invalido! Tente novamente.")
-        while True:
-            try:
-                tipo_habitacao = (
-                    self.telar_opcoes_tipo_habitacao()
-                    if tipo_habitacao is None
-                    else tipo_habitacao
-                )
-                tamanho_habitacao = (
-                    self.telar_opcoes_tamanho_habitacao()
-                    if tamanho_habitacao is None
-                    else tamanho_habitacao
-                )
-                possui_animal = (
-                    self.telar_opcoes_possui_animal()
-                    if possui_animal is None
-                    else possui_animal
-                )
-                break
-            except OpcaoInvalidaException as e:
-                print(e)
-            except ValueError:
-                print("Somente numeros. Tente novamente.")
+                button, values = self.__window.read()
+                if (button == "confirmar" and self.input_valido()) or button == "cancelar":
+                    break
+            except CampoObrigatorioException as e:
+                sg.popup(e)
 
-        print("DADOS ENDERECO:")
-        logradouro = input("\tLogradouro: ")
-        numero = input("\tNumero: ")
+        cpf = values["cpf"]
+        nome = values["nome"]
+        data_nascimento_convertida = values["data_nascimento"]
+        tipo_habitacao = values["tipo_habitacao"]
+        tamanho_habitacao = values["tamanho_habitacao"]
+        possui_animal = values["possui_animal"]
+        logradouro = values["logradouro"]
+        numero = values["numero"]
 
+        self.__window.close()
         return {
             "cpf": cpf,
             "nome": nome,
@@ -159,3 +171,36 @@ class AdotanteView:
 
     def mostrar_mensagem(self, msg):
         sg.popup("", msg)
+
+    def input_valido(self):
+        campos_nao_preenchidos = []
+
+        cpf = self.__window["cpf"].get().strip()
+        nome = self.__window["nome"].get().strip()
+        tipo_habitacao = self.__window["casa"].get() or self.__window["apartamento"].get()
+        tamanho_habitacao = self.__window["pequeno"].get() or self.__window["medio"] or self.__window["grande"].get()
+        possui_animal = self.__window["possui"].get() or self.__window["nao_possui"].get()
+
+        try:
+            data_nascimento = self.__window["data_nascimento"].get().strip()
+            data_nascimento_convertida = datetime.strptime(
+                data_nascimento, "%d/%m/%Y"
+            ).date()
+        except ValueError:
+            sg.popup("Data em formato invalido! Tente novamente.")
+
+        if not cpf:
+            campos_nao_preenchidos.append("CPF")
+        if not nome:
+            campos_nao_preenchidos.append("Nome")
+        if not tipo_habitacao:
+            campos_nao_preenchidos.append("Tipo de habitacao")
+        if not tamanho_habitacao:
+            campos_nao_preenchidos.append("Tamanho da habitacao")
+        if not possui_animal:
+            campos_nao_preenchidos.append("Possui animal")
+
+        if len(campos_nao_preenchidos) > 0:
+            raise CampoObrigatorioException(campos_nao_preenchidos)
+
+        return True
