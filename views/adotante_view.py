@@ -113,14 +113,14 @@ class AdotanteView:
         if adotante:
             layout = [
                 [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
-                [sg.Text("CPF:", size=(15, 1)), sg.InputText(adotante.cpf, key="cpf")],
-                [sg.Text("Nome:", size=(15, 1)), sg.InputText(adotante.nome, key="nome")],
-                [sg.Text("Data de nascimento", size=(15, 1)),
-                 sg.Input(adotante.data_nascimento.strftime('%d/%m/%Y'), size=(28, 1), key="data_nascimento"),
+                [sg.Text("CPF:", size=(17, 1)), sg.InputText(adotante.cpf, key="cpf")],
+                [sg.Text("Nome:", size=(17, 1)), sg.InputText(adotante.nome, key="nome")],
+                [sg.Text("Data de nascimento", size=(17, 1)),
+                 sg.Input(adotante.data_nascimento.strftime('%d/%m/%Y'), size=(26, 1), key="data_nascimento"),
                  sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
-                [sg.Text("Logradouro:", size=(15, 1)),
+                [sg.Text("Logradouro:", size=(17, 1)),
                  sg.InputText(adotante.endereco.logradouro, key="logradouro")],
-                [sg.Text("Numero:", size=(15, 1)),
+                [sg.Text("Numero:", size=(17, 1)),
                  sg.InputText(adotante.endereco.numero, key="numero")],
                 self.tipo_habitacao_padrao(adotante.tipo_habitacao),
                 self.tamanho_habitacao_padrao(adotante.tamanho_habitacao),
@@ -131,14 +131,14 @@ class AdotanteView:
         else:
             layout = [
                 [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
-                [sg.Text("CPF:", size=(15, 1)), sg.InputText("", key="cpf")],
-                [sg.Text("Nome:", size=(15, 1)), sg.InputText("", key="nome")],
-                [sg.Text("Data de nascimento", size=(15, 1)),
-                 sg.Input(size=(28, 1), key="data_nascimento"),
+                [sg.Text("CPF:", size=(17, 1)), sg.InputText("", key="cpf")],
+                [sg.Text("Nome:", size=(17, 1)), sg.InputText("", key="nome")],
+                [sg.Text("Data de nascimento:", size=(17, 1)),
+                 sg.Input(size=(26, 1), key="data_nascimento"),
                  sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
-                [sg.Text("Logradouro:", size=(15, 1)),
+                [sg.Text("Logradouro:", size=(17, 1)),
                  sg.InputText("", key="logradouro")],
-                [sg.Text("Numero:", size=(15, 1)), sg.InputText("", key="numero")],
+                [sg.Text("Numero:", size=(17, 1)), sg.InputText("", key="numero")],
                 [
                     [
                         sg.Column(
@@ -182,9 +182,7 @@ class AdotanteView:
         while True:
             try:
                 button, values = self.__window.read()
-                if (
-                        button == "confirmar" and self.input_valido()
-                ) or button == "cancelar":
+                if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except (CampoObrigatorioException, CpfInvalidoException) as e:
                 sg.popup(e)
@@ -196,9 +194,7 @@ class AdotanteView:
 
         cpf = values["cpf"]
         nome = values["nome"]
-        data_nascimento_convertida = datetime.strptime(
-            values["data_nascimento"], "%d/%m/%Y"
-        ).date()
+        data_nascimento_convertida = datetime.strptime(values["data_nascimento"], "%d/%m/%Y").date()
 
         if values["casa"]:
             tipo_habitacao = 1
@@ -390,27 +386,27 @@ class AdotanteView:
         sg.popup("", msg)
 
     def input_valido(self):
+        data_formato_valido = True
         campos_nao_preenchidos = []
 
         cpf = self.__window["cpf"].get().strip()
         nome = self.__window["nome"].get().strip()
-        tipo_habitacao = (
-                self.__window["casa"].get() or self.__window["apartamento"].get()
-        )
+        tipo_habitacao = (self.__window["casa"].get() or self.__window["apartamento"].get())
         tamanho_habitacao = (
                 self.__window["pequeno"].get()
                 or self.__window["medio"]
                 or self.__window["grande"].get()
         )
-        possui_animal = (
-                self.__window["possui"].get() or self.__window["nao_possui"].get()
-        )
+        possui_animal = (self.__window["possui"].get() or self.__window["nao_possui"].get())
+        logradouro = self.__window["logradouro"].get().strip()
+        numero = self.__window["numero"].get().strip()
 
         try:
             data_nascimento = self.__window["data_nascimento"].get().strip()
             datetime.strptime(data_nascimento, "%d/%m/%Y").date()
         except ValueError:
             sg.popup("Data em formato invalido! Tente novamente.")
+            data_formato_valido = False
 
         if not cpf:
             campos_nao_preenchidos.append("CPF")
@@ -422,6 +418,10 @@ class AdotanteView:
             campos_nao_preenchidos.append("Tamanho da habitacao")
         if not possui_animal:
             campos_nao_preenchidos.append("Possui animal")
+        if not logradouro:
+            campos_nao_preenchidos.append("Logradouro")
+        if not numero:
+            campos_nao_preenchidos.append("Numero")
 
         if len(campos_nao_preenchidos) > 0:
             raise CampoObrigatorioException(campos_nao_preenchidos)
@@ -429,4 +429,4 @@ class AdotanteView:
         if self.cpf_invalido(cpf):
             raise CpfInvalidoException(cpf)
 
-        return True
+        return data_formato_valido

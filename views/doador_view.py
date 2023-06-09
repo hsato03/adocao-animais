@@ -1,4 +1,4 @@
-from exceptions import OpcaoInvalidaException, CpfInvalidoException
+from exceptions import CpfInvalidoException, CampoObrigatorioException
 from datetime import datetime
 import PySimpleGUI as sg
 
@@ -106,25 +106,62 @@ class DoadorView:
             "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
         )
 
-    def pegar_dados_doador(self):
-        print("\n-------- DADOS DOADOR ----------")
-        cpf = input("CPF: ")
-        if not self.validar_cpf(cpf):
-            raise CpfInvalidoException(cpf)
-        nome = input("Nome: ")
+    def pegar_dados_doador(self, doador):
+        if doador:
+            layout = [
+                [sg.Text("CADASTRO DOADOR", font=("Inter", 25), justification="center")],
+                [sg.Text("CPF:", size=(17, 1)), sg.InputText(doador.cpf, key="cpf")],
+                [sg.Text("Nome:", size=(17, 1)), sg.InputText(doador.nome, key="nome")],
+                [sg.Text("Data de nascimento", size=(17, 1)),
+                 sg.Input(doador.data_nascimento.strftime('%d/%m/%Y'), size=(26, 1), key="data_nascimento"),
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
+                [sg.Text("Logradouro:", size=(17, 1)),
+                 sg.InputText(doador.endereco.logradouro, key="logradouro")],
+                [sg.Text("Numero:", size=(17, 1)),
+                 sg.InputText(doador.endereco.numero, key="numero")],
+                [sg.Button("Confirmar", key="confirmar"),
+                 sg.Cancel("Cancelar", key="cancelar")]
+            ]
+        else:
+            layout = [
+                [sg.Text("CADASTRO DOADOR", font=("Inter", 25), justification="center")],
+                [sg.Text("CPF:", size=(17, 1)), sg.InputText("", key="cpf")],
+                [sg.Text("Nome:", size=(17, 1)), sg.InputText("", key="nome")],
+                [sg.Text("Data de nascimento", size=(17, 1)),
+                 sg.Input(size=(26, 1), key="data_nascimento"),
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
+                [sg.Text("Logradouro:", size=(17, 1)),
+                 sg.InputText("", key="logradouro")],
+                [sg.Text("Numero:", size=(17, 1)), sg.InputText("", key="numero")],
+                [
+                    sg.Button("Confirmar", key="confirmar"),
+                    sg.Cancel("Cancelar", key="cancelar"),
+                ],
+            ]
+
+        self.__window = sg.Window("Layout", layout, enable_close_attempted_event=True)
+
         while True:
             try:
-                data_nascimento = input("Data de nascimento (dd/mm/yyyy): ")
-                data_nascimento_convertida = datetime.strptime(
-                    data_nascimento, "%d/%m/%Y"
-                ).date()
-                break
-            except ValueError:
-                print("ERRO: Data em formato invalido! Tente novamente.")
+                button, values = self.__window.read()
+                if (button == "confirmar" and self.input_valido()) or button == "cancelar":
+                    break
+            except (CampoObrigatorioException, CpfInvalidoException) as e:
+                sg.popup(e)
 
-        print("DADOS ENDERECO:")
-        logradouro = input("\tLogradouro: ")
-        numero = input("\tNumero: ")
+        self.__window.close()
+
+        if button == "cancelar":
+            return
+
+        cpf = values["cpf"]
+        nome = values["nome"]
+        data_nascimento_convertida = datetime.strptime(
+            values["data_nascimento"], "%d/%m/%Y"
+        ).date()
+
+        logradouro = values["logradouro"]
+        numero = values["numero"]
 
         return {
             "cpf": cpf,
@@ -135,22 +172,98 @@ class DoadorView:
         }
 
     def mostrar_doador(self, dados_doador: dict):
-        print("\t- CPF:", dados_doador["cpf"])
-        print("\t- NOME:", dados_doador["nome"])
-        print(
-            "\t- DATA DE NASCIMENTO:",
-            dados_doador["data_nascimento"].strftime("%d/%m/%Y"),
+        nome = dados_doador["nome"]
+        index_endfirstname = nome.find(" ")
+        output_doador = f"\t - CPF: {dados_doador['cpf']}\n"
+        output_doador += f"\t - Nome: {nome}\n"
+        output_doador += f"\t - Data de nascimento: {dados_doador['data_nascimento'].strftime('%d/%m/%Y')}\n"
+
+        sg.Popup(
+            f"Dados do doador {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:",
+            output_doador,
         )
-        print(f"\t- ENDERECO: {dados_doador['endereco']}\n")
 
-    def validar_cpf(self, cpf: str):
-        return len(cpf) == 11
+    def mostrar_doadores(self, doadores: list):
+        toprow = [
+            "CPF",
+            "Nome",
+            "Data nascimento",
+            "Endereco",
+        ]
+        dados_doadores = [
+            [
+                doador.cpf,
+                doador.nome,
+                str(doador.data_nascimento.strftime('%d/%m/%Y')),
+                str(doador.endereco),
+            ]
+            for doador in doadores
+        ]
+        layout = [
+            [
+                sg.Table(
+                    headings=toprow,
+                    values=dados_doadores,
+                    auto_size_columns=True,
+                    expand_y=True,
+                    expand_x=True,
+                    justification="center",
+                )
+            ],
+            [sg.Button("Fechar", key="fechar", button_color="red")],
+        ]
 
-    def selecionar_doador(self):
-        cpf = input("CPF do doador que deseja selecionar: ")
-        if self.validar_cpf(cpf):
-            return cpf
-        raise CpfInvalidoException(cpf)
+        self.__window = sg.Window("Layout", layout)
+        self.__window.read()
+        self.__window.close()
+
+    def cpf_invalido(self, cpf: str):
+        return len(cpf) != 11
+
+    def selecionar_doador(self, cpfs: list):
+        layout = [
+            [sg.Text("CPF do doador que deseja selecionar: ")],
+            [sg.Combo(values=cpfs, default_value=cpfs[0], key="cpf")],
+            [sg.Button("Confirmar", key="confirmar")],
+        ]
+        self.__window = sg.Window("Layout", layout)
+        button, values = self.__window.read()
+        self.__window.close()
+
+        return values["cpf"]
 
     def mostrar_mensagem(self, msg: str):
         sg.popup("", msg)
+
+    def input_valido(self):
+        data_formato_valido = True
+        campos_nao_preenchidos = []
+
+        cpf = self.__window["cpf"].get().strip()
+        nome = self.__window["nome"].get().strip()
+        logradouro = self.__window["logradouro"].get().strip()
+        numero = self.__window["numero"].get().strip()
+
+        try:
+            data_nascimento = self.__window["data_nascimento"].get().strip()
+            datetime.strptime(data_nascimento, "%d/%m/%Y").date()
+        except ValueError:
+            sg.popup("Data em formato invalido! Tente novamente.")
+            data_formato_valido = False
+
+        if not cpf:
+            campos_nao_preenchidos.append("CPF")
+        if not nome:
+            campos_nao_preenchidos.append("Nome")
+        if not logradouro:
+            campos_nao_preenchidos.append("Endereco")
+        if not numero:
+            campos_nao_preenchidos.append("Numero")
+
+        if len(campos_nao_preenchidos) > 0:
+            raise CampoObrigatorioException(campos_nao_preenchidos)
+
+        if self.cpf_invalido(cpf):
+            raise CpfInvalidoException(cpf)
+
+        return data_formato_valido
