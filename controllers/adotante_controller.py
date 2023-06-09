@@ -92,7 +92,6 @@ class AdotanteController:
             self.__tela_adotante.mostrar_mensagem("Nenhum adotante cadastrado.")
             return
 
-        self.listar_adotantes()
         cpf_adotante = self.__tela_adotante.selecionar_adotante(
             [adotante.cpf for adotante in self.__adotantes]
         )

@@ -345,7 +345,7 @@ class AdotanteView:
             [
                 adotante.cpf,
                 adotante.nome,
-                str(adotante.data_nascimento),
+                str(adotante.data_nascimento.strftime('%d/%m/%Y')),
                 adotante.tipo_habitacao.name,
                 adotante.tamanho_habitacao.name,
                 "Sim" if adotante.possui_animal else "Nao",
