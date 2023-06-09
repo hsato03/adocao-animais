@@ -2,7 +2,6 @@ from views import AdotanteView
 from model import Adotante, TipoHabitacao, TamanhoHabitacao
 from exceptions import (
     EntidadeNaoEncontradaException,
-    OpcaoInvalidaException,
     CpfInvalidoException,
     IdentificadorJaExistenteException,
 )
@@ -21,7 +20,7 @@ class AdotanteController:
         raise EntidadeNaoEncontradaException("ERRO: Adotante nao existente.")
 
     def incluir_adotante(self):
-        dados_adotante = self.__tela_adotante.pegar_dados_adotante()
+        dados_adotante = self.__tela_adotante.pegar_dados_adotante(adotante=None)
 
         if not dados_adotante:
             return
@@ -49,10 +48,16 @@ class AdotanteController:
             self.__tela_adotante.mostrar_mensagem("Nenhum adotante cadastrado.")
             return
 
-        self.listar_adotantes()
-        cpf_adotante = self.__tela_adotante.selecionar_adotante()
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(
+            [adotante.cpf for adotante in self.__adotantes]
+        )
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
-        novos_dados_adotante = self.__tela_adotante.pegar_dados_adotante()
+        novos_dados_adotante = self.__tela_adotante.pegar_dados_adotante(
+            adotante=adotante
+        )
+
+        if not novos_dados_adotante:
+            return
 
         self.validar_digitos_cpf(novos_dados_adotante["cpf"])
 
@@ -64,7 +69,7 @@ class AdotanteController:
 
         adotante.nome = novos_dados_adotante["nome"]
         adotante.cpf = novos_dados_adotante["cpf"]
-        adotante.data = novos_dados_adotante["data_nascimento"]
+        adotante.data_nascimento = novos_dados_adotante["data_nascimento"]
         adotante.tipo_habitacao = TipoHabitacao(novos_dados_adotante["tipo_habitacao"])
         adotante.tamanho_habitacao = TamanhoHabitacao(
             novos_dados_adotante["tamanho_habitacao"]
@@ -75,7 +80,6 @@ class AdotanteController:
         adotante.add_endereco(
             novos_dados_adotante["logradouro"], novos_dados_adotante["numero"]
         )
-        self.listar_adotantes()
 
     def listar_adotantes(self):
         if len(self.__adotantes) <= 0:
@@ -89,7 +93,9 @@ class AdotanteController:
             return
 
         self.listar_adotantes()
-        cpf_adotante = self.__tela_adotante.selecionar_adotante()
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(
+            [adotante.cpf for adotante in self.__adotantes]
+        )
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
 
         self.__adotantes.remove(adotante)
@@ -100,7 +106,9 @@ class AdotanteController:
             self.__tela_adotante.mostrar_mensagem("Nenhum adotante cadastrado.")
             return
 
-        cpf_adotante = self.__tela_adotante.selecionar_adotante()
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(
+            [adotante.cpf for adotante in self.__adotantes]
+        )
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
 
         self.__tela_adotante.mostrar_adotante(
@@ -140,7 +148,6 @@ class AdotanteController:
             try:
                 lista_opcoes[self.__tela_adotante.telar_opcoes()]()
             except (
-                OpcaoInvalidaException,
                 EntidadeNaoEncontradaException,
                 CpfInvalidoException,
                 IdentificadorJaExistenteException,

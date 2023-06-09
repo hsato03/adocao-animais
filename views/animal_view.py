@@ -32,19 +32,91 @@ class AnimalView:
 
     def init_components(self):
         layout = [
-            [sg.Text("Animais", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
-                     pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
-            [sg.Column([
-                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="incluir")],
-                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="alterar")],
-                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="listar")],
-                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="excluir")],
-                [sg.Button("Buscar por N° Chip", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="buscar_por_nchip")],
-                [sg.Button("Aplicar Vacina", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="vacinar")],
-                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12), key="retornar")],
-            ], justification="center", background_color="#3F3F3F")]
+            [
+                sg.Text(
+                    "Animais",
+                    font=["Inter", 30, "bold"],
+                    size=[20, 2],
+                    justification="center",
+                    pad=((0, 0), (25, 0)),
+                    background_color="#3F3F3F",
+                )
+            ],
+            [
+                sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Incluir",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="incluir",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Alterar",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="alterar",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Listar",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="listar",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Excluir",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="excluir",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Buscar por N° Chip",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="buscar_por_nchip",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Aplicar Vacina",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="vacinar",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Retornar",
+                                size=(20, 2),
+                                button_color=("black", "#FAF000"),
+                                font=("Inter", 12),
+                                key="retornar",
+                            )
+                        ],
+                    ],
+                    justification="center",
+                    background_color="#3F3F3F",
+                )
+            ],
         ]
-        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
+        self.__window = sg.Window(
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+        )
 
     def telar_opcoes_tipo_animal(self):
         print("TIPO ANIMAL:")
@@ -176,4 +248,4 @@ class AnimalView:
             print("Somente numeros. Tente novamente")
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("",msg)
+        sg.popup("", msg)

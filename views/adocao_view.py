@@ -31,19 +31,91 @@ class AdocaoView:
 
     def init_components(self):
         layout = [
-            [sg.Text("Adocoes", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
-                     pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
-            [sg.Column([
-                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="incluir")],
-                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="alterar")],
-                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="listar")],
-                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="excluir")],
-                [sg.Button("Animais disponiveis para adocao", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="animais_disponiveis")],
-                [sg.Button("Adocoes por periodo", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="adocoes_periodo")],
-                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12), key="retornar")],
-            ], justification="center", background_color="#3F3F3F")]
+            [
+                sg.Text(
+                    "Adocoes",
+                    font=["Inter", 30, "bold"],
+                    size=[20, 2],
+                    justification="center",
+                    pad=((0, 0), (25, 0)),
+                    background_color="#3F3F3F",
+                )
+            ],
+            [
+                sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Incluir",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="incluir",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Alterar",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="alterar",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Listar",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="listar",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Excluir",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="excluir",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Animais disponiveis para adocao",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="animais_disponiveis",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Adocoes por periodo",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="adocoes_periodo",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Retornar",
+                                size=(20, 2),
+                                button_color=("black", "#FAF000"),
+                                font=("Inter", 12),
+                                key="retornar",
+                            )
+                        ],
+                    ],
+                    justification="center",
+                    background_color="#3F3F3F",
+                )
+            ],
         ]
-        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
+        self.__window = sg.Window(
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+        )
 
     def telar_opcoes_termo(self):
         print("ASSINAR TERMO?")

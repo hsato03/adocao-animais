@@ -77,7 +77,9 @@ class AdocaoController:
         novos_dados_adocao = self.__tela_adocao.pegar_dados_adocao(criacao=False)
 
         adocao.data = novos_dados_adocao["data"]
-        adocao.termo_assinado = True if novos_dados_adocao["termo_assinado"] == 1 else False
+        adocao.termo_assinado = (
+            True if novos_dados_adocao["termo_assinado"] == 1 else False
+        )
 
     def listar_adocoes(self):
         if self.verificar_nenhuma_adocao_cadastrada():
@@ -184,7 +186,9 @@ class AdocaoController:
 
         for adocao in self.__adocoes:
             if adocao.animal.numero_chip == animal.numero_chip:
-                raise AdocaoRegraVioladaException(f"Animal {animal.nome} [{animal.numero_chip}] ja foi adotado")
+                raise AdocaoRegraVioladaException(
+                    f"Animal {animal.nome} [{animal.numero_chip}] ja foi adotado"
+                )
 
     def pegar_tipo_id(self):
         while True:
@@ -213,7 +217,11 @@ class AdocaoController:
         while True:
             try:
                 lista_opcoes[self.__tela_adocao.telar_opcoes()]()
-            except (OpcaoInvalidaException, EntidadeNaoEncontradaException, AdocaoRegraVioladaException) as e:
+            except (
+                OpcaoInvalidaException,
+                EntidadeNaoEncontradaException,
+                AdocaoRegraVioladaException,
+            ) as e:
                 self.__tela_adocao.mostrar_mensagem(e)
             except ValueError:
                 self.__tela_adocao.mostrar_mensagem("Somente numeros. Tente novamente")

@@ -203,7 +203,8 @@ class AdocaoTest(unittest.TestCase):
     def test_alterar_adocao_should_work_when_valid_data(self):
         self.incluir_adocao_test(self.adocao_valida)
         with patch(
-            "builtins.input", side_effect=[TIPO_CPF, cpf, data_atualizada, termo_nao_assinado]
+            "builtins.input",
+            side_effect=[TIPO_CPF, cpf, data_atualizada, termo_nao_assinado],
         ):
             try:
                 self.controlador_adocoes.alterar_adocao()
@@ -212,9 +213,7 @@ class AdocaoTest(unittest.TestCase):
 
         try:
             adoacao_atualizada = (
-                self.controlador_adocoes.buscar_adocao_por_identificador(
-                    cpf, TIPO_CPF
-                )
+                self.controlador_adocoes.buscar_adocao_por_identificador(cpf, TIPO_CPF)
             )
         except EntidadeNaoEncontradaException:
             self.fail("Adocao nao alterada.")

@@ -131,7 +131,8 @@ class DoacaoTest(unittest.TestCase):
     def test_alterar_doacao_should_work_when_valid_data(self):
         self.incluir_doacao_test(self.doacao_valida)
         with patch(
-            "builtins.input", side_effect=[TIPO_CPF, cpf, data_atualizada, motivo_atualizado]
+            "builtins.input",
+            side_effect=[TIPO_CPF, cpf, data_atualizada, motivo_atualizado],
         ):
             try:
                 self.controlador_doacoes.alterar_doacao()
@@ -140,9 +141,7 @@ class DoacaoTest(unittest.TestCase):
 
         try:
             adoacao_atualizada = (
-                self.controlador_doacoes.buscar_doacao_por_identificador(
-                    cpf, TIPO_CPF
-                )
+                self.controlador_doacoes.buscar_doacao_por_identificador(cpf, TIPO_CPF)
             )
         except EntidadeNaoEncontradaException:
             self.fail("Doacao nao alterada.")

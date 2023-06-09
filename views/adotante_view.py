@@ -1,4 +1,7 @@
-from exceptions import OpcaoInvalidaException, CpfInvalidoException, CampoObrigatorioException
+from exceptions import (
+    CpfInvalidoException,
+    CampoObrigatorioException,
+)
 from datetime import datetime
 import PySimpleGUI as sg
 
@@ -28,105 +31,285 @@ class AdotanteView:
 
     def init_components(self):
         layout = [
-            [sg.Text("Adotantes", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
-                     pad=((0, 0), (25, 0)), background_color="#3F3F3F")],
-            [sg.Column([
-                [sg.Button("Incluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
-                           key="incluir")],
-                [sg.Button("Alterar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
-                           key="alterar")],
-                [sg.Button("Listar", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
-                           key="listar")],
-                [sg.Button("Excluir", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
-                           key="excluir")],
-                [sg.Button("Buscar por CPF", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"),
-                           key="buscar_por_cpf")],
-                [sg.Button("Retornar", size=(20, 2), button_color=("black", "#FAF000"), font=("Inter", 12),
-                           key="retornar", pad=((0, 0), (50, 0)))],
-            ], justification="center", background_color="#3F3F3F")]
-        ]
-        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
-
-    def pegar_dados_adotante(self):
-        layout = [
-            [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
-            [sg.Text("CPF:", size=(15, 1)), sg.InputText("", key="cpf")],
-            [sg.Text("Nome:", size=(15, 1)), sg.InputText("", key="nome")],
-            [sg.Text("Data de nascimento", size=(15, 1)),
-             sg.Input(size=(28, 1), key="data_nascimento"),
-             sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
-            [sg.Text("Logradouro:", size=(15, 1)), sg.InputText('', key='logradouro')],
-            [sg.Text("Numero:", size=(15, 1)), sg.InputText('', key='numero')],
             [
-                [sg.Column([
-                    [sg.Text("Tipo de habitacao: ")],
-                    [sg.Radio("Casa", "RD1", key="casa")],
-                    [sg.Radio("Apartamento", "RD1", key="apartamento")],
-                    [sg.HorizontalSeparator()]
-                ])],
-                [sg.Column([
-                    [sg.Text("Tipo de habitacao: ")],
-                    [sg.Radio("Pequeno", "RD2", key="pequeno")],
-                    [sg.Radio("Medio", "RD2", key="medio")],
-                    [sg.Radio("Grande", "RD2", key="grande")],
-                    [sg.HorizontalSeparator()],
-                ])],
-                [sg.Column(
-                    [
-                        [sg.Text("Possui animal?")],
-                        [sg.Radio("Sim", "RD3", key="possui")],
-                        [sg.Radio("Nao", "RD3", key="nao_possui")],
-                    ])],
+                sg.Text(
+                    "Adotantes",
+                    font=["Inter", 30, "bold"],
+                    size=[20, 2],
+                    justification="center",
+                    pad=((0, 0), (25, 0)),
+                    background_color="#3F3F3F",
+                )
             ],
-
-            [sg.Button("Confirmar", key="confirmar"), sg.Cancel("Cancelar", key="cancelar")]
+            [
+                sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Incluir",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="incluir",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Alterar",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="alterar",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Listar",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="listar",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Excluir",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="excluir",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Buscar por CPF",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="buscar_por_cpf",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Retornar",
+                                size=(20, 2),
+                                button_color=("black", "#FAF000"),
+                                font=("Inter", 12),
+                                key="retornar",
+                                pad=((0, 0), (50, 0)),
+                            )
+                        ],
+                    ],
+                    justification="center",
+                    background_color="#3F3F3F",
+                )
+            ],
         ]
+        self.__window = sg.Window(
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+        )
+
+    def pegar_dados_adotante(self, adotante):
+        if adotante:
+            layout = [
+                [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
+                [sg.Text("CPF:", size=(15, 1)), sg.InputText(adotante.cpf, key="cpf")],
+                [sg.Text("Nome:", size=(15, 1)), sg.InputText(adotante.nome, key="nome")],
+                [sg.Text("Data de nascimento", size=(15, 1)),
+                 sg.Input(adotante.data_nascimento.strftime('%d/%m/%Y'), size=(28, 1), key="data_nascimento"),
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
+                [sg.Text("Logradouro:", size=(15, 1)),
+                 sg.InputText(adotante.endereco.logradouro, key="logradouro")],
+                [sg.Text("Numero:", size=(15, 1)),
+                 sg.InputText(adotante.endereco.numero, key="numero")],
+                self.tipo_habitacao_padrao(adotante.tipo_habitacao),
+                self.tamanho_habitacao_padrao(adotante.tamanho_habitacao),
+                self.possui_animal_padrao(adotante.possui_animal),
+                [sg.Button("Confirmar", key="confirmar"),
+                 sg.Cancel("Cancelar", key="cancelar")]
+            ]
+        else:
+            layout = [
+                [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
+                [sg.Text("CPF:", size=(15, 1)), sg.InputText("", key="cpf")],
+                [sg.Text("Nome:", size=(15, 1)), sg.InputText("", key="nome")],
+                [sg.Text("Data de nascimento", size=(15, 1)),
+                 sg.Input(size=(28, 1), key="data_nascimento"),
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
+                [sg.Text("Logradouro:", size=(15, 1)),
+                 sg.InputText("", key="logradouro")],
+                [sg.Text("Numero:", size=(15, 1)), sg.InputText("", key="numero")],
+                [
+                    [
+                        sg.Column(
+                            [
+                                [sg.Text("Tipo de habitacao: ")],
+                                [sg.Radio("Casa", "RD1", key="casa")],
+                                [sg.Radio("Apartamento", "RD1", key="apartamento")],
+                                [sg.HorizontalSeparator()],
+                            ]
+                        )
+                    ],
+                    [
+                        sg.Column(
+                            [
+                                [sg.Text("Tipo de habitacao: ")],
+                                [sg.Radio("Pequeno", "RD2", key="pequeno")],
+                                [sg.Radio("Medio", "RD2", key="medio")],
+                                [sg.Radio("Grande", "RD2", key="grande")],
+                                [sg.HorizontalSeparator()],
+                            ]
+                        )
+                    ],
+                    [
+                        sg.Column(
+                            [
+                                [sg.Text("Possui animal?")],
+                                [sg.Radio("Sim", "RD3", key="possui")],
+                                [sg.Radio("Nao", "RD3", key="nao_possui")],
+                            ]
+                        )
+                    ],
+                ],
+                [
+                    sg.Button("Confirmar", key="confirmar"),
+                    sg.Cancel("Cancelar", key="cancelar"),
+                ],
+            ]
 
         self.__window = sg.Window("Layout", layout, enable_close_attempted_event=True)
 
         while True:
             try:
                 button, values = self.__window.read()
-                if (button == "confirmar" and self.input_valido()) or button == "cancelar":
+                if (
+                        button == "confirmar" and self.input_valido()
+                ) or button == "cancelar":
                     break
             except (CampoObrigatorioException, CpfInvalidoException) as e:
                 sg.popup(e)
 
         self.__window.close()
 
-        if button == "confirmar":
-            cpf = values["cpf"]
-            nome = values["nome"]
-            data_nascimento_convertida = datetime.strptime(
-                values["data_nascimento"], "%d/%m/%Y"
-            ).date()
+        if button == "cancelar":
+            return
 
-            if values["casa"]:
-                tipo_habitacao = 1
-            else:
-                tipo_habitacao = 2
+        cpf = values["cpf"]
+        nome = values["nome"]
+        data_nascimento_convertida = datetime.strptime(
+            values["data_nascimento"], "%d/%m/%Y"
+        ).date()
 
-            if values["pequeno"]:
-                tamanho_habitacao = 1
-            elif values["medio"]:
-                tamanho_habitacao = 2
-            else:
-                tamanho_habitacao = 3
+        if values["casa"]:
+            tipo_habitacao = 1
+        else:
+            tipo_habitacao = 2
 
-            possui_animal = True if values["possui"] else False
-            logradouro = values["logradouro"]
-            numero = values["numero"]
+        if values["pequeno"]:
+            tamanho_habitacao = 1
+        elif values["medio"]:
+            tamanho_habitacao = 2
+        else:
+            tamanho_habitacao = 3
 
-            return {
-                "cpf": cpf,
-                "nome": nome,
-                "data_nascimento": data_nascimento_convertida,
-                "tipo_habitacao": tipo_habitacao,
-                "tamanho_habitacao": tamanho_habitacao,
-                "possui_animal": possui_animal,
-                "logradouro": logradouro,
-                "numero": numero,
-            }
+        possui_animal = True if values["possui"] else False
+        logradouro = values["logradouro"]
+        numero = values["numero"]
+
+        return {
+            "cpf": cpf,
+            "nome": nome,
+            "data_nascimento": data_nascimento_convertida,
+            "tipo_habitacao": tipo_habitacao,
+            "tamanho_habitacao": tamanho_habitacao,
+            "possui_animal": possui_animal,
+            "logradouro": logradouro,
+            "numero": numero,
+        }
+
+    def tipo_habitacao_padrao(self, tipo_habitacao):
+        if tipo_habitacao.name == "CASA":
+            return [
+                sg.Column(
+                    [
+                        [sg.Text("Tipo de habitacao: ")],
+                        [sg.Radio("Casa", "RD1", default=True, key="casa")],
+                        [sg.Radio("Apartamento", "RD1", key="apartamento")],
+                        [sg.HorizontalSeparator()],
+                    ]
+                )
+            ]
+
+        return [
+            sg.Column(
+                [
+                    [sg.Text("Tipo de habitacao: ")],
+                    [sg.Radio("Casa", "RD1", key="casa")],
+                    [sg.Radio("Apartamento", "RD1", default=True, key="apartamento")],
+                    [sg.HorizontalSeparator()],
+                ]
+            )
+        ]
+
+    def tamanho_habitacao_padrao(self, tamanho_habitacao):
+        if tamanho_habitacao.name == "PEQUENO":
+            return [
+                       sg.Column(
+                           [
+                               [sg.Text("Tamanho de habitacao: ")],
+                               [sg.Radio("Pequeno", "RD2", default=True, key="pequeno")],
+                               [sg.Radio("Medio", "RD2", key="medio")],
+                               [sg.Radio("Grande", "RD2", key="grande")],
+                               [sg.HorizontalSeparator()],
+                           ]
+                       )
+                   ],
+
+        elif tamanho_habitacao.name == "MEDIO":
+            return [
+                       sg.Column(
+                           [
+                               [sg.Text("Tamanho de habitacao: ")],
+                               [sg.Radio("Pequeno", "RD2", key="pequeno")],
+                               [sg.Radio("Medio", "RD2", default=True, key="medio")],
+                               [sg.Radio("Grande", "RD2", key="grande")],
+                               [sg.HorizontalSeparator()],
+                           ]
+                       )
+                   ],
+
+        return [
+                   sg.Column(
+                       [
+                           [sg.Text("Tamanho de habitacao: ")],
+                           [sg.Radio("Pequeno", "RD2", key="pequeno")],
+                           [sg.Radio("Medio", "RD2", key="medio")],
+                           [sg.Radio("Grande", "RD2", default=True, key="grande")],
+                           [sg.HorizontalSeparator()],
+                       ]
+                   )
+               ],
+
+    def possui_animal_padrao(self, possui_animal):
+        if possui_animal:
+            return [
+                       sg.Column(
+                           [
+                               [sg.Text("Possui animal?")],
+                               [sg.Radio("Sim", "RD3", default=True, key="possui")],
+                               [sg.Radio("Nao", "RD3", key="nao_possui")],
+                           ]
+                       )
+                   ],
+        return [
+                   sg.Column(
+                       [
+                           [sg.Text("Possui animal?")],
+                           [sg.Radio("Sim", "RD3", key="possui")],
+                           [sg.Radio("Nao", "RD3", default=True, key="nao_possui")],
+                       ]
+                   )
+               ],
 
     def mostrar_adotante(self, dados_adotante: dict):
         nome = dados_adotante["nome"]
@@ -134,34 +317,74 @@ class AdotanteView:
         output_adotante = f"\t - CPF: {dados_adotante['cpf']}\n"
         output_adotante += f"\t - Nome: {nome}\n"
         output_adotante += f"\t - Data de nascimento: {dados_adotante['data_nascimento'].strftime('%d/%m/%Y')}\n"
-        output_adotante += f"\t - Tipo de habitacao: {dados_adotante['tipo_habitacao'].name}\n"
-        output_adotante += f"\t - Tamanho da habitacao: {dados_adotante['tamanho_habitacao'].name}\n"
+        output_adotante += (
+            f"\t - Tipo de habitacao: {dados_adotante['tipo_habitacao'].name}\n"
+        )
+        output_adotante += (
+            f"\t - Tamanho da habitacao: {dados_adotante['tamanho_habitacao'].name}\n"
+        )
         output_adotante += f"\t - Possui animal: {'Sim' if dados_adotante['possui_animal'] else 'Nao'}\n"
         output_adotante += f"\t - Endereco: {dados_adotante['endereco']}\n"
 
-        sg.Popup(f"Dados do adotante {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:", output_adotante)
+        sg.Popup(
+            f"Dados do adotante {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:",
+            output_adotante,
+        )
 
     def mostrar_adotantes(self, adotantes: list):
-        toprow = ["CPF", "Nome", "Data nascimento", "Tipo habitacao", "Tamanho habitacao", "Possui animal", "Endereco"]
-        dados_adotantes = [[adotante.cpf, adotante.nome, str(adotante.data_nascimento), adotante.tipo_habitacao.name, adotante.tamanho_habitacao.name, "Sim" if adotante.possui_animal else "Nao", str(adotante.endereco)] for adotante in adotantes]
+        toprow = [
+            "CPF",
+            "Nome",
+            "Data nascimento",
+            "Tipo habitacao",
+            "Tamanho habitacao",
+            "Possui animal",
+            "Endereco",
+        ]
+        dados_adotantes = [
+            [
+                adotante.cpf,
+                adotante.nome,
+                str(adotante.data_nascimento),
+                adotante.tipo_habitacao.name,
+                adotante.tamanho_habitacao.name,
+                "Sim" if adotante.possui_animal else "Nao",
+                str(adotante.endereco),
+            ]
+            for adotante in adotantes
+        ]
         layout = [
-            [sg.Table(headings=toprow, values=dados_adotantes, auto_size_columns=True, expand_y=True, expand_x=True, justification="center")],
-            [sg.Button("Fechar", key="fechar", button_color="red")]
+            [
+                sg.Table(
+                    headings=toprow,
+                    values=dados_adotantes,
+                    auto_size_columns=True,
+                    expand_y=True,
+                    expand_x=True,
+                    justification="center",
+                )
+            ],
+            [sg.Button("Fechar", key="fechar", button_color="red")],
         ]
 
         self.__window = sg.Window("Layout", layout)
         self.__window.read()
         self.__window.close()
 
-
     def cpf_invalido(self, cpf: str):
         return len(cpf) != 11
 
-    def selecionar_adotante(self):
-        cpf = input("CPF do adotante que deseja selecionar: ")
-        if self.cpf_invalido(cpf):
-            raise CpfInvalidoException(cpf)
-        return cpf
+    def selecionar_adotante(self, cpfs: list):
+        layout = [
+            [sg.Text("CPF do adotante que deseja selecionar: ")],
+            [sg.Combo(values=cpfs, default_value=cpfs[0], key="cpf")],
+            [sg.Button("Confirmar", key="confirmar")],
+        ]
+        self.__window = sg.Window("Layout", layout)
+        button, values = self.__window.read()
+        self.__window.close()
+
+        return values["cpf"]
 
     def mostrar_mensagem(self, msg):
         sg.popup("", msg)
@@ -171,15 +394,21 @@ class AdotanteView:
 
         cpf = self.__window["cpf"].get().strip()
         nome = self.__window["nome"].get().strip()
-        tipo_habitacao = self.__window["casa"].get() or self.__window["apartamento"].get()
-        tamanho_habitacao = self.__window["pequeno"].get() or self.__window["medio"] or self.__window["grande"].get()
-        possui_animal = self.__window["possui"].get() or self.__window["nao_possui"].get()
+        tipo_habitacao = (
+                self.__window["casa"].get() or self.__window["apartamento"].get()
+        )
+        tamanho_habitacao = (
+                self.__window["pequeno"].get()
+                or self.__window["medio"]
+                or self.__window["grande"].get()
+        )
+        possui_animal = (
+                self.__window["possui"].get() or self.__window["nao_possui"].get()
+        )
 
         try:
             data_nascimento = self.__window["data_nascimento"].get().strip()
-            datetime.strptime(
-                data_nascimento, "%d/%m/%Y"
-            ).date()
+            datetime.strptime(data_nascimento, "%d/%m/%Y").date()
         except ValueError:
             sg.popup("Data em formato invalido! Tente novamente.")
 

@@ -29,17 +29,90 @@ class SistemaView:
 
     def init_components(self):
         layout = [
-            [sg.Text("DONADOPTION", font=["Inter", 30, "bold"], size=[20, 2], justification="center",
-                     pad=((0, 0), (40, 0)), background_color="#3F3F3F")],
-            [sg.Column([
-                [sg.Button("Adotantes", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="adotantes")],
-                [sg.Button("Adocoes", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="adocoes")],
-                [sg.Button("Animais", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="animais")],
-                [sg.Button("Doadores", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="doadores")],
-                [sg.Button("Doacoes", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="doacoes")],
-                [sg.Button("Vacinas", size=(20, 2), font=("Inter", 12), button_color=("black", "#FEFEFE"), key="vacinas")],
-                [sg.Button("Finalizar Sistema", size=(20, 2), button_color="#FF2929", mouseover_colors="#FF5454", font=("Inter", 12), key="sair")]
-            ], justification="center", background_color="#3F3F3F")]
+            [
+                sg.Text(
+                    "DONADOPTION",
+                    font=["Inter", 30, "bold"],
+                    size=[20, 2],
+                    justification="center",
+                    pad=((0, 0), (40, 0)),
+                    background_color="#3F3F3F",
+                )
+            ],
+            [
+                sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Adotantes",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="adotantes",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Adocoes",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="adocoes",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Animais",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="animais",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Doadores",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="doadores",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Doacoes",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="doacoes",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Vacinas",
+                                size=(20, 2),
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE"),
+                                key="vacinas",
+                            )
+                        ],
+                        [
+                            sg.Button(
+                                "Finalizar Sistema",
+                                size=(20, 2),
+                                button_color="#FF2929",
+                                mouseover_colors="#FF5454",
+                                font=("Inter", 12),
+                                key="sair",
+                            )
+                        ],
+                    ],
+                    justification="center",
+                    background_color="#3F3F3F",
+                )
+            ],
         ]
 
-        self.__window = sg.Window("Window Layout", layout, size=(500, 650), background_color="#3F3F3F")
+        self.__window = sg.Window(
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+        )
