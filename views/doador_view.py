@@ -133,13 +133,11 @@ class DoadorView:
                 [sg.Text("Logradouro:", size=(17, 1)),
                  sg.InputText("", key="logradouro")],
                 [sg.Text("Numero:", size=(17, 1)), sg.InputText("", key="numero")],
-                [
-                    sg.Button("Confirmar", key="confirmar"),
-                    sg.Cancel("Cancelar", key="cancelar"),
-                ],
+                [sg.Button("Confirmar", key="confirmar"),
+                 sg.Cancel("Cancelar", key="cancelar")],
             ]
 
-        self.__window = sg.Window("Layout", layout, enable_close_attempted_event=True)
+        self.__window = sg.Window("Layout", layout)
 
         while True:
             try:

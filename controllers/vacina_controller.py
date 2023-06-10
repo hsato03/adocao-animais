@@ -1,6 +1,6 @@
 from views import VacinaView
 from model import Vacina
-from exceptions import EntidadeNaoEncontradaException, OpcaoInvalidaException
+from exceptions import EntidadeNaoEncontradaException, IdentificadorJaExistenteException
 
 
 class VacinaController:
@@ -16,10 +16,12 @@ class VacinaController:
         raise EntidadeNaoEncontradaException("ERRO: Vacina nao existente.")
 
     def incluir_vacina(self):
-        dados_vacina = self.__tela_vacina.pegar_dados_vacina()
+        dados_vacina = self.__tela_vacina.pegar_dados_vacina(vacina=None)
+
+        self.verificar_id_ja_cadastrado(dados_vacina["id"])
 
         vacina = Vacina(
-            dados_vacina["identificador"],
+            dados_vacina["id"],
             dados_vacina["nome"],
         )
         self.__vacinas.append(vacina)
@@ -29,37 +31,29 @@ class VacinaController:
             self.__tela_vacina.mostrar_mensagem("Nenhuma vacina cadastrada.")
             return
 
-        self.listar_vacinas()
-        identificador = self.__tela_vacina.selecionar_vacina()
+        identificador = self.__tela_vacina.selecionar_vacina(
+            [vacina.identificador for vacina in self.__vacinas]
+        )
         vacina = self.buscar_vacina_por_identificador(identificador)
-        novos_dados_vacina = self.__tela_vacina.pegar_dados_vacina()
+        novos_dados_vacina = self.__tela_vacina.pegar_dados_vacina(vacina=vacina)
 
-        vacina.identificador = novos_dados_vacina["identificador"]
+        vacina.identificador = novos_dados_vacina["id"]
         vacina.nome = novos_dados_vacina["nome"]
-
-        self.listar_vacinas()
 
     def listar_vacinas(self):
         if len(self.__vacinas) <= 0:
             raise EntidadeNaoEncontradaException("Nenhuma vacina cadastrada.")
 
-        for i in range(len(self.__vacinas)):
-            vacina = self.__vacinas[i]
-            self.__tela_vacina.mostrar_mensagem(f"\nVACINA #{i + 1:02d}")
-            self.__tela_vacina.mostrar_vacina(
-                {
-                    "identificador": vacina.identificador,
-                    "nome": vacina.nome,
-                }
-            )
+        self.__tela_vacina.mostrar_vacinas([vacina for vacina in self.__vacinas])
 
     def excluir_vacina(self):
         if len(self.__vacinas) <= 0:
             self.__tela_vacina.mostrar_mensagem("Nenhuma vacina cadastrada.")
             return
 
-        self.listar_vacinas()
-        identificador = self.__tela_vacina.selecionar_vacina()
+        identificador = self.__tela_vacina.selecionar_vacina(
+            [vacina.identificador for vacina in self.__vacinas]
+        )
         vacina = self.buscar_vacina_por_identificador(identificador)
 
         self.__vacinas.remove(vacina)
@@ -70,15 +64,22 @@ class VacinaController:
             self.__tela_vacina.mostrar_mensagem("Nenhuma vacina cadastrada.")
             return
 
-        identificador = self.__tela_vacina.selecionar_vacina()
+        identificador = self.__tela_vacina.selecionar_vacina(
+            [vacina.identificador for vacina in self.__vacinas]
+        )
         vacina = self.buscar_vacina_por_identificador(identificador)
 
         self.__tela_vacina.mostrar_vacina(
             {
-                "identificador": vacina.identificador,
+                "id": vacina.identificador,
                 "nome": vacina.nome,
             }
         )
+
+    def verificar_id_ja_cadastrado(self, nova_vacina_id):
+        for vacina in self.__vacinas:
+            if vacina.identificador == nova_vacina_id:
+                raise IdentificadorJaExistenteException(nova_vacina_id)
 
     def retornar(self):
         self.__controlador_sistema.abrir_tela()
@@ -96,7 +97,7 @@ class VacinaController:
         while True:
             try:
                 lista_opcoes[self.__tela_vacina.telar_opcoes()]()
-            except (OpcaoInvalidaException, EntidadeNaoEncontradaException) as e:
+            except (EntidadeNaoEncontradaException, IdentificadorJaExistenteException) as e:
                 self.__tela_vacina.mostrar_mensagem(e)
             except ValueError:
                 self.__tela_vacina.mostrar_mensagem("Somente numeros. Tente novamente.")

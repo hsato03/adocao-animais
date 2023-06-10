@@ -177,7 +177,7 @@ class AdotanteView:
                 ],
             ]
 
-        self.__window = sg.Window("Layout", layout, enable_close_attempted_event=True)
+        self.__window = sg.Window("Layout", layout)
 
         while True:
             try:
