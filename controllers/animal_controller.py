@@ -74,6 +74,9 @@ class AnimalController:
             animais=self.__animais,
         )
 
+        if not numero_chip:
+            return
+
         animal = self.buscar_animal_por_numero_chip(numero_chip)
         tipo_animal = TIPO_CACHORRO if isinstance(animal, Cachorro) else TIPO_GATO
         novos_dados_animal = self.__tela_animal.pegar_dados_animal(animal, tipo_animal)
@@ -101,6 +104,9 @@ class AnimalController:
             animais=self.__animais,
         )
 
+        if not numero_chip:
+            return
+
         animal = self.buscar_animal_por_numero_chip(numero_chip)
         self.__animais.remove(animal)
         self.__tela_animal.mostrar_mensagem("Animal removido com sucesso.")
@@ -124,28 +130,29 @@ class AnimalController:
             animais=None,
         )
 
+        if not numero_chip:
+            return
+
         animal = self.buscar_animal_por_numero_chip(numero_chip)
         self.__tela_animal.mostrar_animal(animal)
 
     def aplicar_vacina_animal(self):
         self.verificar_nenhum_animal_cadastrado()
-        tipo_animal = self.__tela_animal.telar_opcoes_tipo_animal(listagem=False)
 
         numero_chip = self.__tela_animal.selecionar_animal(
             nchips=[animal.numero_chip for animal in self.__animais],
             animais=self.__animais
         )
 
+        if not numero_chip:
+            return
+
         animal = self.buscar_animal_por_numero_chip(numero_chip)
 
-        # TODO Criar método para retornar vacina
-        self.__controlador_sistema.controlador_vacinas.listar_vacinas()
-        identificador = (
-            self.__controlador_sistema.controlador_vacinas.tela_vacina.selecionar_vacina()
-        )
-        vacina = self.__controlador_sistema.controlador_vacinas.buscar_vacina_por_identificador(
-            identificador
-        )
+        vacina = self.__controlador_sistema.controlador_vacinas.selecionar_vacina()
+
+        if not vacina:
+            return
 
         data_aplicacao_vacina = self.__tela_animal.pegar_data_aplicacao_vacina()
 

@@ -145,6 +145,14 @@ class VacinaView:
         return {"id": identificador, "nome": nome}
 
     def mostrar_vacinas(self, vacinas: list):
+        layout = self.layout_tabela_mostrar_vacinas(vacinas)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+
+        self.__window = sg.Window("Layout", layout)
+        self.__window.read()
+        self.__window.close()
+
+    def layout_tabela_mostrar_vacinas(self, vacinas):
         toprow = ["ID", "Nome"]
         dados_vacinas = [
             [
@@ -153,7 +161,8 @@ class VacinaView:
             ]
             for vacina in vacinas
         ]
-        layout = [
+
+        return [
             [
                 sg.Table(
                     headings=toprow,
@@ -164,12 +173,7 @@ class VacinaView:
                     justification="center",
                 )
             ],
-            [sg.Button("Fechar", key="fechar", button_color="red")],
         ]
-
-        self.__window = sg.Window("Layout", layout)
-        self.__window.read()
-        self.__window.close()
 
     def mostrar_vacina(self, dados_vacina: dict):
         output_vacina = f"\t - ID: {dados_vacina['id']}\n"
@@ -177,15 +181,22 @@ class VacinaView:
 
         sg.Popup("", output_vacina)
 
-    def selecionar_vacina(self, ids: list):
-        layout = [
+    def selecionar_vacina(self, ids: list, vacinas: list):
+        layout = []
+        if vacinas:
+            layout.append(self.layout_tabela_mostrar_vacinas(vacinas))
+        layout.append([
             [sg.Text("ID da vacina que deseja selecionar: ")],
             [sg.Combo(values=ids, default_value=ids[0], key="id")],
-            [sg.Button("Confirmar", key="confirmar")],
-        ]
+            [sg.Button("Confirmar", key="confirmar"),
+             sg.Button("Cancelar", key="cancelar", button_color="red")],
+        ])
         self.__window = sg.Window("Layout", layout)
         button, values = self.__window.read()
         self.__window.close()
+
+        if button == "cancelar":
+            return
 
         return values["id"]
 

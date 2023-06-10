@@ -244,15 +244,23 @@ class AnimalView:
             ]
 
     def pegar_data_aplicacao_vacina(self):
+        layout = [
+            [sg.Text("Data de aplicao da vacina:", size=(20, 1)),
+             sg.Input("", size=(26, 1), key="data_aplicacao"),
+             sg.CalendarButton("Abrir calendario", target="data_aplicacao", format="%d/%m/%Y")],
+            [sg.Button("Confirmar", key="confirmar")],
+        ]
+
+        self.__window = sg.Window("Layout", layout)
         while True:
             try:
-                data_aplicacao = input("Data de aplicacao da vacina (dd/mm/yyyy): ")
-                data_aplicacao_convertida = datetime.strptime(
-                    data_aplicacao, "%d/%m/%Y"
-                ).date()
+                button, values = self.__window.read()
+                data_aplicacao_convertida = datetime.strptime(values["data_aplicacao"], "%d/%m/%Y").date()
+                self.__window.close()
                 return data_aplicacao_convertida
             except ValueError:
-                print("ERRO: Data em formato invalido! Tente novamente.")
+                sg.popup("", "ERRO: Data em formato invalido")
+
 
     def mostrar_animal(self, animal):
         nome = animal.nome
@@ -299,6 +307,10 @@ class AnimalView:
         dados_animais = []
 
         for animal in animais:
+            vacinas = ""
+            for vacina in animal.historico_vacinacao.vacinas:
+                vacinas += f"{vacina['vacina']},"
+
             if hasattr(animal, "tamanho"):
                 dados_animais.append(
                     [
@@ -306,7 +318,7 @@ class AnimalView:
                         animal.nome,
                         animal.raca,
                         "Cachorro",
-                        animal.historico_vacinacao.vacinas,
+                        vacinas,
                         animal.tamanho.name,
                     ]
                 )
@@ -317,7 +329,7 @@ class AnimalView:
                         animal.nome,
                         animal.raca,
                         "Gato",
-                        animal.historico_vacinacao.vacinas,
+                        vacinas,
                         "",
                     ]
                 )
@@ -345,11 +357,15 @@ class AnimalView:
         layout.append([
             [sg.Text("N° chip do animal que deseja selecionar: ")],
             [sg.Combo(values=nchips, default_value=nchips[0], key="numero_chip")],
-            [sg.Button("Confirmar", key="confirmar")],
+            [sg.Button("Confirmar", key="confirmar"),
+             sg.Button("Cancelar", key="cancelar", button_color="red")],
         ])
         self.__window = sg.Window("Layout", layout)
         button, values = self.__window.read()
         self.__window.close()
+
+        if button == "cancelar":
+            return
 
         return values["numero_chip"]
 

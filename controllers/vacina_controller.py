@@ -30,13 +30,16 @@ class VacinaController:
         self.__vacinas.append(vacina)
 
     def alterar_vacina(self):
-        if len(self.__vacinas) <= 0:
-            self.__tela_vacina.mostrar_mensagem("Nenhuma vacina cadastrada.")
-            return
+        self.verificar_nenhuma_vacina_cadastrada()
 
         identificador = self.__tela_vacina.selecionar_vacina(
-            [vacina.identificador for vacina in self.__vacinas]
+            [vacina.identificador for vacina in self.__vacinas],
+            vacinas=self.__vacinas,
         )
+
+        if not identificador:
+            return
+
         vacina = self.buscar_vacina_por_identificador(identificador)
         novos_dados_vacina = self.__tela_vacina.pegar_dados_vacina(vacina=vacina)
 
@@ -47,32 +50,36 @@ class VacinaController:
         vacina.nome = novos_dados_vacina["nome"]
 
     def listar_vacinas(self):
-        if len(self.__vacinas) <= 0:
-            raise EntidadeNaoEncontradaException("Nenhuma vacina cadastrada.")
-
+        self.verificar_nenhuma_vacina_cadastrada()
         self.__tela_vacina.mostrar_vacinas([vacina for vacina in self.__vacinas])
 
     def excluir_vacina(self):
-        if len(self.__vacinas) <= 0:
-            self.__tela_vacina.mostrar_mensagem("Nenhuma vacina cadastrada.")
-            return
+        self.verificar_nenhuma_vacina_cadastrada()
 
         identificador = self.__tela_vacina.selecionar_vacina(
-            [vacina.identificador for vacina in self.__vacinas]
+            [vacina.identificador for vacina in self.__vacinas],
+            vacinas=self.__vacinas,
         )
+
+        if not identificador:
+            return
+
         vacina = self.buscar_vacina_por_identificador(identificador)
 
         self.__vacinas.remove(vacina)
         self.__tela_vacina.mostrar_mensagem("Vacina removida com sucesso.")
 
     def listar_vacina_por_identificador(self):
-        if len(self.__vacinas) <= 0:
-            self.__tela_vacina.mostrar_mensagem("Nenhuma vacina cadastrada.")
-            return
+        self.verificar_nenhuma_vacina_cadastrada()
 
         identificador = self.__tela_vacina.selecionar_vacina(
-            [vacina.identificador for vacina in self.__vacinas]
+            ids=[vacina.identificador for vacina in self.__vacinas],
+            vacinas=None,
         )
+
+        if not identificador:
+            return
+
         vacina = self.buscar_vacina_por_identificador(identificador)
 
         self.__tela_vacina.mostrar_vacina(
@@ -82,10 +89,26 @@ class VacinaController:
             }
         )
 
+    def selecionar_vacina(self):
+        self.verificar_nenhuma_vacina_cadastrada()
+        id_vacina = self.__tela_vacina.selecionar_vacina(
+            ids=[vacina.identificador for vacina in self.__vacinas],
+            vacinas=self.__vacinas,
+        )
+
+        if not id_vacina:
+            return
+
+        return self.buscar_vacina_por_identificador(id_vacina)
+
     def verificar_id_ja_cadastrado(self, nova_vacina_id):
         for vacina in self.__vacinas:
             if vacina.identificador == nova_vacina_id:
                 raise IdentificadorJaExistenteException(nova_vacina_id)
+
+    def verificar_nenhuma_vacina_cadastrada(self):
+        if len(self.__vacinas) <= 0:
+            raise EntidadeNaoEncontradaException("Nenhuma vacina cadastrada.")
 
     def retornar(self):
         self.__controlador_sistema.abrir_tela()

@@ -18,3 +18,6 @@ class Vacina:
     @nome.setter
     def nome(self, nome: str):
         self.__nome = nome
+
+    def __str__(self):
+        return self.__nome
