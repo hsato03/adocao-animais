@@ -40,11 +40,11 @@ class AdocaoController:
         numero_chip = dados_adocao["numero_chip"]
 
         if tipo_animal == TIPO_CACHORRO:
-            animal = self.__controlador_sistema.controlador_animais.buscar_cachorro_por_numero_chip(
+            animal = self.__controlador_sistema.controlador_animais.buscar_animal_por_numero_chip(
                 numero_chip
             )
         else:
-            animal = self.__controlador_sistema.controlador_animais.buscar_gato_por_numero_chip(
+            animal = self.__controlador_sistema.controlador_animais.buscar_animal(
                 numero_chip
             )
 

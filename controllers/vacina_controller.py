@@ -18,6 +18,9 @@ class VacinaController:
     def incluir_vacina(self):
         dados_vacina = self.__tela_vacina.pegar_dados_vacina(vacina=None)
 
+        if not dados_vacina:
+            return
+
         self.verificar_id_ja_cadastrado(dados_vacina["id"])
 
         vacina = Vacina(
@@ -36,6 +39,9 @@ class VacinaController:
         )
         vacina = self.buscar_vacina_por_identificador(identificador)
         novos_dados_vacina = self.__tela_vacina.pegar_dados_vacina(vacina=vacina)
+
+        if not novos_dados_vacina:
+            return
 
         vacina.identificador = novos_dados_vacina["id"]
         vacina.nome = novos_dados_vacina["nome"]

@@ -154,7 +154,7 @@ class AnimalTest(unittest.TestCase):
 
         try:
             cachorro_atualizado = (
-                self.controlador_animais.buscar_cachorro_por_numero_chip(
+                self.controlador_animais.buscar_animal_por_numero_chip(
                     numero_chip_atualizado
                 )
             )
@@ -203,7 +203,7 @@ class AnimalTest(unittest.TestCase):
                 )
 
         try:
-            gato_atualizado = self.controlador_animais.buscar_gato_por_numero_chip(
+            gato_atualizado = self.controlador_animais.buscar_animal_por_numero_chip(
                 numero_chip_atualizado
             )
         except EntidadeNaoEncontradaException:

@@ -203,4 +203,7 @@ class VacinaView:
         if not nome:
             campos_nao_preenchidos.append("Nome")
 
+        if len(campos_nao_preenchidos) > 0:
+            raise CampoObrigatorioException(campos_nao_preenchidos)
+
         return True

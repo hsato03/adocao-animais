@@ -28,11 +28,11 @@ class DoacaoController:
 
         numero_chip = dados_doacao["numero_chip"]
         if tipo_animal == TIPO_CACHORRO:
-            animal = self.__controlador_sistema.controlador_animais.buscar_cachorro_por_numero_chip(
+            animal = self.__controlador_sistema.controlador_animais.buscar_animal_por_numero_chip(
                 numero_chip
             )
         else:
-            animal = self.__controlador_sistema.controlador_animais.buscar_gato_por_numero_chip(
+            animal = self.__controlador_sistema.controlador_animais.buscar_animal_por_numero_chip(
                 numero_chip
             )
 
@@ -59,6 +59,9 @@ class DoacaoController:
         identificador = self.__tela_doacao.selecionar_doacao(tipo_id)
         doacao = self.buscar_doacao_por_identificador(identificador, tipo_id)
         novos_dados_doacao = self.__tela_doacao.pegar_dados_doacao(criacao=False)
+
+        if not novos_dados_doacao:
+            return
 
         doacao.data = novos_dados_doacao["data"]
         doacao.motivo = novos_dados_doacao["motivo"]
