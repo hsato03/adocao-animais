@@ -177,6 +177,7 @@ class DoadorView:
         output_doador = f"\t - CPF: {dados_doador['cpf']}\n"
         output_doador += f"\t - Nome: {nome}\n"
         output_doador += f"\t - Data de nascimento: {dados_doador['data_nascimento'].strftime('%d/%m/%Y')}\n"
+        output_doador += f"\t - Endereco: {dados_doador['endereco']}\n"
 
         sg.Popup(
             f"Dados do doador {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:",

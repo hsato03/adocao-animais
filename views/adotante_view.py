@@ -153,7 +153,7 @@ class AdotanteView:
                     [
                         sg.Column(
                             [
-                                [sg.Text("Tipo de habitacao: ")],
+                                [sg.Text("Tamanho de habitacao: ")],
                                 [sg.Radio("Pequeno", "RD2", key="pequeno")],
                                 [sg.Radio("Medio", "RD2", key="medio")],
                                 [sg.Radio("Grande", "RD2", key="grande")],
@@ -394,7 +394,7 @@ class AdotanteView:
         tipo_habitacao = (self.__window["casa"].get() or self.__window["apartamento"].get())
         tamanho_habitacao = (
                 self.__window["pequeno"].get()
-                or self.__window["medio"]
+                or self.__window["medio"].get()
                 or self.__window["grande"].get()
         )
         possui_animal = (self.__window["possui"].get() or self.__window["nao_possui"].get())
@@ -412,16 +412,16 @@ class AdotanteView:
             campos_nao_preenchidos.append("CPF")
         if not nome:
             campos_nao_preenchidos.append("Nome")
+        if not logradouro:
+            campos_nao_preenchidos.append("Logradouro")
+        if not numero:
+            campos_nao_preenchidos.append("Numero")
         if not tipo_habitacao:
             campos_nao_preenchidos.append("Tipo de habitacao")
         if not tamanho_habitacao:
             campos_nao_preenchidos.append("Tamanho da habitacao")
         if not possui_animal:
             campos_nao_preenchidos.append("Possui animal")
-        if not logradouro:
-            campos_nao_preenchidos.append("Logradouro")
-        if not numero:
-            campos_nao_preenchidos.append("Numero")
 
         if len(campos_nao_preenchidos) > 0:
             raise CampoObrigatorioException(campos_nao_preenchidos)
