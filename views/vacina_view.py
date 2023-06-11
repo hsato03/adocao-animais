@@ -139,7 +139,7 @@ class VacinaView:
         if button == "cancelar":
             return
 
-        identificador = values["id"]
+        identificador = int(values["id"])
         nome = values["nome"]
 
         return {"id": identificador, "nome": nome}
@@ -205,9 +205,16 @@ class VacinaView:
 
     def input_valido(self):
         campos_nao_preenchidos = []
+        id_valido = True
 
         identificador = self.__window["id"].get().strip()
         nome = self.__window["nome"].get().strip()
+
+        try:
+            int(identificador)
+        except ValueError:
+            sg.popup("", "ID deve ser um valor inteiro")
+            id_valido = False
 
         if not identificador:
             campos_nao_preenchidos.append("ID")
@@ -217,4 +224,4 @@ class VacinaView:
         if len(campos_nao_preenchidos) > 0:
             raise CampoObrigatorioException(campos_nao_preenchidos)
 
-        return True
+        return id_valido

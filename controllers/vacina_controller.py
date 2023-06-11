@@ -9,7 +9,7 @@ class VacinaController:
         self.__tela_vacina = VacinaView()
         self.__controlador_sistema = controlador_sistema
 
-    def buscar_vacina_por_identificador(self, identificador: str):
+    def buscar_vacina_por_identificador(self, identificador: int):
         for vacina in self.__vacinas:
             if vacina.identificador == identificador:
                 return vacina
@@ -122,8 +122,6 @@ class VacinaController:
                 lista_opcoes[self.__tela_vacina.telar_opcoes()]()
             except (EntidadeNaoEncontradaException, IdentificadorJaExistenteException) as e:
                 self.__tela_vacina.mostrar_mensagem(e)
-            except ValueError:
-                self.__tela_vacina.mostrar_mensagem("Somente numeros. Tente novamente.")
 
     @property
     def tela_vacina(self):

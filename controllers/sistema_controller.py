@@ -82,5 +82,3 @@ class SistemaController:
                 funcao_escolhida()
             except OpcaoInvalidaException as e:
                 print(e)
-            except ValueError:
-                print("Somente numeros. Tente novamente.")

@@ -119,6 +119,18 @@ class AdotanteController:
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
         self.__tela_adotante.mostrar_adotante(adotante)
 
+    def selecionar_adotante(self):
+        self.verificar_nenhum_adotante_cadastrado()
+        cpf = self.__tela_adotante.selecionar_adotante(
+            cpfs=[adotante.cpf for adotante in self.__adotantes],
+            adotantes=self.__adotantes,
+        )
+
+        if not cpf:
+            return
+
+        return self.buscar_adotante_por_cpf(cpf)
+
     def verificar_cpf_adotante_ja_cadastrado(self, cpf: str):
         for adotante in self.__adotantes:
             if adotante.cpf == cpf:
@@ -153,7 +165,3 @@ class AdotanteController:
                 IdentificadorJaExistenteException,
             ) as e:
                 self.__tela_adotante.mostrar_mensagem(e)
-            except ValueError:
-                self.__tela_adotante.mostrar_mensagem(
-                    "Somente numeros. Tente novamente."
-                )

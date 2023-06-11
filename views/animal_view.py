@@ -157,7 +157,7 @@ class AnimalView:
 
         else:
             layout = [
-                [sg.Text("ALTERAR ANIMAL", font=("Inter", 25), justification="center")],
+                [sg.Text("CADASTRAR ANIMAL", font=("Inter", 25), justification="center")],
                 [sg.Text("N° Chip:", size=(17, 1)), sg.InputText("", key="numero_chip")],
                 [sg.Text("Nome:", size=(17, 1)), sg.InputText("", key="nome")],
                 [sg.Text("Raca:", size=(17, 1)), sg.InputText("", key="raca")],
@@ -194,7 +194,7 @@ class AnimalView:
             return
 
         dados_animal = {
-            "numero_chip": values["numero_chip"],
+            "numero_chip": int(values["numero_chip"]),
             "nome": values["nome"],
             "raca": values["raca"],
         }
@@ -274,10 +274,10 @@ class AnimalView:
 
         historico_vacinacao = animal.historico_vacinacao
         if len(historico_vacinacao.vacinas) > 0:
-            output_animal += "\t- VACINA(S):\n"
+            output_animal += "\t - Vacina(s):\n"
             for vacina in historico_vacinacao.vacinas:
                 output_animal += f"\t\t+ {vacina['vacina'].nome} " \
-                                 f"({vacina['data_aplicacao'].strftime('%d/%m/%Y')})"
+                                 f"({vacina['data_aplicacao'].strftime('%d/%m/%Y')})\n"
         else:
             output_animal += "\t - Nenhuma vacina aplicada"
 
@@ -373,14 +373,22 @@ class AnimalView:
         sg.popup("", msg)
 
     def input_valido(self, cachorro: bool):
+        numero_chip_valido = True
         campos_nao_preenchidos = []
 
         numero_chip = self.__window["numero_chip"].get().strip()
         nome = self.__window["nome"].get().strip()
         raca = self.__window["raca"].get().strip()
 
+
+        try:
+            int(numero_chip)
+        except ValueError:
+            sg.popup("", "Numero do chip deve ser um valor inteiro")
+            numero_chip_valido = False
+
         if not numero_chip:
-            campos_nao_preenchidos.append("ID")
+            campos_nao_preenchidos.append("Numero chip")
         if not nome:
             campos_nao_preenchidos.append("Nome")
         if not raca:
@@ -394,4 +402,4 @@ class AnimalView:
         if len(campos_nao_preenchidos) > 0:
             raise CampoObrigatorioException(campos_nao_preenchidos)
 
-        return True
+        return numero_chip_valido

@@ -158,14 +158,35 @@ class AnimalController:
 
         animal.historico_vacinacao.add_vacina(vacina, data_aplicacao_vacina)
 
+    def selecionar_animal_adocao(self):
+        self.verificar_nenhum_animal_cadastrado()
+        numero_chip = self.__tela_animal.selecionar_animal(
+            nchips=[animal.numero_chip for animal in self.__animais],
+            animais=self.animais_disponiveis_para_adocao(),
+        )
+
+        if not numero_chip:
+            return
+
+        return self.buscar_animal_por_numero_chip(numero_chip)
+
     def listar_animais_disponiveis_para_adocao(self):
+        self.verificar_nenhum_animal_cadastrado()
+        animais_disponiveis_adocao = self.animais_disponiveis_para_adocao()
+        if animais_disponiveis_adocao:
+            self.__tela_animal.mostrar_animais(animais=animais_disponiveis_adocao)
+
+    def animais_disponiveis_para_adocao(self):
         animais_disponiveis_adocao = []
 
         for animal in self.__animais:
             if self.possui_todas_vacinas_para_adocao(animal):
                 animais_disponiveis_adocao.append(animal)
 
-            self.__tela_animal.mostrar_animais(animais_disponiveis_adocao)
+        if len(animais_disponiveis_adocao) <= 0:
+            raise EntidadeNaoEncontradaException("Nenhum animal disponivel para adocao.")
+
+        return animais_disponiveis_adocao
 
     def possui_todas_vacinas_para_adocao(self, animal):
         leptospirose = False

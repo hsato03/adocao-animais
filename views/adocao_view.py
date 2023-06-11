@@ -1,5 +1,5 @@
 from datetime import datetime
-from exceptions import OpcaoInvalidaException
+from exceptions import OpcaoInvalidaException, CampoObrigatorioException
 import PySimpleGUI as sg
 
 
@@ -117,103 +117,88 @@ class AdocaoView:
             "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
         )
 
-    def telar_opcoes_termo(self):
-        print("ASSINAR TERMO?")
-        print("\t[1] - Sim")
-        print("\t[2] - Nao")
+    def pegar_dados_adocao(self, adocao):
+        if adocao:
+            layout = [
+                [sg.Text("ALTERAR ADOCAO", font=("Inter", 25), justification="center")],
+                [sg.Text("Data de adocao:", size=(17, 1)),
+                 sg.Input(adocao.data.strftime('%d/%m/%Y'), size=(26, 1), key="data"),
+                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y")],
+                [self.termo_assinado_padrao(adocao.termo_assinado)],
+                [sg.Button("Confirmar", key="confirmar"),
+                 sg.Cancel("Cancelar", key="cancelar")]
+            ]
+        else:
+            layout = [
+                [sg.Text("CADASTRO ADOCAO", font=("Inter", 25), justification="center")],
+                [sg.Text("Data de adocao:", size=(12, 1)),
+                 sg.Input("", size=(26, 1), key="data"),
+                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y")],
+                [sg.Text("Assinar termo:", size=(12, 1)),
+                 sg.Radio("Sim", "RD1", key="assinar"),
+                 sg.Radio("Nao", "RD1", key="nao_assinar")],
+                [sg.Button("Confirmar", key="confirmar"),
+                 sg.Cancel("Cancelar", key="cancelar")]
+            ]
 
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(1, 3):
-            raise OpcaoInvalidaException()
-
-        return opcao
-
-    def telar_opcoes_identificador(self):
-        print("BUSCAR POR:")
-        print("\t[1] -> CPF")
-        print("\t[2] -> N° chip")
-
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(1, 3):
-            raise OpcaoInvalidaException()
-
-        return opcao
-
-    def telar_opcoes_tipo_animal(self):
-        print("TIPO DO ANIMAL:")
-        print("\t[1] -> Cachorro")
-        print("\t[2] -> Gato")
-
-        opcao = int(input("Escolha a opcao: "))
-        if opcao not in range(1, 3):
-            raise OpcaoInvalidaException()
-
-        return opcao
-
-    def pegar_dados_adocao(self, criacao):
-        print("\n-------- DADOS ADOCAO ----------")
-        if criacao:
-            cpf_adotante = input("CPF (adotante): ")
-            numero_chip = self.pegar_numero_chip()
+        self.__window = sg.Window("Layout", layout)
 
         while True:
             try:
-                data_adocao = input("Data de adocao (dd/mm/yyyy): ")
-                data_adocao_convertida = datetime.strptime(
-                    data_adocao, "%d/%m/%Y"
-                ).date()
-                break
-            except ValueError:
-                print("ERRO: Data em formato invalido! Tente novamente.")
+                button, values = self.__window.read()
+                if (button == "confirmar" and self.input_valido()) or button == "cancelar":
+                    break
+            except CampoObrigatorioException as e:
+                sg.popup(e)
 
-        while True:
-            try:
-                termo_assinado = self.telar_opcoes_termo()
-                break
-            except OpcaoInvalidaException as e:
-                print(e)
-            except ValueError:
-                print("Somente numeros. Tente novamente.")
+        self.__window.close()
 
-        if criacao:
-            return {
-                "cpf_adotante": cpf_adotante,
-                "numero_chip": numero_chip,
-                "data": data_adocao_convertida,
-                "termo_assinado": termo_assinado,
-            }
+        if button == "cancelar":
+            return
+
+        data_adocao_convertida = datetime.strptime(
+            values["data"], "%d/%m/%Y"
+        ).date()
+
         return {
             "data": data_adocao_convertida,
-            "termo_assinado": termo_assinado,
+            "termo_assinado": True if values["assinar"] else False
         }
 
-    def pegar_numero_chip(self):
-        while True:
-            try:
-                numero_chip = int(input("N° chip: "))
-                return numero_chip
-            except ValueError:
-                print("Somente numeros. Tente novamente")
+    def termo_assinado_padrao(self, termo_assinado):
+        if termo_assinado:
+            return [
+                sg.Text("Assinar termo:"),
+                sg.Radio("Sim", "RD1", default=True, key="assinar"),
+                sg.Radio("Nao", "RD1", key="nao_assinar")
+            ],
+        return [
+            sg.Text("Assinar termo:"),
+            sg.Radio("Sim", "RD1", key="assinar"),
+            sg.Radio("Nao", "RD1", default=True, key="nao_assinar")
+        ],
 
     def pegar_dados_periodo(self):
-        while True:
-            try:
-                data_inicio = input("Data de inicio (dd/mm/yyyy): ")
-                data_inicio_convertida = datetime.strptime(
-                    data_inicio, "%d/%m/%Y"
-                ).date()
-                break
-            except ValueError:
-                print("ERRO: Data em formato invalido! Tente novamente.")
-        while True:
-            try:
-                data_fim = input("Data de fim (dd/mm/yyyy): ")
-                data_fim_convertida = datetime.strptime(data_fim, "%d/%m/%Y").date()
-                break
-            except ValueError:
-                print("ERRO: Data em formato invalido! Tente novamente.")
+        layout = [
+            [sg.Text("Data de inicio:", size=(20, 1)),
+             sg.Input("", size=(26, 1), key="data_inicio"),
+             sg.CalendarButton("Abrir calendario", target="data_inicio", format="%d/%m/%Y")],
+            [sg.Text("Data de fim:", size=(20, 1)),
+             sg.Input("", size=(26, 1), key="data_fim"),
+             sg.CalendarButton("Abrir calendario", target="data_fim", format="%d/%m/%Y")],
+            [sg.Button("Confirmar", key="confirmar")],
+        ]
 
-        return {"data_inicio": data_inicio_convertida, "data_fim": data_fim_convertida}
+        self.__window = sg.Window("Layout", layout)
+        while True:
+            try:
+                button, values = self.__window.read()
+                data_inicio_convertida = datetime.strptime(values["data_inicio"], "%d/%m/%Y").date()
+                data_fim_convertida = datetime.strptime(values["data_fim"], "%d/%m/%Y").date()
+                self.__window.close()
+                return {"data_inicio": data_inicio_convertida, "data_fim": data_fim_convertida}
+            except ValueError:
+                sg.popup("", "ERRO: Data em formato invalido")
 
     def mostrar_adocao(self, adocao):
         output_adotante = f"\t - Adotante: {adocao.adotante.cpf}\n"
@@ -223,19 +208,109 @@ class AdocaoView:
 
         sg.Popup("", output_adotante)
 
-    def selecionar_adocao(self, tipo_id: int):
-        if tipo_id == 1:
-            identificador = input("CPF da adocao que deseja selecionar: ")
-        else:
-            while True:
-                try:
-                    identificador = int(
-                        input("N° Chip da doacao que deseja selecionar: ")
-                    )
-                    break
-                except ValueError:
-                    print("Somente numeros. Tente novamente")
-        return identificador
+    def mostrar_adocoes(self, adocoes: list):
+        dados_adocoes = [
+            [
+                "{}.{}.{}-{}".format(
+                    adocao.adotante.cpf[:3],
+                    adocao.adotante.cpf[3:6],
+                    adocao.adotante.cpf[6:9],
+                    adocao.adotante.cpf[9:]
+                ),
+                adocao.animal.numero_chip,
+                str(adocao.data.strftime('%d/%m/%Y')),
+                "Sim" if adocao.termo_assinado else "Nao",
+            ]
+            for adocao in adocoes
+        ]
+
+        layout = self.layout_tabela_mostrar_adocoes(dados_adocoes)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+
+        self.__window = sg.Window("Layout", layout)
+        self.__window.read()
+        self.__window.close()
+
+    def layout_tabela_mostrar_adocoes(self, dados_adocoes: list):
+        toprow = [
+            "Adotante",
+            "Animal",
+            "Data adocao",
+            "Termo assinado",
+        ]
+
+        return [
+            [
+                sg.Table(
+                    headings=toprow,
+                    values=dados_adocoes,
+                    auto_size_columns=True,
+                    expand_y=True,
+                    expand_x=True,
+                    justification="center",
+                    display_row_numbers=True,
+                    key="table",
+                )
+            ],
+        ]
+
+    def selecionar_adocao(self, adocoes: list):
+        layout = []
+        dados_adocoes = [
+            [
+                "{}.{}.{}-{}".format(
+                    adocao.adotante.cpf[:3],
+                    adocao.adotante.cpf[3:6],
+                    adocao.adotante.cpf[6:9],
+                    adocao.adotante.cpf[9:]
+                ),
+                adocao.animal.numero_chip,
+                str(adocao.data.strftime('%d/%m/%Y')),
+                "Sim" if adocao.termo_assinado else "Nao",
+            ]
+            for adocao in adocoes
+        ]
+        layout.append(self.layout_tabela_mostrar_adocoes(dados_adocoes))
+
+        layout.append([
+            [sg.Text("Adocao que deseja selecionar: ")],
+            [sg.Combo(values=[i for i in range(len(adocoes))], default_value=0, key="row")],
+            [sg.Button("Confirmar", key="confirmar"),
+             sg.Button("Cancelar", key="cancelar", button_color="red")],
+        ])
+        self.__window = sg.Window("Layout", layout)
+        button, values = self.__window.read()
+        print(values["row"])
+        adocao = dados_adocoes[int(values["row"])]
+        numero_chip = adocao[1]
+        self.__window.close()
+
+        if button == "cancelar":
+            return
+
+        return int(numero_chip)
 
     def mostrar_mensagem(self, msg: str):
         sg.popup("", msg)
+
+    def input_valido(self):
+        data_formato_valido = True
+        campos_nao_preenchidos = []
+
+        termo_assinado = self.__window["assinar"] or self.__window["nao assinar"]
+
+        try:
+            data_adocao = self.__window["data"].get().strip()
+            datetime.strptime(data_adocao, "%d/%m/%Y").date()
+        except ValueError:
+            sg.popup("Data em formato invalido! Tente novamente.")
+            data_formato_valido = False
+
+        if not termo_assinado:
+            campos_nao_preenchidos.append("Assinar termo")
+
+        if len(campos_nao_preenchidos) > 0:
+            raise CampoObrigatorioException(campos_nao_preenchidos)
+
+        return data_formato_valido
+

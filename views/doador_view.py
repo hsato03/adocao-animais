@@ -184,14 +184,14 @@ class DoadorView:
         )
 
     def mostrar_doadores(self, doadores: list):
-        layout = self.layout_tabela_mostar_doadores(doadores)
+        layout = self.layout_tabela_mostrar_doadores(doadores)
         layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
 
         self.__window = sg.Window("Layout", layout)
         self.__window.read()
         self.__window.close()
 
-    def layout_tabela_mostar_doadores(self, doadores: list):
+    def layout_tabela_mostrar_doadores(self, doadores: list):
         toprow = [
             "CPF",
             "Nome",
@@ -215,7 +215,7 @@ class DoadorView:
                     auto_size_columns=True,
                     expand_y=True,
                     expand_x=True,
-                    justification="center",
+                    justification="center"
                 )
             ],
         ]
@@ -227,7 +227,7 @@ class DoadorView:
         layout = []
 
         if doadores:
-            layout.append(self.layout_tabela_mostar_doadores(doadores))
+            layout.append(self.layout_tabela_mostrar_doadores(doadores))
 
         layout.append([
             [sg.Text("CPF do doador que deseja selecionar: ")],
