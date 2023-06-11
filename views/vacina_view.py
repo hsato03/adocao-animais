@@ -110,7 +110,7 @@ class VacinaView:
         if vacina:
             layout = [
                 [sg.Text("CADASTRO VACINA", font=("Inter", 25), justification="center")],
-                [sg.Text("ID:", size=(17, 1)), sg.InputText(vacina.identificador3, key="id")],
+                [sg.Text("ID:", size=(17, 1)), sg.InputText(vacina.identificador, key="id")],
                 [sg.Text("Nome:", size=(17, 1)), sg.InputText(vacina.nome, key="nome")],
                 [sg.Button("Confirmar", key="confirmar"),
                  sg.Cancel("Cancelar", key="cancelar")],
