@@ -289,23 +289,23 @@ class AdotanteView:
     def possui_animal_padrao(self, possui_animal):
         if possui_animal:
             return [
-                       sg.Column(
-                           [
-                               [sg.Text("Possui animal?")],
-                               [sg.Radio("Sim", "RD3", default=True, key="possui")],
-                               [sg.Radio("Nao", "RD3", key="nao_possui")],
-                           ]
-                       )
-                   ],
+               sg.Column(
+                   [
+                       [sg.Text("Possui animal?")],
+                       [sg.Radio("Sim", "RD3", default=True, key="possui")],
+                       [sg.Radio("Nao", "RD3", key="nao_possui")],
+                   ]
+               )
+           ],
         return [
-                   sg.Column(
-                       [
-                           [sg.Text("Possui animal?")],
-                           [sg.Radio("Sim", "RD3", key="possui")],
-                           [sg.Radio("Nao", "RD3", default=True, key="nao_possui")],
-                       ]
-                   )
-               ],
+           sg.Column(
+               [
+                   [sg.Text("Possui animal?")],
+                   [sg.Radio("Sim", "RD3", key="possui")],
+                   [sg.Radio("Nao", "RD3", default=True, key="nao_possui")],
+               ]
+           )
+        ],
 
     def mostrar_adotante(self, dados_adotante: dict):
         nome = dados_adotante["nome"]
@@ -328,6 +328,14 @@ class AdotanteView:
         )
 
     def mostrar_adotantes(self, adotantes: list):
+        layout = self.layout_tabela_mostrar_adotantes(adotantes)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+
+        self.__window = sg.Window("Layout", layout)
+        self.__window.read()
+        self.__window.close()
+
+    def layout_tabela_mostrar_adotantes(self, adotantes: list):
         toprow = [
             "CPF",
             "Nome",
@@ -349,7 +357,7 @@ class AdotanteView:
             ]
             for adotante in adotantes
         ]
-        layout = [
+        return [
             [
                 sg.Table(
                     headings=toprow,
@@ -360,25 +368,30 @@ class AdotanteView:
                     justification="center",
                 )
             ],
-            [sg.Button("Fechar", key="fechar", button_color="red")],
         ]
-
-        self.__window = sg.Window("Layout", layout)
-        self.__window.read()
-        self.__window.close()
 
     def cpf_invalido(self, cpf: str):
         return len(cpf) != 11
 
-    def selecionar_adotante(self, cpfs: list):
-        layout = [
+    def selecionar_adotante(self, cpfs: list, adotantes: list):
+        layout = []
+
+        if adotantes:
+            layout.append(self.layout_tabela_mostrar_adotantes(adotantes))
+
+        layout.append([
             [sg.Text("CPF do adotante que deseja selecionar: ")],
             [sg.Combo(values=cpfs, default_value=cpfs[0], key="cpf")],
-            [sg.Button("Confirmar", key="confirmar")],
-        ]
+            [sg.Button("Confirmar", key="confirmar"),
+             sg.Button("Cancelar", key="cancelar", button_color="red")],
+        ])
+
         self.__window = sg.Window("Layout", layout)
         button, values = self.__window.read()
         self.__window.close()
+
+        if button == "cancelar":
+            return
 
         return values["cpf"]
 

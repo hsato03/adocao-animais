@@ -44,13 +44,16 @@ class AdotanteController:
         self.__adotantes.append(adotante)
 
     def alterar_adotante(self):
-        if len(self.__adotantes) <= 0:
-            self.__tela_adotante.mostrar_mensagem("Nenhum adotante cadastrado.")
-            return
+        self.verificar_nenhum_adotante_cadastrado()
 
         cpf_adotante = self.__tela_adotante.selecionar_adotante(
-            [adotante.cpf for adotante in self.__adotantes]
+            cpfs=[adotante.cpf for adotante in self.__adotantes],
+            adotantes=self.__adotantes
         )
+
+        if not cpf_adotante:
+            return
+
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
         novos_dados_adotante = self.__tela_adotante.pegar_dados_adotante(
             adotante=adotante
@@ -82,32 +85,37 @@ class AdotanteController:
         )
 
     def listar_adotantes(self):
-        if len(self.__adotantes) <= 0:
-            raise EntidadeNaoEncontradaException("Nenhum adotante cadastrado.")
+        self.verificar_nenhum_adotante_cadastrado()
 
         self.__tela_adotante.mostrar_adotantes(self.__adotantes)
 
     def excluir_adotante(self):
-        if len(self.__adotantes) <= 0:
-            self.__tela_adotante.mostrar_mensagem("Nenhum adotante cadastrado.")
-            return
+        self.verificar_nenhum_adotante_cadastrado()
 
         cpf_adotante = self.__tela_adotante.selecionar_adotante(
-            [adotante.cpf for adotante in self.__adotantes]
+            cpfs=[adotante.cpf for adotante in self.__adotantes],
+            adotantes=self.__adotantes,
         )
+
+        if not cpf_adotante:
+            return
+
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
 
         self.__adotantes.remove(adotante)
         self.__tela_adotante.mostrar_mensagem("Adotante removido com sucesso.")
 
     def listar_adotante_por_cpf(self):
-        if len(self.__adotantes) <= 0:
-            self.__tela_adotante.mostrar_mensagem("Nenhum adotante cadastrado.")
-            return
+        self.verificar_nenhum_adotante_cadastrado()
 
         cpf_adotante = self.__tela_adotante.selecionar_adotante(
-            [adotante.cpf for adotante in self.__adotantes]
+            cpfs=[adotante.cpf for adotante in self.__adotantes],
+            adotantes=None
         )
+
+        if not cpf_adotante:
+            return
+
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
 
         self.__tela_adotante.mostrar_adotante(
@@ -126,6 +134,10 @@ class AdotanteController:
         for adotante in self.__adotantes:
             if adotante.cpf == cpf:
                 raise IdentificadorJaExistenteException(cpf)
+
+    def verificar_nenhum_adotante_cadastrado(self):
+        if len(self.__adotantes) <= 0:
+            raise EntidadeNaoEncontradaException("Nenhum adotante cadastrado.")
 
     def validar_digitos_cpf(self, cpf):
         int(cpf)
