@@ -41,11 +41,13 @@ class DoadorController:
         self.__doadores.append(doador)
 
     def alterar_doador(self):
-        if len(self.__doadores) <= 0:
-            self.__tela_doador.mostrar_mensagem("Nenhum doador cadastrado.")
+        self.verificar_nenhum_doador_cadastrado()
+
+        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores], self.__doadores)
+
+        if not cpf_doador:
             return
 
-        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores])
         doador = self.buscar_doador_por_cpf(cpf_doador)
         novos_dados_doador = self.__tela_doador.pegar_dados_doador(doador=doador)
 
@@ -68,28 +70,31 @@ class DoadorController:
         )
 
     def listar_doadores(self):
-        if len(self.__doadores) <= 0:
-            raise EntidadeNaoEncontradaException("Nenhum doador cadastrado.")
+        self.verificar_nenhum_doador_cadastrado()
 
         self.__tela_doador.mostrar_doadores(self.__doadores)
 
     def excluir_doador(self):
-        if len(self.__doadores) <= 0:
-            self.__tela_doador.mostrar_mensagem("Nenhum doador cadastrado.")
+        self.verificar_nenhum_doador_cadastrado()
+
+        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores], self.__doadores)
+
+        if not cpf_doador:
             return
 
-        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores])
         doador = self.buscar_doador_por_cpf(cpf_doador)
 
         self.__doadores.remove(doador)
         self.__tela_doador.mostrar_mensagem("Doador removido com sucesso.")
 
     def listar_doador_por_cpf(self):
-        if len(self.__doadores) <= 0:
-            self.__tela_doador.mostrar_mensagem("Nenhum doador cadastrado.")
+        self.verificar_nenhum_doador_cadastrado()
+
+        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores], None)
+
+        if not cpf_doador:
             return
 
-        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores])
         doador = self.buscar_doador_por_cpf(cpf_doador)
 
         self.__tela_doador.mostrar_doador(
@@ -105,6 +110,10 @@ class DoadorController:
         for doador in self.__doadores:
             if doador.cpf == cpf:
                 raise IdentificadorJaExistenteException(cpf)
+
+    def verificar_nenhum_doador_cadastrado(self):
+        if len(self.__doadores) <= 0:
+            raise EntidadeNaoEncontradaException("Nennum doador cadastrado.")
 
     def validar_digitos_cpf(self, cpf):
         int(cpf)

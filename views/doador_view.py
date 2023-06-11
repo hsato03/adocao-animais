@@ -183,6 +183,14 @@ class DoadorView:
         )
 
     def mostrar_doadores(self, doadores: list):
+        layout = self.layout_tabela_mostar_doadores(doadores)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+
+        self.__window = sg.Window("Layout", layout)
+        self.__window.read()
+        self.__window.close()
+
+    def layout_tabela_mostar_doadores(self, doadores: list):
         toprow = [
             "CPF",
             "Nome",
@@ -198,7 +206,7 @@ class DoadorView:
             ]
             for doador in doadores
         ]
-        layout = [
+        return [
             [
                 sg.Table(
                     headings=toprow,
@@ -209,25 +217,29 @@ class DoadorView:
                     justification="center",
                 )
             ],
-            [sg.Button("Fechar", key="fechar", button_color="red")],
         ]
-
-        self.__window = sg.Window("Layout", layout)
-        self.__window.read()
-        self.__window.close()
 
     def cpf_invalido(self, cpf: str):
         return len(cpf) != 11
 
-    def selecionar_doador(self, cpfs: list):
-        layout = [
+    def selecionar_doador(self, cpfs: list, doadores: list):
+        layout = []
+
+        if doadores:
+            layout.append(self.layout_tabela_mostar_doadores(doadores))
+
+        layout.append([
             [sg.Text("CPF do doador que deseja selecionar: ")],
             [sg.Combo(values=cpfs, default_value=cpfs[0], key="cpf")],
-            [sg.Button("Confirmar", key="confirmar")],
-        ]
+            [sg.Button("Confirmar", key="confirmar"),
+             sg.Button("Cancelar", key="cancelar", button_color="red")],
+        ])
         self.__window = sg.Window("Layout", layout)
         button, values = self.__window.read()
         self.__window.close()
+
+        if button == "cancelar":
+            return
 
         return values["cpf"]
 
