@@ -169,13 +169,14 @@ class DoadorView:
             "numero": numero,
         }
 
-    def mostrar_doador(self, dados_doador: dict):
-        nome = dados_doador["nome"]
+    def mostrar_doador(self, doador):
+        nome = doador.nome
+        cpf = doador.cpf
         index_endfirstname = nome.find(" ")
-        output_doador = f"\t - CPF: {dados_doador['cpf']}\n"
+        output_doador = "\t - CPF: {}.{}.{}-{}\n".format(cpf[:3], cpf[3:6], cpf[6:9], cpf[9:])
         output_doador += f"\t - Nome: {nome}\n"
-        output_doador += f"\t - Data de nascimento: {dados_doador['data_nascimento'].strftime('%d/%m/%Y')}\n"
-        output_doador += f"\t - Endereco: {dados_doador['endereco']}\n"
+        output_doador += f"\t - Data de nascimento: {doador.data_nascimento.strftime('%d/%m/%Y')}\n"
+        output_doador += f"\t - Endereco: {doador.endereco}\n"
 
         sg.Popup(
             f"Dados do doador {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:",
@@ -199,7 +200,7 @@ class DoadorView:
         ]
         dados_doadores = [
             [
-                doador.cpf,
+                "{}.{}.{}-{}".format(doador.cpf[:3], doador.cpf[3:6], doador.cpf[6:9], doador.cpf[9:]),
                 doador.nome,
                 str(doador.data_nascimento.strftime('%d/%m/%Y')),
                 str(doador.endereco),

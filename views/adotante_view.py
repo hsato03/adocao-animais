@@ -307,20 +307,21 @@ class AdotanteView:
            )
         ],
 
-    def mostrar_adotante(self, dados_adotante: dict):
-        nome = dados_adotante["nome"]
+    def mostrar_adotante(self, adotante):
+        nome = adotante.nome
+        cpf = adotante.cpf
         index_endfirstname = nome.find(" ")
-        output_adotante = f"\t - CPF: {dados_adotante['cpf']}\n"
+        output_adotante = "\t - CPF: {}.{}.{}-{}\n".format(cpf[:3], cpf[3:6], cpf[6:9], cpf[9:])
         output_adotante += f"\t - Nome: {nome}\n"
-        output_adotante += f"\t - Data de nascimento: {dados_adotante['data_nascimento'].strftime('%d/%m/%Y')}\n"
+        output_adotante += f"\t - Data de nascimento: {adotante.data_nascimento.strftime('%d/%m/%Y')}\n"
         output_adotante += (
-            f"\t - Tipo de habitacao: {dados_adotante['tipo_habitacao'].name}\n"
+            f"\t - Tipo de habitacao: {adotante.tipo_habitacao.name}\n"
         )
         output_adotante += (
-            f"\t - Tamanho da habitacao: {dados_adotante['tamanho_habitacao'].name}\n"
+            f"\t - Tamanho da habitacao: {adotante.tamanho_habitacao.name}\n"
         )
-        output_adotante += f"\t - Possui animal: {'Sim' if dados_adotante['possui_animal'] else 'Nao'}\n"
-        output_adotante += f"\t - Endereco: {dados_adotante['endereco']}\n"
+        output_adotante += f"\t - Possui animal: {'Sim' if adotante.possui_animal else 'Nao'}\n"
+        output_adotante += f"\t - Endereco: {adotante.endereco}\n"
 
         sg.Popup(
             f"Dados do adotante {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:",
@@ -347,7 +348,7 @@ class AdotanteView:
         ]
         dados_adotantes = [
             [
-                adotante.cpf,
+                "{}.{}.{}-{}".format(adotante.cpf[:3], adotante.cpf[3:6], adotante.cpf[6:9], adotante.cpf[9:]),
                 adotante.nome,
                 str(adotante.data_nascimento.strftime('%d/%m/%Y')),
                 adotante.tipo_habitacao.name,

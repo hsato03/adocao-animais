@@ -110,25 +110,14 @@ class AdotanteController:
 
         cpf_adotante = self.__tela_adotante.selecionar_adotante(
             cpfs=[adotante.cpf for adotante in self.__adotantes],
-            adotantes=None
+            adotantes=None,
         )
 
         if not cpf_adotante:
             return
 
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
-
-        self.__tela_adotante.mostrar_adotante(
-            {
-                "cpf": adotante.cpf,
-                "nome": adotante.nome,
-                "data_nascimento": adotante.data_nascimento,
-                "tipo_habitacao": adotante.tipo_habitacao,
-                "tamanho_habitacao": adotante.tamanho_habitacao,
-                "possui_animal": adotante.possui_animal,
-                "endereco": adotante.endereco,
-            }
-        )
+        self.__tela_adotante.mostrar_adotante(adotante)
 
     def verificar_cpf_adotante_ja_cadastrado(self, cpf: str):
         for adotante in self.__adotantes:

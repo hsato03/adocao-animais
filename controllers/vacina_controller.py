@@ -81,13 +81,7 @@ class VacinaController:
             return
 
         vacina = self.buscar_vacina_por_identificador(identificador)
-
-        self.__tela_vacina.mostrar_vacina(
-            {
-                "id": vacina.identificador,
-                "nome": vacina.nome,
-            }
-        )
+        self.__tela_vacina.mostrar_vacina(vacina)
 
     def selecionar_vacina(self):
         self.verificar_nenhuma_vacina_cadastrada()

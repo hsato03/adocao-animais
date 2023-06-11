@@ -215,11 +215,13 @@ class AdocaoView:
 
         return {"data_inicio": data_inicio_convertida, "data_fim": data_fim_convertida}
 
-    def mostrar_adocao(self, dados_adocao: dict):
-        print("\t - CPF ADOTANTE: ", dados_adocao["cpf_adotante"])
-        print("\t - N° CHIP ANIMAL: ", dados_adocao["numero_chip"])
-        print("\t - DATA DE ADOCAO: ", dados_adocao["data"].strftime("%d/%m/%Y"))
-        print("\t - TERMO ASSINADO: ", dados_adocao["termo_assinado"])
+    def mostrar_adocao(self, adocao):
+        output_adotante = f"\t - Adotante: {adocao.adotante.cpf}\n"
+        output_adotante += f"\t - Animal: {adocao.animal.numero_chip}\n"
+        output_adotante += f"\t - Data de adocao: {adocao.data.strftime('%d/%m/%Y')}\n"
+        output_adotante += f"\t - Termo assinado: {'Sim' if adocao.termo_assinado else 'Nao'}\n"
+
+        sg.Popup("", output_adotante)
 
     def selecionar_adocao(self, tipo_id: int):
         if tipo_id == 1:

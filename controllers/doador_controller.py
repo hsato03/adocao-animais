@@ -96,15 +96,7 @@ class DoadorController:
             return
 
         doador = self.buscar_doador_por_cpf(cpf_doador)
-
-        self.__tela_doador.mostrar_doador(
-            {
-                "cpf": doador.cpf,
-                "nome": doador.nome,
-                "data_nascimento": doador.data_nascimento,
-                "endereco": doador.endereco,
-            }
-        )
+        self.__tela_doador.mostrar_doador(doador)
 
     def verificar_cpf_doador_ja_cadastrado(self, cpf: str):
         for doador in self.__doadores:

@@ -175,9 +175,9 @@ class VacinaView:
             ],
         ]
 
-    def mostrar_vacina(self, dados_vacina: dict):
-        output_vacina = f"\t - ID: {dados_vacina['id']}\n"
-        output_vacina += f"\t - Nome: {dados_vacina['nome']}\n"
+    def mostrar_vacina(self, vacina):
+        output_vacina = f"\t - ID: {vacina.id}\n"
+        output_vacina += f"\t - Nome: {vacina.nome}\n"
 
         sg.Popup("", output_vacina)
 
