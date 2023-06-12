@@ -3,8 +3,8 @@ from exceptions import (
     CpfInvalidoException,
     IdentificadorJaExistenteException,
 )
-from views import DoadorView
 from model import Doador
+from views import DoadorView
 
 
 class DoadorController:
@@ -97,6 +97,18 @@ class DoadorController:
 
         doador = self.buscar_doador_por_cpf(cpf_doador)
         self.__tela_doador.mostrar_doador(doador)
+
+    def selecionar_doador(self):
+        self.verificar_nenhum_doador_cadastrado()
+        cpf = self.__tela_doador.selecionar_doador(
+            [doador.cpf for doador in self.__doadores],
+            self.__doadores,
+        )
+
+        if not cpf:
+            return
+
+        return self.buscar_doador_por_cpf(cpf)
 
     def verificar_cpf_doador_ja_cadastrado(self, cpf: str):
         for doador in self.__doadores:

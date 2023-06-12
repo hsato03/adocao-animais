@@ -2,7 +2,6 @@ from datetime import date
 
 from exceptions import (
     EntidadeNaoEncontradaException,
-    OpcaoInvalidaException,
     AdocaoRegraVioladaException,
 )
 from model import (
@@ -30,8 +29,16 @@ class AdocaoController:
 
     def incluir_adocao(self):
         animal = self.__controlador_sistema.controlador_animais.selecionar_animal_adocao()
+        if not animal:
+            return
+
         adotante = self.__controlador_sistema.controlador_adotantes.selecionar_adotante()
+        if not adotante:
+            return
+
         dados_adocao = self.__tela_adocao.pegar_dados_adocao(adocao=None)
+        if not dados_adocao:
+            return
 
         self.verificar_regras_adocao(animal, adotante, verifica_animal=True)
 
@@ -87,6 +94,9 @@ class AdocaoController:
         self.verificar_nenhuma_adocao_cadastrada()
 
         dados_periodo = self.__tela_adocao.pegar_dados_periodo()
+        if not dados_periodo:
+            return
+
         data_inicio = dados_periodo["data_inicio"]
         data_fim = dados_periodo["data_fim"]
         adocoes_periodo = []
@@ -171,7 +181,6 @@ class AdocaoController:
             try:
                 lista_opcoes[self.__tela_adocao.telar_opcoes()]()
             except (
-                OpcaoInvalidaException,
                 EntidadeNaoEncontradaException,
                 AdocaoRegraVioladaException,
             ) as e:

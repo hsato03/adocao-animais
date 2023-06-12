@@ -141,7 +141,7 @@ class DoacaoTest(unittest.TestCase):
 
         try:
             adoacao_atualizada = (
-                self.controlador_doacoes.buscar_doacao_por_identificador(cpf, TIPO_CPF)
+                self.controlador_doacoes.buscar_doacao_por_numero_chip(cpf, TIPO_CPF)
             )
         except EntidadeNaoEncontradaException:
             self.fail("Doacao nao alterada.")

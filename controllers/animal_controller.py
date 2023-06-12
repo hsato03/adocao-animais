@@ -2,7 +2,6 @@ from views import AnimalView
 from model import Cachorro, TamanhoCachorro, Gato, TIPO_CACHORRO, TIPO_GATO
 from exceptions import (
     EntidadeNaoEncontradaException,
-    OpcaoInvalidaException,
     IdentificadorJaExistenteException,
 )
 
@@ -69,10 +68,7 @@ class AnimalController:
     def alterar_animal(self):
         self.verificar_nenhum_animal_cadastrado()
 
-        numero_chip = self.__tela_animal.selecionar_animal(
-            nchips=[animal.numero_chip for animal in self.__animais],
-            animais=self.__animais,
-        )
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
 
         if not numero_chip:
             return
@@ -99,10 +95,7 @@ class AnimalController:
     def excluir_animal(self):
         self.verificar_nenhum_animal_cadastrado()
 
-        numero_chip = self.__tela_animal.selecionar_animal(
-            nchips=[animal.numero_chip for animal in self.__animais],
-            animais=self.__animais,
-        )
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
 
         if not numero_chip:
             return
@@ -125,10 +118,7 @@ class AnimalController:
 
     def listar_animal_por_numero_chip(self):
         self.verificar_nenhum_animal_cadastrado()
-        numero_chip = self.__tela_animal.selecionar_animal(
-            nchips=[animal.numero_chip for animal in self.__animais],
-            animais=None,
-        )
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=False)
 
         if not numero_chip:
             return
@@ -139,10 +129,7 @@ class AnimalController:
     def aplicar_vacina_animal(self):
         self.verificar_nenhum_animal_cadastrado()
 
-        numero_chip = self.__tela_animal.selecionar_animal(
-            nchips=[animal.numero_chip for animal in self.__animais],
-            animais=self.__animais
-        )
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
 
         if not numero_chip:
             return
@@ -158,12 +145,19 @@ class AnimalController:
 
         animal.historico_vacinacao.add_vacina(vacina, data_aplicacao_vacina)
 
+    def selecionar_animal(self):
+        self.verificar_nenhum_animal_cadastrado()
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
+
+        if not numero_chip:
+            return
+
+        return self.buscar_animal_por_numero_chip(numero_chip)
+
     def selecionar_animal_adocao(self):
         self.verificar_nenhum_animal_cadastrado()
-        numero_chip = self.__tela_animal.selecionar_animal(
-            nchips=[animal.numero_chip for animal in self.__animais],
-            animais=self.animais_disponiveis_para_adocao(),
-        )
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.animais_disponiveis_para_adocao(),
+                                                           mostrar_opcoes=True)
 
         if not numero_chip:
             return
@@ -226,7 +220,6 @@ class AnimalController:
             try:
                 lista_opcoes[self.__tela_animal.telar_opcoes()]()
             except (
-                OpcaoInvalidaException,
                 EntidadeNaoEncontradaException,
                 IdentificadorJaExistenteException,
             ) as e:

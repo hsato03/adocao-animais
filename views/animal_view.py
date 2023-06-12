@@ -2,7 +2,7 @@ from datetime import datetime
 
 import PySimpleGUI as sg
 
-from exceptions import OpcaoInvalidaException, CampoObrigatorioException
+from exceptions import CampoObrigatorioException
 
 TIPO_CACHORRO = 1
 TIPO_GATO = 2
@@ -350,13 +350,16 @@ class AnimalView:
 
         ]
 
-    def selecionar_animal(self, nchips: list, animais: list):
+    def selecionar_animal(self, animais: list, mostrar_opcoes: bool):
         layout = []
-        if animais:
+
+        if mostrar_opcoes:
             layout.append(self.layout_tabela_mostrar_animais(animais))
+
         layout.append([
             [sg.Text("N° chip do animal que deseja selecionar: ")],
-            [sg.Combo(values=nchips, default_value=nchips[0], key="numero_chip")],
+            [sg.Combo(values=[animal.numero_chip for animal in animais], default_value=animais[0].numero_chip,
+             key="numero_chip")],
             [sg.Button("Confirmar", key="confirmar"),
              sg.Button("Cancelar", key="cancelar", button_color="red")],
         ])

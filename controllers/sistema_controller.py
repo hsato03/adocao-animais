@@ -7,8 +7,6 @@ from controllers import (
     DoacaoController,
     VacinaController,
 )
-from exceptions import OpcaoInvalidaException
-
 
 class SistemaController:
     def __init__(self):
@@ -76,9 +74,6 @@ class SistemaController:
         }
 
         while True:
-            try:
-                opcao_escolhida = self.__tela_sistema.telar_opcoes()
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            except OpcaoInvalidaException as e:
-                print(e)
+            opcao_escolhida = self.__tela_sistema.telar_opcoes()
+            funcao_escolhida = lista_opcoes[opcao_escolhida]
+            funcao_escolhida()

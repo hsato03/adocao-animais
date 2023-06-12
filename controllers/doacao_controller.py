@@ -1,7 +1,6 @@
+from exceptions import EntidadeNaoEncontradaException
+from model import Doacao
 from views import DoacaoView
-from model import Doacao, Cachorro, TIPO_CACHORRO, TIPO_CPF
-from exceptions import EntidadeNaoEncontradaException, OpcaoInvalidaException
-from datetime import date
 
 
 class DoacaoController:
@@ -10,35 +9,25 @@ class DoacaoController:
         self.__tela_doacao = DoacaoView()
         self.__controlador_sistema = controlador_sistema
 
-    def buscar_doacao_por_identificador(self, identificador, tipo_id: int):
+    def buscar_doacao_por_numero_chip(self, numero_chip: int):
         for doacao in self.__doacoes:
-            if tipo_id == TIPO_CPF:
-                if doacao.doador.cpf == identificador:
-                    return doacao
-            else:
-                if doacao.animal.numero_chip == int(identificador):
-                    return doacao
+            if doacao.animal.numero_chip == numero_chip:
+                return doacao
+
         raise EntidadeNaoEncontradaException("ERRO: Doacao nao existente.")
 
     def incluir_doacao(self):
-        tipo_animal = self.__tela_doacao.telar_opcoes_tipo_animal()
-        dados_doacao = self.__tela_doacao.pegar_dados_doacao(criacao=True)
+        animal = self.__controlador_sistema.controlador_animais.selecionar_animal()
+        if not animal:
+            return
 
-        cpf_doador = dados_doacao["cpf_doador"]
+        doador = self.__controlador_sistema.controlador_doadores.selecionar_doador()
+        if not doador:
+            return
 
-        numero_chip = dados_doacao["numero_chip"]
-        if tipo_animal == TIPO_CACHORRO:
-            animal = self.__controlador_sistema.controlador_animais.buscar_animal_por_numero_chip(
-                numero_chip
-            )
-        else:
-            animal = self.__controlador_sistema.controlador_animais.buscar_animal_por_numero_chip(
-                numero_chip
-            )
-
-        doador = self.__controlador_sistema.controlador_doadores.buscar_doador_por_cpf(
-            cpf_doador
-        )
+        dados_doacao = self.__tela_doacao.pegar_dados_doacao(doacao=None)
+        if not dados_doacao:
+            return
 
         doacao = Doacao(
             doador,
@@ -49,16 +38,11 @@ class DoacaoController:
         self.__doacoes.append(doacao)
 
     def alterar_doacao(self):
-        if self.verificar_nenhuma_doacao_cadastrada():
-            return
+        self.verificar_nenhuma_doacao_cadastrada()
 
-        self.listar_doacoes()
-
-        tipo_id = self.get_tipo_id()
-
-        identificador = self.__tela_doacao.selecionar_doacao(tipo_id)
-        doacao = self.buscar_doacao_por_identificador(identificador, tipo_id)
-        novos_dados_doacao = self.__tela_doacao.pegar_dados_doacao(criacao=False)
+        numero_chip = self.__tela_doacao.selecionar_doacao(doacoes=self.__doacoes)
+        doacao = self.buscar_doacao_por_numero_chip(numero_chip)
+        novos_dados_doacao = self.__tela_doacao.pegar_dados_doacao(doacao=doacao)
 
         if not novos_dados_doacao:
             return
@@ -67,71 +51,44 @@ class DoacaoController:
         doacao.motivo = novos_dados_doacao["motivo"]
 
     def listar_doacoes(self):
-        if self.verificar_nenhuma_doacao_cadastrada():
-            return
+        self.verificar_nenhuma_doacao_cadastrada()
 
-        for i in range(len(self.__doacoes)):
-            self.__tela_doacao.mostrar_mensagem(f"\nDOACAO #{i + 1:02d}")
-            doacao = self.__doacoes[i]
-            self.__tela_doacao.mostrar_doacao(
-                {
-                    "cpf_doador": doacao.doador.cpf,
-                    "numero_chip": doacao.animal.numero_chip,
-                    "data": doacao.data,
-                    "motivo": doacao.motivo,
-                }
-            )
+        self.__tela_doacao.mostrar_doacoes(self.__doacoes)
 
     def excluir_doacao(self):
-        if self.verificar_nenhuma_doacao_cadastrada():
+        self.verificar_nenhuma_doacao_cadastrada()
+
+        numero_chip = self.__tela_doacao.selecionar_doacao(doacoes=self.__doacoes)
+
+        if not numero_chip:
             return
 
-        self.listar_doacoes()
-
-        tipo_id = self.get_tipo_id()
-
-        identificador = self.__tela_doacao.selecionar_doacao(tipo_id)
-        doacao = self.buscar_doacao_por_identificador(identificador, tipo_id)
+        doacao = self.buscar_doacao_por_numero_chip(numero_chip=numero_chip)
         self.__doacoes.remove(doacao)
 
     def listar_doacoes_por_periodo(self):
-        contador = 1
+        self.verificar_nenhuma_doacao_cadastrada()
+
         dados_periodo = self.__tela_doacao.pegar_dados_periodo()
+        if not dados_periodo:
+            return
+
         data_inicio = dados_periodo["data_inicio"]
         data_fim = dados_periodo["data_fim"]
+        doacoes_periodo = []
 
         for doacao in self.__doacoes:
             if data_inicio <= doacao.data <= data_fim:
-                self.__tela_doacao.mostrar_mensagem(f"DOACAO #{contador:02d}")
-                self.__tela_doacao.mostrar_doacao(
-                    {
-                        "cpf_doador": doacao.doador.cpf,
-                        "numero_chip": doacao.animal.numero_chip,
-                        "data": doacao.data,
-                        "motivo": doacao.motivo,
-                    }
-                )
-                contador += 1
+                doacoes_periodo.append(doacao)
 
-        if contador == 1:
-            self.__tela_doacao.mostrar_mensagem(
-                "Nenhuma doacao encontrada neste periodo"
-            )
+        if len(doacoes_periodo) <= 0:
+            raise EntidadeNaoEncontradaException("Nenhuma doacao encontrada neste periodo")
+
+        self.__tela_doacao.mostrar_doacoes(doacoes_periodo)
 
     def verificar_nenhuma_doacao_cadastrada(self):
         if len(self.__doacoes) <= 0:
-            self.__tela_doacao.mostrar_mensagem("Nenhuma doacao cadastrada.")
-            return True
-
-    def get_tipo_id(self):
-        while True:
-            try:
-                tipo_id = self.__tela_doacao.telar_opcoes_identificador()
-                return tipo_id
-            except OpcaoInvalidaException as e:
-                self.__tela_doacao.mostrar_mensagem(e)
-            except ValueError:
-                self.__tela_doacao.mostrar_mensagem("Somente numeros. Tente novamente.")
+            raise EntidadeNaoEncontradaException("Nenhuma doacao cadastrada.")
 
     def retornar(self):
         self.__controlador_sistema.abrir_tela()
@@ -149,7 +106,7 @@ class DoacaoController:
         while True:
             try:
                 lista_opcoes[self.__tela_doacao.telar_opcoes()]()
-            except (OpcaoInvalidaException, EntidadeNaoEncontradaException) as e:
+            except EntidadeNaoEncontradaException as e:
                 self.__tela_doacao.mostrar_mensagem(e)
             except ValueError:
                 self.__tela_doacao.mostrar_mensagem("Somente numeros. Tente novamente")

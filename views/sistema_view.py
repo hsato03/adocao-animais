@@ -1,4 +1,3 @@
-from exceptions import OpcaoInvalidaException
 import PySimpleGUI as sg
 
 

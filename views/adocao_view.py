@@ -1,5 +1,5 @@
 from datetime import datetime
-from exceptions import OpcaoInvalidaException, CampoObrigatorioException
+from exceptions import CampoObrigatorioException
 import PySimpleGUI as sg
 
 
@@ -186,13 +186,19 @@ class AdocaoView:
             [sg.Text("Data de fim:", size=(20, 1)),
              sg.Input("", size=(26, 1), key="data_fim"),
              sg.CalendarButton("Abrir calendario", target="data_fim", format="%d/%m/%Y")],
-            [sg.Button("Confirmar", key="confirmar")],
+            [sg.Button("Confirmar", key="confirmar"),
+             sg.Button("Cancelar", key="cancelar", button_color="red")],
         ]
 
         self.__window = sg.Window("Layout", layout)
         while True:
             try:
                 button, values = self.__window.read()
+
+                if button == "cancelar":
+                    self.__window.close()
+                    return
+
                 data_inicio_convertida = datetime.strptime(values["data_inicio"], "%d/%m/%Y").date()
                 data_fim_convertida = datetime.strptime(values["data_fim"], "%d/%m/%Y").date()
                 self.__window.close()
@@ -255,7 +261,6 @@ class AdocaoView:
         ]
 
     def selecionar_adocao(self, adocoes: list):
-        layout = []
         dados_adocoes = [
             [
                 "{}.{}.{}-{}".format(
@@ -270,7 +275,7 @@ class AdocaoView:
             ]
             for adocao in adocoes
         ]
-        layout.append(self.layout_tabela_mostrar_adocoes(dados_adocoes))
+        layout = self.layout_tabela_mostrar_adocoes(dados_adocoes)
 
         layout.append([
             [sg.Text("Adocao que deseja selecionar: ")],
