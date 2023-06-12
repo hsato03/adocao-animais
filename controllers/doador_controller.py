@@ -43,7 +43,7 @@ class DoadorController:
     def alterar_doador(self):
         self.verificar_nenhum_doador_cadastrado()
 
-        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores], self.__doadores)
+        cpf_doador = self.__tela_doador.selecionar_doador(self.__doadores, mostrar_opcoes=True)
 
         if not cpf_doador:
             return
@@ -77,7 +77,7 @@ class DoadorController:
     def excluir_doador(self):
         self.verificar_nenhum_doador_cadastrado()
 
-        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores], self.__doadores)
+        cpf_doador = self.__tela_doador.selecionar_doador(doadores=self.__doadores, mostrar_opcoes=True)
 
         if not cpf_doador:
             return
@@ -90,7 +90,7 @@ class DoadorController:
     def listar_doador_por_cpf(self):
         self.verificar_nenhum_doador_cadastrado()
 
-        cpf_doador = self.__tela_doador.selecionar_doador([doador.cpf for doador in self.__doadores], None)
+        cpf_doador = self.__tela_doador.selecionar_doador(doadores=self.__doadores, mostrar_opcoes=False)
 
         if not cpf_doador:
             return
@@ -100,10 +100,7 @@ class DoadorController:
 
     def selecionar_doador(self):
         self.verificar_nenhum_doador_cadastrado()
-        cpf = self.__tela_doador.selecionar_doador(
-            [doador.cpf for doador in self.__doadores],
-            self.__doadores,
-        )
+        cpf = self.__tela_doador.selecionar_doador(doadores=self.__doadores, mostrar_opcoes=True)
 
         if not cpf:
             return

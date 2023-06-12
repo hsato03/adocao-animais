@@ -46,10 +46,7 @@ class AdotanteController:
     def alterar_adotante(self):
         self.verificar_nenhum_adotante_cadastrado()
 
-        cpf_adotante = self.__tela_adotante.selecionar_adotante(
-            cpfs=[adotante.cpf for adotante in self.__adotantes],
-            adotantes=self.__adotantes
-        )
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=True)
 
         if not cpf_adotante:
             return
@@ -92,10 +89,7 @@ class AdotanteController:
     def excluir_adotante(self):
         self.verificar_nenhum_adotante_cadastrado()
 
-        cpf_adotante = self.__tela_adotante.selecionar_adotante(
-            cpfs=[adotante.cpf for adotante in self.__adotantes],
-            adotantes=self.__adotantes,
-        )
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=True)
 
         if not cpf_adotante:
             return
@@ -108,10 +102,7 @@ class AdotanteController:
     def listar_adotante_por_cpf(self):
         self.verificar_nenhum_adotante_cadastrado()
 
-        cpf_adotante = self.__tela_adotante.selecionar_adotante(
-            cpfs=[adotante.cpf for adotante in self.__adotantes],
-            adotantes=None,
-        )
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=False)
 
         if not cpf_adotante:
             return
@@ -121,10 +112,7 @@ class AdotanteController:
 
     def selecionar_adotante(self):
         self.verificar_nenhum_adotante_cadastrado()
-        cpf = self.__tela_adotante.selecionar_adotante(
-            cpfs=[adotante.cpf for adotante in self.__adotantes],
-            adotantes=self.__adotantes,
-        )
+        cpf = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=True)
 
         if not cpf:
             return

@@ -223,15 +223,15 @@ class DoadorView:
     def cpf_invalido(self, cpf: str):
         return len(cpf) != 11
 
-    def selecionar_doador(self, cpfs: list, doadores: list):
+    def selecionar_doador(self, doadores: list, mostrar_opcoes: bool):
         layout = []
 
-        if doadores:
+        if mostrar_opcoes:
             layout.append(self.layout_tabela_mostrar_doadores(doadores))
 
         layout.append([
             [sg.Text("CPF do doador que deseja selecionar: ")],
-            [sg.Combo(values=cpfs, default_value=cpfs[0], key="cpf")],
+            [sg.Combo(values=[doador.cpf for doador in doadores], default_value=doadores[0].cpf, key="cpf")],
             [sg.Button("Confirmar", key="confirmar"),
              sg.Button("Cancelar", key="cancelar", button_color="red")],
         ])

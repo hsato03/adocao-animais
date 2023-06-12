@@ -374,15 +374,15 @@ class AdotanteView:
     def cpf_invalido(self, cpf: str):
         return len(cpf) != 11
 
-    def selecionar_adotante(self, cpfs: list, adotantes: list):
+    def selecionar_adotante(self, adotantes: list, mostrar_opcoes: bool):
         layout = []
 
-        if adotantes:
+        if mostrar_opcoes:
             layout.append(self.layout_tabela_mostrar_adotantes(adotantes))
 
         layout.append([
             [sg.Text("CPF do adotante que deseja selecionar: ")],
-            [sg.Combo(values=cpfs, default_value=cpfs[0], key="cpf")],
+            [sg.Combo(values=[adotante.cpf for adotante in adotantes], default_value=adotantes[0].cpf, key="cpf")],
             [sg.Button("Confirmar", key="confirmar"),
              sg.Button("Cancelar", key="cancelar", button_color="red")],
         ])

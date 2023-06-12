@@ -32,10 +32,7 @@ class VacinaController:
     def alterar_vacina(self):
         self.verificar_nenhuma_vacina_cadastrada()
 
-        identificador = self.__tela_vacina.selecionar_vacina(
-            [vacina.identificador for vacina in self.__vacinas],
-            vacinas=self.__vacinas,
-        )
+        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=True)
 
         if not identificador:
             return
@@ -56,10 +53,7 @@ class VacinaController:
     def excluir_vacina(self):
         self.verificar_nenhuma_vacina_cadastrada()
 
-        identificador = self.__tela_vacina.selecionar_vacina(
-            [vacina.identificador for vacina in self.__vacinas],
-            vacinas=self.__vacinas,
-        )
+        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=True)
 
         if not identificador:
             return
@@ -72,10 +66,7 @@ class VacinaController:
     def listar_vacina_por_identificador(self):
         self.verificar_nenhuma_vacina_cadastrada()
 
-        identificador = self.__tela_vacina.selecionar_vacina(
-            ids=[vacina.identificador for vacina in self.__vacinas],
-            vacinas=None,
-        )
+        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=False)
 
         if not identificador:
             return
@@ -85,10 +76,7 @@ class VacinaController:
 
     def selecionar_vacina(self):
         self.verificar_nenhuma_vacina_cadastrada()
-        id_vacina = self.__tela_vacina.selecionar_vacina(
-            ids=[vacina.identificador for vacina in self.__vacinas],
-            vacinas=self.__vacinas,
-        )
+        id_vacina = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=True)
 
         if not id_vacina:
             return

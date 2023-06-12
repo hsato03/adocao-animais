@@ -176,18 +176,19 @@ class VacinaView:
         ]
 
     def mostrar_vacina(self, vacina):
-        output_vacina = f"\t - ID: {vacina.id}\n"
+        output_vacina = f"\t - ID: {vacina.identificador}\n"
         output_vacina += f"\t - Nome: {vacina.nome}\n"
 
         sg.Popup("", output_vacina)
 
-    def selecionar_vacina(self, ids: list, vacinas: list):
+    def selecionar_vacina(self, vacinas: list, mostrar_opcoes):
         layout = []
-        if vacinas:
+        if mostrar_opcoes:
             layout.append(self.layout_tabela_mostrar_vacinas(vacinas))
         layout.append([
             [sg.Text("ID da vacina que deseja selecionar: ")],
-            [sg.Combo(values=ids, default_value=ids[0], key="id")],
+            [sg.Combo(values=[vacina.identificador for vacina in vacinas],
+                      default_value=vacinas[0].identificador, key="id")],
             [sg.Button("Confirmar", key="confirmar"),
              sg.Button("Cancelar", key="cancelar", button_color="red")],
         ])
