@@ -45,6 +45,7 @@ class VacinaController:
 
         vacina.identificador = novos_dados_vacina["id"]
         vacina.nome = novos_dados_vacina["nome"]
+        self.__tela_vacina.mostrar_mensagem("Vacina alterada com sucesso")
 
     def listar_vacinas(self):
         self.verificar_nenhuma_vacina_cadastrada()

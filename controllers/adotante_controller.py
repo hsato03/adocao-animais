@@ -80,6 +80,7 @@ class AdotanteController:
         adotante.add_endereco(
             novos_dados_adotante["logradouro"], novos_dados_adotante["numero"]
         )
+        self.__tela_adotante.mostrar_mensagem("Adotante alterado com sucesso.")
 
     def listar_adotantes(self):
         self.verificar_nenhum_adotante_cadastrado()

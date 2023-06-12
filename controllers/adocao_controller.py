@@ -69,6 +69,7 @@ class AdocaoController:
         adocao.termo_assinado = (
             True if novos_dados_adocao["termo_assinado"] == 1 else False
         )
+        self.__tela_adocao.mostrar_mensagem("Adocao alterada com sucesso.")
 
     def listar_adocoes(self):
         self.verificar_nenhuma_adocao_cadastrada()

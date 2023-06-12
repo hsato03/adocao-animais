@@ -68,6 +68,7 @@ class DoadorController:
         doador.add_endereco(
             novos_dados_doador["logradouro"], novos_dados_doador["numero"]
         )
+        self.__tela_doador.mostrar_mensagem("Doador alterado com sucesso.")
 
     def listar_doadores(self):
         self.verificar_nenhum_doador_cadastrado()

@@ -49,6 +49,7 @@ class DoacaoController:
 
         doacao.data = novos_dados_doacao["data"]
         doacao.motivo = novos_dados_doacao["motivo"]
+        self.__tela_doacao.mostrar_mensagem("Doacao alterada com sucesso.")
 
     def listar_doacoes(self):
         self.verificar_nenhuma_doacao_cadastrada()
@@ -65,6 +66,7 @@ class DoacaoController:
 
         doacao = self.buscar_doacao_por_numero_chip(numero_chip=numero_chip)
         self.__doacoes.remove(doacao)
+        self.__tela_doacao.mostrar_mensagem("Doacao removida com sucesso.")
 
     def listar_doacoes_por_periodo(self):
         self.verificar_nenhuma_doacao_cadastrada()
