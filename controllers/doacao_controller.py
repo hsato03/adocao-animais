@@ -1,18 +1,19 @@
 from exceptions import EntidadeNaoEncontradaException
 from model import Doacao
 from views import DoacaoView
+from persistence import DoacaoDAO
 
 
 class DoacaoController:
     def __init__(self, controlador_sistema):
-        self.__doacoes = []
+        self.__doacao_dao = DoacaoDAO("datasources/doacoes.pkl")
         self.__tela_doacao = DoacaoView()
         self.__controlador_sistema = controlador_sistema
 
     def buscar_doacao_por_numero_chip(self, numero_chip: int):
-        for doacao in self.__doacoes:
-            if doacao.animal.numero_chip == numero_chip:
-                return doacao
+        doacao = self.__doacao_dao.find_by_id(numero_chip)
+        if doacao:
+            return doacao
 
         raise EntidadeNaoEncontradaException("ERRO: Doacao nao existente.")
 
@@ -35,12 +36,12 @@ class DoacaoController:
             dados_doacao["data"],
             dados_doacao["motivo"],
         )
-        self.__doacoes.append(doacao)
+        self.__doacao_dao.insert(doacao)
 
     def alterar_doacao(self):
         self.verificar_nenhuma_doacao_cadastrada()
 
-        numero_chip = self.__tela_doacao.selecionar_doacao(doacoes=self.__doacoes)
+        numero_chip = self.__tela_doacao.selecionar_doacao(doacoes=self.__doacao_dao.find_all())
         doacao = self.buscar_doacao_por_numero_chip(numero_chip)
         novos_dados_doacao = self.__tela_doacao.pegar_dados_doacao(doacao=doacao)
 
@@ -49,24 +50,28 @@ class DoacaoController:
 
         doacao.data = novos_dados_doacao["data"]
         doacao.motivo = novos_dados_doacao["motivo"]
+
+        self.__doacao_dao.update(numero_chip, doacao)
         self.__tela_doacao.mostrar_mensagem("Doacao alterada com sucesso.")
 
     def listar_doacoes(self):
         self.verificar_nenhuma_doacao_cadastrada()
 
-        self.__tela_doacao.mostrar_doacoes(self.__doacoes)
+        self.__tela_doacao.mostrar_doacoes(self.__doacao_dao.find_all())
 
     def excluir_doacao(self):
         self.verificar_nenhuma_doacao_cadastrada()
 
-        numero_chip = self.__tela_doacao.selecionar_doacao(doacoes=self.__doacoes)
+        numero_chip = self.__tela_doacao.selecionar_doacao(doacoes=self.__doacao_dao.find_all())
 
         if not numero_chip:
             return
 
-        doacao = self.buscar_doacao_por_numero_chip(numero_chip=numero_chip)
-        self.__doacoes.remove(doacao)
-        self.__tela_doacao.mostrar_mensagem("Doacao removida com sucesso.")
+        removed = self.__doacao_dao.remove(numero_chip)
+        if removed:
+            self.__tela_doacao.mostrar_mensagem("Doacao removida com sucesso.")
+        else:
+            self.__tela_doacao.mostrar_mensagem("Doacao não removida.")
 
     def listar_doacoes_por_periodo(self):
         self.verificar_nenhuma_doacao_cadastrada()
@@ -79,7 +84,7 @@ class DoacaoController:
         data_fim = dados_periodo["data_fim"]
         doacoes_periodo = []
 
-        for doacao in self.__doacoes:
+        for doacao in self.__doacao_dao.find_all():
             if data_inicio <= doacao.data <= data_fim:
                 doacoes_periodo.append(doacao)
 
@@ -89,7 +94,7 @@ class DoacaoController:
         self.__tela_doacao.mostrar_doacoes(doacoes_periodo)
 
     def verificar_nenhuma_doacao_cadastrada(self):
-        if len(self.__doacoes) <= 0:
+        if len(self.__doacao_dao.find_all()) <= 0:
             raise EntidadeNaoEncontradaException("Nenhuma doacao cadastrada.")
 
     def retornar(self):
