@@ -87,8 +87,11 @@ class DoadorController:
         if not cpf_doador:
             return
 
-        self.__doador_dao.remove(cpf_doador)
-        self.__tela_doador.mostrar_mensagem("Doador removido com sucesso.")
+        removed = self.__doador_dao.remove(cpf_doador)
+        if removed:
+            self.__tela_doador.mostrar_mensagem("Doador removido com sucesso.")
+        else:
+            self.__tela_doador.mostrar_mensagem("Doador não removido.")
 
     def listar_doador_por_cpf(self):
         self.verificar_nenhum_doador_cadastrado()

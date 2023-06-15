@@ -101,8 +101,11 @@ class AdotanteController:
         if not cpf_adotante:
             return
 
-        self.__adotante_dao.remove(cpf_adotante)
-        self.__tela_adotante.mostrar_mensagem("Adotante removido com sucesso.")
+        removed = self.__adotante_dao.remove(cpf_adotante)
+        if removed:
+            self.__tela_adotante.mostrar_mensagem("Adotante removido com sucesso.")
+        else:
+            self.__tela_adotante.mostrar_mensagem("Adotante não removido.")
 
     def listar_adotante_por_cpf(self):
         self.verificar_nenhum_adotante_cadastrado()

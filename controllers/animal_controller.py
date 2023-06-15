@@ -168,7 +168,7 @@ class AnimalController:
         animais_disponiveis_adocao = []
 
         for animal in self.__animal_dao.find_all():
-            if self.possui_todas_vacinas_para_adocao(animal):
+            if self.possui_todas_vacinas_para_adocao(animal) and self.nao_adotado(animal):
                 animais_disponiveis_adocao.append(animal)
 
         if len(animais_disponiveis_adocao) <= 0:
@@ -181,6 +181,9 @@ class AnimalController:
         if "hepatite infecciosa" and "leptospirose" and "raiva" in vacinas_aplicadas:
             return True
         return False
+
+    def nao_adotado(self, animal):
+        return not self.__controlador_sistema.controlador_adocoes.verificar_animal_ja_adotado(animal)
 
     def verificar_numero_chip_ja_existente(self, numero_chip: int):
         if self.__animal_dao.find_by_id(numero_chip):
