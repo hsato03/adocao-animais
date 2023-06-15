@@ -10,7 +10,7 @@ from persistence import DoadorDAO
 
 class DoadorController:
     def __init__(self, controlador_sistema):
-        self.__doador_dao = DoadorDAO("doadores.pkl")
+        self.__doador_dao = DoadorDAO("datasources/doadores.pkl")
         self.__tela_doador = DoadorView()
         self.__controlador_sistema = controlador_sistema
 
@@ -40,7 +40,7 @@ class DoadorController:
             dados_doador["logradouro"],
             dados_doador["numero"],
         )
-        self.__doador_dao.add(doador)
+        self.__doador_dao.insert(doador)
 
     def alterar_doador(self):
         self.verificar_nenhum_doador_cadastrado()
@@ -113,8 +113,7 @@ class DoadorController:
         return self.buscar_doador_por_cpf(cpf)
 
     def verificar_cpf_doador_ja_cadastrado(self, cpf: str):
-        doador = self.__doador_dao.find_by_id(cpf)
-        if doador:
+        if self.__doador_dao.find_by_id(cpf):
             raise IdentificadorJaExistenteException(cpf)
 
     def verificar_nenhum_doador_cadastrado(self):

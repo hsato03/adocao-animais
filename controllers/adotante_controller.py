@@ -10,7 +10,7 @@ from exceptions import (
 
 class AdotanteController:
     def __init__(self, controlador_sistema):
-        self.__adotante_dao = AdotanteDAO("adotantes.pkl")
+        self.__adotante_dao = AdotanteDAO("datasources/adotantes.pkl")
         self.__tela_adotante = AdotanteView()
         self.__controlador_sistema = controlador_sistema
 
@@ -43,7 +43,7 @@ class AdotanteController:
             TamanhoHabitacao(dados_adotante["tamanho_habitacao"]),
             True if dados_adotante["possui_animal"] == 1 else False,
         )
-        self.__adotante_dao.add(adotante)
+        self.__adotante_dao.insert(adotante)
 
     def alterar_adotante(self):
         self.verificar_nenhum_adotante_cadastrado()
@@ -129,9 +129,8 @@ class AdotanteController:
         return self.buscar_adotante_por_cpf(cpf)
 
     def verificar_cpf_adotante_ja_cadastrado(self, cpf: str):
-        for adotante in self.__adotante_dao.find_all():
-            if adotante.cpf == cpf:
-                raise IdentificadorJaExistenteException(cpf)
+        if self.__adotante_dao.find_by_id(cpf):
+            raise IdentificadorJaExistenteException(cpf)
 
     def verificar_nenhum_adotante_cadastrado(self):
         if len(self.__adotante_dao.find_all()) <= 0:

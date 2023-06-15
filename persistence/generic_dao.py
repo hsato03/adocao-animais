@@ -17,7 +17,7 @@ class GenericDAO(ABC):
     def __load(self):
         self.__cache = pickle.load(open(self.__datasource, "rb"))
 
-    def add(self, key, obj):
+    def insert(self, key, obj):
         self.__cache[key] = obj
         self.__dump()
 
@@ -27,10 +27,18 @@ class GenericDAO(ABC):
         except KeyError:
             pass
 
+    def update(self, old_key, new_key, obj):
+        self.remove(old_key)
+        self.__cache[new_key] = obj
+        self.__dump()
+
+        return obj
+
     def remove(self, key):
         try:
-            self.__cache.pop(key)
+            obj = self.__cache.pop(key)
             self.__dump()
+            return obj
         except KeyError:
             pass
 

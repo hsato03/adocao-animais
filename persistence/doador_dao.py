@@ -6,17 +6,17 @@ class DoadorDAO(GenericDAO):
     def __init__(self, datasource=''):
         super().__init__(datasource)
 
-    def add(self, doador: Doador):
+    def insert(self, doador: Doador):
         if isinstance(doador, Doador) and doador is not None:
-            super().add(doador.cpf, doador)
+            super().insert(doador.cpf, doador)
 
-    def update(self, cpf, doador):
+    def update(self, cpf: str, doador: Doador):
         if isinstance(doador, Doador) and doador is not None:
-            super().remove(cpf)
-            super().add(doador.cpf, doador)
+            super().update(cpf, doador.cpf, doador)
+            return doador
 
-    def find_by_id(self, cpf):
+    def find_by_id(self, cpf: str):
         return super().find_by_id(cpf)
 
-    def remove(self, cpf):
+    def remove(self, cpf: str):
         return super().remove(cpf)

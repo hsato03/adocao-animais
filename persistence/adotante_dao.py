@@ -6,17 +6,17 @@ class AdotanteDAO(GenericDAO):
     def __init__(self, datasource=""):
         super().__init__(datasource)
 
-    def add(self, adotante: Adotante):
+    def insert(self, adotante: Adotante):
         if isinstance(adotante, Adotante) and adotante is not None:
-            super().add(adotante.cpf, adotante)
+            super().insert(adotante.cpf, adotante)
 
-    def find_by_id(self, key):
-        return super().find_by_id(key)
+    def find_by_id(self, cpf: str):
+        return super().find_by_id(cpf)
 
-    def update(self, cpf, adotante):
+    def update(self, cpf: str, adotante: Adotante):
         if isinstance(adotante, Adotante) and adotante is not None:
-            super().remove(cpf)
-            super().add(adotante.cpf, adotante)
+            super().update(cpf, adotante.cpf, adotante)
+            return adotante
 
-    def remove(self, key):
-        return super().remove(key)
+    def remove(self, cpf: str):
+        return super().remove(cpf)

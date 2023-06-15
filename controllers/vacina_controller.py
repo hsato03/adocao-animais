@@ -1,18 +1,20 @@
 from views import VacinaView
 from model import Vacina
+from persistence import VacinaDAO
 from exceptions import EntidadeNaoEncontradaException, IdentificadorJaExistenteException
 
 
 class VacinaController:
     def __init__(self, controlador_sistema):
-        self.__vacinas = []
+        self.__vacina_dao = VacinaDAO("datasources/vacinas.pkl")
         self.__tela_vacina = VacinaView()
         self.__controlador_sistema = controlador_sistema
 
     def buscar_vacina_por_identificador(self, identificador: int):
-        for vacina in self.__vacinas:
-            if vacina.identificador == identificador:
-                return vacina
+        vacina = self.__vacina_dao.find_by_id(identificador)
+        if vacina:
+            return vacina
+
         raise EntidadeNaoEncontradaException("ERRO: Vacina nao existente.")
 
     def incluir_vacina(self):
@@ -27,12 +29,12 @@ class VacinaController:
             dados_vacina["id"],
             dados_vacina["nome"],
         )
-        self.__vacinas.append(vacina)
+        self.__vacina_dao.insert(vacina)
 
     def alterar_vacina(self):
         self.verificar_nenhuma_vacina_cadastrada()
 
-        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=True)
+        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacina_dao.find_all(), mostrar_opcoes=True)
 
         if not identificador:
             return
@@ -45,29 +47,31 @@ class VacinaController:
 
         vacina.identificador = novos_dados_vacina["id"]
         vacina.nome = novos_dados_vacina["nome"]
+
+        self.__vacina_dao.update(identificador, vacina)
         self.__tela_vacina.mostrar_mensagem("Vacina alterada com sucesso")
 
     def listar_vacinas(self):
         self.verificar_nenhuma_vacina_cadastrada()
-        self.__tela_vacina.mostrar_vacinas([vacina for vacina in self.__vacinas])
+        self.__tela_vacina.mostrar_vacinas([vacina for vacina in self.__vacina_dao.find_all()])
 
     def excluir_vacina(self):
         self.verificar_nenhuma_vacina_cadastrada()
 
-        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=True)
+        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacina_dao.find_all(), mostrar_opcoes=True)
 
         if not identificador:
             return
 
         vacina = self.buscar_vacina_por_identificador(identificador)
 
-        self.__vacinas.remove(vacina)
+        self.__vacina_dao.remove(vacina)
         self.__tela_vacina.mostrar_mensagem("Vacina removida com sucesso.")
 
     def listar_vacina_por_identificador(self):
         self.verificar_nenhuma_vacina_cadastrada()
 
-        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=False)
+        identificador = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacina_dao.find_all(), mostrar_opcoes=False)
 
         if not identificador:
             return
@@ -77,7 +81,7 @@ class VacinaController:
 
     def selecionar_vacina(self):
         self.verificar_nenhuma_vacina_cadastrada()
-        id_vacina = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacinas, mostrar_opcoes=True)
+        id_vacina = self.__tela_vacina.selecionar_vacina(vacinas=self.__vacina_dao.find_all(), mostrar_opcoes=True)
 
         if not id_vacina:
             return
@@ -85,12 +89,11 @@ class VacinaController:
         return self.buscar_vacina_por_identificador(id_vacina)
 
     def verificar_id_ja_cadastrado(self, nova_vacina_id):
-        for vacina in self.__vacinas:
-            if vacina.identificador == nova_vacina_id:
-                raise IdentificadorJaExistenteException(nova_vacina_id)
+        if self.__vacina_dao.find_by_id(nova_vacina_id):
+            raise IdentificadorJaExistenteException(nova_vacina_id)
 
     def verificar_nenhuma_vacina_cadastrada(self):
-        if len(self.__vacinas) <= 0:
+        if len(self.__vacina_dao.find_all()) <= 0:
             raise EntidadeNaoEncontradaException("Nenhuma vacina cadastrada.")
 
     def retornar(self):
