@@ -87,9 +87,7 @@ class DoadorController:
         if not cpf_doador:
             return
 
-        doador = self.buscar_doador_por_cpf(cpf_doador)
-
-        self.__doador_dao.remove(doador.cpf)
+        self.__doador_dao.remove(cpf_doador)
         self.__tela_doador.mostrar_mensagem("Doador removido com sucesso.")
 
     def listar_doador_por_cpf(self):

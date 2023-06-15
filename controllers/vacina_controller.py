@@ -63,10 +63,11 @@ class VacinaController:
         if not identificador:
             return
 
-        vacina = self.buscar_vacina_por_identificador(identificador)
-
-        self.__vacina_dao.remove(vacina)
-        self.__tela_vacina.mostrar_mensagem("Vacina removida com sucesso.")
+        removed = self.__vacina_dao.remove(identificador)
+        if removed:
+            self.__tela_vacina.mostrar_mensagem("Vacina removida com sucesso.")
+        else:
+            self.__tela_vacina.mostrar_mensagem("Vacina não removida.")
 
     def listar_vacina_por_identificador(self):
         self.verificar_nenhuma_vacina_cadastrada()

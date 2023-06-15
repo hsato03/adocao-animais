@@ -10,13 +10,7 @@ class AdotanteDAO(GenericDAO):
         if isinstance(adotante, Adotante) and adotante is not None:
             super().insert(adotante.cpf, adotante)
 
-    def find_by_id(self, cpf: str):
-        return super().find_by_id(cpf)
-
     def update(self, cpf: str, adotante: Adotante):
         if isinstance(adotante, Adotante) and adotante is not None:
             super().update(cpf, adotante.cpf, adotante)
             return adotante
-
-    def remove(self, cpf: str):
-        return super().remove(cpf)

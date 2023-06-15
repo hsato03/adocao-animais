@@ -1,4 +1,5 @@
 from views import AnimalView
+from persistence import AnimalDAO
 from model import Cachorro, TamanhoCachorro, Gato, TIPO_CACHORRO, TIPO_GATO
 from exceptions import (
     EntidadeNaoEncontradaException,
@@ -8,22 +9,23 @@ from exceptions import (
 
 class AnimalController:
     def __init__(self, controlador_sistema):
-        self.__animais = []
+        self.__animal_dao = AnimalDAO("datasources/animais.pkl")
         self.__controlador_sistema = controlador_sistema
         self.__tela_animal = AnimalView()
 
     @property
     def gatos(self):
-        return list(filter(lambda animal: not hasattr(animal, "tamanho"), self.__animais))
+        return list(filter(lambda animal: not hasattr(animal, "tamanho"), self.__animal_dao.find_all()))
 
     @property
     def cachorros(self):
-        return list(filter(lambda animal: hasattr(animal, "tamanho"), self.__animais))
+        return list(filter(lambda animal: hasattr(animal, "tamanho"), self.__animal_dao.find_all()))
 
     def buscar_animal_por_numero_chip(self, numero_chip: int):
-        for animal in self.__animais:
-            if animal.numero_chip == numero_chip:
-                return animal
+        animal = self.__animal_dao.find_by_id(numero_chip)
+        if animal:
+            return animal
+
         raise EntidadeNaoEncontradaException("ERRO: Animal nao existente")
 
     def incluir_animal(self):
@@ -42,14 +44,14 @@ class AnimalController:
                 dados_animal["raca"],
                 TamanhoCachorro(dados_animal["tamanho_cachorro"]),
             )
-            self.__animais.append(cachorro)
+            self.__animal_dao.insert(cachorro)
         else:
             gato = Gato(
                 dados_animal["numero_chip"],
                 dados_animal["nome"],
                 dados_animal["raca"],
             )
-            self.__animais.append(gato)
+            self.__animal_dao.insert(gato)
 
     def listar_animais(self):
         self.verificar_nenhum_animal_cadastrado()
@@ -63,12 +65,12 @@ class AnimalController:
             self.__tela_animal.mostrar_animais(animais=self.gatos)
         else:
             self.verificar_nenhum_animal_cadastrado()
-            self.__tela_animal.mostrar_animais(animais=self.__animais)
+            self.__tela_animal.mostrar_animais(animais=self.__animal_dao.find_all())
 
     def alterar_animal(self):
         self.verificar_nenhum_animal_cadastrado()
 
-        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animal_dao.find_all(), mostrar_opcoes=True)
 
         if not numero_chip:
             return
@@ -90,35 +92,26 @@ class AnimalController:
         if tipo_animal == TIPO_CACHORRO:
             animal.tamanho = TamanhoCachorro(novos_dados_animal["tamanho_cachorro"])
 
+        self.__animal_dao.update(numero_chip, animal)
         self.__tela_animal.mostrar_mensagem("Animal alterado com sucesso.")
 
     def excluir_animal(self):
         self.verificar_nenhum_animal_cadastrado()
 
-        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animal_dao.find_all(), mostrar_opcoes=True)
 
         if not numero_chip:
             return
 
-        animal = self.buscar_animal_por_numero_chip(numero_chip)
-        self.__animais.remove(animal)
-        self.__tela_animal.mostrar_mensagem("Animal removido com sucesso.")
-
-    def verificar_nenhum_cachorro_cadastrado(self):
-        if len(self.cachorros) <= 0:
-            raise EntidadeNaoEncontradaException("Nenhum cachorro cadastrado.")
-
-    def verificar_nenhum_gato_cadastrado(self):
-        if len(self.gatos) <= 0:
-            raise EntidadeNaoEncontradaException("Nenhum gato cadastrado.")
-
-    def verificar_nenhum_animal_cadastrado(self):
-        if len(self.__animais) <= 0:
-            raise EntidadeNaoEncontradaException("Nenhum animal cadastrado.")
+        removed = self.__animal_dao.remove(numero_chip)
+        if removed:
+            self.__tela_animal.mostrar_mensagem("Animal removido com sucesso.")
+        else:
+            self.__tela_animal.mostrar_mensagem("Animal não removido.")
 
     def listar_animal_por_numero_chip(self):
         self.verificar_nenhum_animal_cadastrado()
-        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=False)
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animal_dao.find_all(), mostrar_opcoes=False)
 
         if not numero_chip:
             return
@@ -129,7 +122,7 @@ class AnimalController:
     def aplicar_vacina_animal(self):
         self.verificar_nenhum_animal_cadastrado()
 
-        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animal_dao.find_all(), mostrar_opcoes=True)
 
         if not numero_chip:
             return
@@ -144,10 +137,11 @@ class AnimalController:
         data_aplicacao_vacina = self.__tela_animal.pegar_data_aplicacao_vacina()
 
         animal.historico_vacinacao.add_vacina(vacina, data_aplicacao_vacina)
+        self.__animal_dao.update(numero_chip, animal)
 
     def selecionar_animal(self):
         self.verificar_nenhum_animal_cadastrado()
-        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animais, mostrar_opcoes=True)
+        numero_chip = self.__tela_animal.selecionar_animal(animais=self.__animal_dao.find_all(), mostrar_opcoes=True)
 
         if not numero_chip:
             return
@@ -173,7 +167,7 @@ class AnimalController:
     def animais_disponiveis_para_adocao(self):
         animais_disponiveis_adocao = []
 
-        for animal in self.__animais:
+        for animal in self.__animal_dao.find_all():
             if self.possui_todas_vacinas_para_adocao(animal):
                 animais_disponiveis_adocao.append(animal)
 
@@ -183,24 +177,26 @@ class AnimalController:
         return animais_disponiveis_adocao
 
     def possui_todas_vacinas_para_adocao(self, animal):
-        leptospirose = False
-        hepatite = False
-        raiva = False
-        for vacina in animal.historico_vacinacao.vacinas:
-            if vacina["vacina"].nome == "raiva":
-                raiva = True
-            elif vacina["vacina"].nome == "leptospirose":
-                leptospirose = True
-            elif vacina["vacina"].nome == "hepatite infecciosa":
-                hepatite = True
-        if leptospirose and hepatite and raiva:
+        vacinas_aplicadas = [vacina["vacina"].nome for vacina in animal.historico_vacinacao.vacinas]
+        if "hepatite infecciosa" and "leptospirose" and "raiva" in vacinas_aplicadas:
             return True
         return False
 
     def verificar_numero_chip_ja_existente(self, numero_chip: int):
-        for animal in self.__animais:
-            if animal.numero_chip == numero_chip:
-                raise IdentificadorJaExistenteException(numero_chip)
+        if self.__animal_dao.find_by_id(numero_chip):
+            raise IdentificadorJaExistenteException(numero_chip)
+
+    def verificar_nenhum_cachorro_cadastrado(self):
+        if len(self.cachorros) <= 0:
+            raise EntidadeNaoEncontradaException("Nenhum cachorro cadastrado.")
+
+    def verificar_nenhum_gato_cadastrado(self):
+        if len(self.gatos) <= 0:
+            raise EntidadeNaoEncontradaException("Nenhum gato cadastrado.")
+
+    def verificar_nenhum_animal_cadastrado(self):
+        if len(self.__animal_dao.find_all()) <= 0:
+            raise EntidadeNaoEncontradaException("Nenhum animal cadastrado.")
 
     def retornar(self):
         self.__controlador_sistema.abrir_tela()

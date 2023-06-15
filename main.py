@@ -1,18 +1,20 @@
 from controllers import SistemaController
-from model import Doador
+from model import *
 from datetime import date
-from persistence import DoadorDAO
+from persistence import *
 
 
 if __name__ == "__main__":
     SistemaController.inicializar_sistema(SistemaController())
 
-    # doador1 = Doador("02860078002", "Henrique", date.today(), "dasdasdaas", "132312")
-    # doador2 = Doador("00011122233", "Marco", date.today(), "aaaaaa", "1111")
-    # dao = DoadorDAO("doadores.pkl")
+    # cachorro = Cachorro(1, "Brisa", "Bulldog ingles", TamanhoCachorro.MEDIO)
+    # gato = Gato(2, "Miau", "Persa")
     #
-    # dao.add(doador1)
-    # print(dao.find_all())
+    # animal_dao = AnimalDAO("datasources/animais.pkl")
     #
-    # dao.update(doador1.cpf, doador2)
-    # print(dao.find_all()[0].cpf)
+    # animal_dao.insert(cachorro)
+    # animal_dao.insert(gato)
+    #
+    # animal_dao.remove(cachorro.numero_chip)
+    #
+    # print(animal_dao.find_by_id(1).nome)

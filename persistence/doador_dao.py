@@ -14,9 +14,3 @@ class DoadorDAO(GenericDAO):
         if isinstance(doador, Doador) and doador is not None:
             super().update(cpf, doador.cpf, doador)
             return doador
-
-    def find_by_id(self, cpf: str):
-        return super().find_by_id(cpf)
-
-    def remove(self, cpf: str):
-        return super().remove(cpf)
