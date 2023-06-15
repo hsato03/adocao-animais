@@ -5,18 +5,20 @@ from exceptions import (
 )
 from model import Doador
 from views import DoadorView
+from persistence import DoadorDAO
 
 
 class DoadorController:
     def __init__(self, controlador_sistema):
-        self.__doadores = []
+        self.__doador_dao = DoadorDAO("doadores.pkl")
         self.__tela_doador = DoadorView()
         self.__controlador_sistema = controlador_sistema
 
     def buscar_doador_por_cpf(self, cpf: str):
-        for doador in self.__doadores:
-            if doador.cpf == cpf:
-                return doador
+        doador = self.__doador_dao.find_by_id(cpf)
+        if doador:
+            return doador
+
         raise EntidadeNaoEncontradaException("ERRO: Doador nao existente.")
 
     def incluir_doador(self):
@@ -38,12 +40,12 @@ class DoadorController:
             dados_doador["logradouro"],
             dados_doador["numero"],
         )
-        self.__doadores.append(doador)
+        self.__doador_dao.add(doador)
 
     def alterar_doador(self):
         self.verificar_nenhum_doador_cadastrado()
 
-        cpf_doador = self.__tela_doador.selecionar_doador(self.__doadores, mostrar_opcoes=True)
+        cpf_doador = self.__tela_doador.selecionar_doador(self.__doador_dao.find_all(), mostrar_opcoes=True)
 
         if not cpf_doador:
             return
@@ -68,30 +70,32 @@ class DoadorController:
         doador.add_endereco(
             novos_dados_doador["logradouro"], novos_dados_doador["numero"]
         )
+
+        self.__doador_dao.update(cpf_doador, doador)
         self.__tela_doador.mostrar_mensagem("Doador alterado com sucesso.")
 
     def listar_doadores(self):
         self.verificar_nenhum_doador_cadastrado()
 
-        self.__tela_doador.mostrar_doadores(self.__doadores)
+        self.__tela_doador.mostrar_doadores(self.__doador_dao.find_all())
 
     def excluir_doador(self):
         self.verificar_nenhum_doador_cadastrado()
 
-        cpf_doador = self.__tela_doador.selecionar_doador(doadores=self.__doadores, mostrar_opcoes=True)
+        cpf_doador = self.__tela_doador.selecionar_doador(doadores=self.__doador_dao.find_all(), mostrar_opcoes=True)
 
         if not cpf_doador:
             return
 
         doador = self.buscar_doador_por_cpf(cpf_doador)
 
-        self.__doadores.remove(doador)
+        self.__doador_dao.remove(doador.cpf)
         self.__tela_doador.mostrar_mensagem("Doador removido com sucesso.")
 
     def listar_doador_por_cpf(self):
         self.verificar_nenhum_doador_cadastrado()
 
-        cpf_doador = self.__tela_doador.selecionar_doador(doadores=self.__doadores, mostrar_opcoes=False)
+        cpf_doador = self.__tela_doador.selecionar_doador(doadores=self.__doador_dao.find_all(), mostrar_opcoes=False)
 
         if not cpf_doador:
             return
@@ -101,7 +105,7 @@ class DoadorController:
 
     def selecionar_doador(self):
         self.verificar_nenhum_doador_cadastrado()
-        cpf = self.__tela_doador.selecionar_doador(doadores=self.__doadores, mostrar_opcoes=True)
+        cpf = self.__tela_doador.selecionar_doador(doadores=self.__doador_dao.find_all(), mostrar_opcoes=True)
 
         if not cpf:
             return
@@ -109,12 +113,12 @@ class DoadorController:
         return self.buscar_doador_por_cpf(cpf)
 
     def verificar_cpf_doador_ja_cadastrado(self, cpf: str):
-        for doador in self.__doadores:
-            if doador.cpf == cpf:
-                raise IdentificadorJaExistenteException(cpf)
+        doador = self.__doador_dao.find_by_id(cpf)
+        if doador:
+            raise IdentificadorJaExistenteException(cpf)
 
     def verificar_nenhum_doador_cadastrado(self):
-        if len(self.__doadores) <= 0:
+        if len(self.__doador_dao.find_all()) <= 0:
             raise EntidadeNaoEncontradaException("Nennum doador cadastrado.")
 
     def validar_digitos_cpf(self, cpf):

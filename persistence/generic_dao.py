@@ -21,6 +21,12 @@ class GenericDAO(ABC):
         self.__cache[key] = obj
         self.__dump()
 
+    def find_by_id(self, key):
+        try:
+            return self.__cache[key]
+        except KeyError:
+            pass
+
     def remove(self, key):
         try:
             self.__cache.pop(key)
@@ -28,5 +34,5 @@ class GenericDAO(ABC):
         except KeyError:
             pass
 
-    def get_all(self):
-        return self.__cache.values()
+    def find_all(self):
+        return list(self.__cache.values())

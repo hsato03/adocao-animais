@@ -1,5 +1,6 @@
 from views import AdotanteView
 from model import Adotante, TipoHabitacao, TamanhoHabitacao
+from persistence import AdotanteDAO
 from exceptions import (
     EntidadeNaoEncontradaException,
     CpfInvalidoException,
@@ -9,14 +10,15 @@ from exceptions import (
 
 class AdotanteController:
     def __init__(self, controlador_sistema):
-        self.__adotantes = []
+        self.__adotante_dao = AdotanteDAO("adotantes.pkl")
         self.__tela_adotante = AdotanteView()
         self.__controlador_sistema = controlador_sistema
 
     def buscar_adotante_por_cpf(self, cpf: str):
-        for adotante in self.__adotantes:
-            if adotante.cpf == cpf:
-                return adotante
+        adotante = self.__adotante_dao.find_by_id(cpf)
+        if adotante is not None:
+            return adotante
+
         raise EntidadeNaoEncontradaException("ERRO: Adotante nao existente.")
 
     def incluir_adotante(self):
@@ -41,12 +43,14 @@ class AdotanteController:
             TamanhoHabitacao(dados_adotante["tamanho_habitacao"]),
             True if dados_adotante["possui_animal"] == 1 else False,
         )
-        self.__adotantes.append(adotante)
+        self.__adotante_dao.add(adotante)
 
     def alterar_adotante(self):
         self.verificar_nenhum_adotante_cadastrado()
 
-        cpf_adotante = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=True)
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(
+            adotantes=self.__adotante_dao.find_all(), mostrar_opcoes=True
+        )
 
         if not cpf_adotante:
             return
@@ -80,30 +84,34 @@ class AdotanteController:
         adotante.add_endereco(
             novos_dados_adotante["logradouro"], novos_dados_adotante["numero"]
         )
+
+        self.__adotante_dao.update(cpf_adotante, adotante)
         self.__tela_adotante.mostrar_mensagem("Adotante alterado com sucesso.")
 
     def listar_adotantes(self):
         self.verificar_nenhum_adotante_cadastrado()
 
-        self.__tela_adotante.mostrar_adotantes(self.__adotantes)
+        self.__tela_adotante.mostrar_adotantes(self.__adotante_dao.find_all())
 
     def excluir_adotante(self):
         self.verificar_nenhum_adotante_cadastrado()
 
-        cpf_adotante = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=True)
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotante_dao.find_all(), mostrar_opcoes=True)
 
         if not cpf_adotante:
             return
 
         adotante = self.buscar_adotante_por_cpf(cpf_adotante)
 
-        self.__adotantes.remove(adotante)
+        self.__adotante_dao.remove(adotante.cpf)
         self.__tela_adotante.mostrar_mensagem("Adotante removido com sucesso.")
 
     def listar_adotante_por_cpf(self):
         self.verificar_nenhum_adotante_cadastrado()
 
-        cpf_adotante = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=False)
+        cpf_adotante = self.__tela_adotante.selecionar_adotante(
+            adotantes=self.__adotante_dao.find_all(), mostrar_opcoes=False
+        )
 
         if not cpf_adotante:
             return
@@ -113,7 +121,7 @@ class AdotanteController:
 
     def selecionar_adotante(self):
         self.verificar_nenhum_adotante_cadastrado()
-        cpf = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotantes, mostrar_opcoes=True)
+        cpf = self.__tela_adotante.selecionar_adotante(adotantes=self.__adotante_dao.find_all(), mostrar_opcoes=True)
 
         if not cpf:
             return
@@ -121,12 +129,12 @@ class AdotanteController:
         return self.buscar_adotante_por_cpf(cpf)
 
     def verificar_cpf_adotante_ja_cadastrado(self, cpf: str):
-        for adotante in self.__adotantes:
+        for adotante in self.__adotante_dao.find_all():
             if adotante.cpf == cpf:
                 raise IdentificadorJaExistenteException(cpf)
 
     def verificar_nenhum_adotante_cadastrado(self):
-        if len(self.__adotantes) <= 0:
+        if len(self.__adotante_dao.find_all()) <= 0:
             raise EntidadeNaoEncontradaException("Nenhum adotante cadastrado.")
 
     def validar_digitos_cpf(self, cpf):
