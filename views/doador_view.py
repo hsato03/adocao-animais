@@ -29,12 +29,20 @@ class DoadorView:
     def init_components(self):
         layout = [
             [
-                sg.Text(
-                    "Doadores",
-                    font=["Inter", 30, "bold"],
-                    size=[20, 2],
+                sg.Column(
+                    [
+                        [
+                            sg.Text(
+                                "Doadores",
+                                font=["Inter", 30, "bold"],
+                                size=[20, 2],
+                                justification="center",
+                                pad=((0, 0), (25, 0)),
+                                background_color="#3F3F3F",
+                            )
+                        ],
+                    ],
                     justification="center",
-                    pad=((0, 0), (25, 0)),
                     background_color="#3F3F3F",
                 )
             ],
@@ -103,13 +111,13 @@ class DoadorView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
         )
 
     def pegar_dados_doador(self, doador):
         if doador:
             layout = [
-                [sg.Text("CADASTRO DOADOR", font=("Inter", 25), justification="center")],
+                [sg.Text("ALTERAR DOADOR", font=("Inter", 25), justification="center")],
                 [sg.Text("CPF:", size=(17, 1)), sg.InputText(doador.cpf, key="cpf")],
                 [sg.Text("Nome:", size=(17, 1)), sg.InputText(doador.nome, key="nome")],
                 [sg.Text("Data de nascimento", size=(17, 1)),

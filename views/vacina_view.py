@@ -29,12 +29,20 @@ class VacinaView:
     def init_components(self):
         layout = [
             [
-                sg.Text(
-                    "Vacinas",
-                    font=["Inter", 30, "bold"],
-                    size=[20, 2],
+                sg.Column(
+                    [
+                        [
+                            sg.Text(
+                                "Vacinas",
+                                font=["Inter", 30, "bold"],
+                                size=[20, 2],
+                                justification="center",
+                                pad=((0, 0), (25, 0)),
+                                background_color="#3F3F3F",
+                            )
+                        ],
+                    ],
                     justification="center",
-                    pad=((0, 0), (25, 0)),
                     background_color="#3F3F3F",
                 )
             ],
@@ -103,28 +111,53 @@ class VacinaView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F",
         )
 
     def pegar_dados_vacina(self, vacina):
         if vacina:
             layout = [
-                [sg.Text("CADASTRO VACINA", font=("Inter", 25), justification="center")],
-                [sg.Text("ID:", size=(17, 1)), sg.InputText(vacina.identificador, key="id")],
-                [sg.Text("Nome:", size=(17, 1)), sg.InputText(vacina.nome, key="nome")],
-                [sg.Button("Confirmar", key="confirmar"),
-                 sg.Cancel("Cancelar", key="cancelar")],
+                [sg.Text("ALTERAR VACINA", font=("Inter", 25), justification="center", background_color="#3F3F3F", pad=15)],
+                [sg.Text("ID:", size=(10, 1), background_color="#3F3F3F"), sg.InputText(vacina.identificador, key="id")],
+                [sg.Text("Nome:", size=(10, 1), background_color="#3F3F3F"), sg.InputText(vacina.nome, key="nome")],
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE")
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
         else:
             layout = [
-                [sg.Text("CADASTRO VACINA", font=("Inter", 25), justification="center")],
-                [sg.Text("ID:", size=(17, 1)), sg.InputText("", key="id")],
-                [sg.Text("Nome:", size=(17, 1)), sg.InputText("", key="nome")],
-                [sg.Button("Confirmar", key="confirmar"),
-                 sg.Cancel("Cancelar", key="cancelar")],
+                [sg.Text("CADASTRO VACINA", font=("Inter", 25), justification="center", background_color="#3F3F3F", pad=15)],
+                [sg.Text("ID:", size=(10, 1), background_color="#3F3F3F"), sg.InputText("", key="id")],
+                [sg.Text("Nome:", size=(10, 1), background_color="#3F3F3F"), sg.InputText("", key="nome")],
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("black", "#FEFEFE")
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
-
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
 
         while True:
             try:
@@ -132,7 +165,7 @@ class VacinaView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e)
+                sg.popup(e, background_color="#3F3F3F", button_color=("#000", "#FEFEFE"), font=("Inter", 12))
 
         self.__window.close()
 
@@ -146,9 +179,9 @@ class VacinaView:
 
     def mostrar_vacinas(self, vacinas: list):
         layout = self.layout_tabela_mostrar_vacinas(vacinas)
-        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red")], )
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F")
         self.__window.read()
         self.__window.close()
 
@@ -171,6 +204,12 @@ class VacinaView:
                     expand_y=True,
                     expand_x=True,
                     justification="center",
+                    background_color="#FEFEFE",
+                    text_color="#000",
+                    alternating_row_color="#BDBDBD",
+                    font=("Inter", 12),
+                    sbar_background_color="#2B2B2B",
+                    num_rows=10,
                 )
             ],
         ]
@@ -179,20 +218,38 @@ class VacinaView:
         output_vacina = f"\t - ID: {vacina.identificador}\n"
         output_vacina += f"\t - Nome: {vacina.nome}\n"
 
-        sg.Popup("", output_vacina)
+        sg.Popup("", output_vacina, background_color="#3F3F3F", button_color=("#000", "#FEFEFE"), font=("Inter", 12))
 
     def selecionar_vacina(self, vacinas: list, mostrar_opcoes):
         layout = []
         if mostrar_opcoes:
             layout.append(self.layout_tabela_mostrar_vacinas(vacinas))
         layout.append([
-            [sg.Text("ID da vacina que deseja selecionar: ")],
+            [sg.Text("ID da vacina que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F", pad=10)],
             [sg.Combo(values=[vacina.identificador for vacina in vacinas],
-                      default_value=vacinas[0].identificador, key="id")],
-            [sg.Button("Confirmar", key="confirmar"),
-             sg.Button("Cancelar", key="cancelar", button_color="red")],
+                      default_value=vacinas[0].identificador,
+                      size=(22, 10),
+                      font=("Inter", 14),
+                      button_background_color="#2B2B2B",
+                      pad=((15, 0), (0, 0)),
+                      key="id")],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("black", "#FEFEFE")
+                        ),
+                        sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=15
+            ),
+            ],
         ])
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F")
         button, values = self.__window.read()
         self.__window.close()
 
@@ -202,7 +259,7 @@ class VacinaView:
         return values["id"]
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg)
+        sg.popup("", msg, background_color="#3F3F3F", button_color=("#000", "#FEFEFE"), font=("Inter", 12))
 
     def input_valido(self):
         campos_nao_preenchidos = []
@@ -214,7 +271,7 @@ class VacinaView:
         try:
             int(identificador)
         except ValueError:
-            sg.popup("", "ID deve ser um valor inteiro")
+            sg.popup("", "ID deve ser um valor inteiro", background_color="#3F3F3F", button_color=("#000", "#FEFEFE"), font=("Inter", 12))
             id_valido = False
 
         if not identificador:

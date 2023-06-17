@@ -29,12 +29,20 @@ class SistemaView:
     def init_components(self):
         layout = [
             [
-                sg.Text(
-                    "DONADOPTION",
-                    font=["Inter", 30, "bold"],
-                    size=[20, 2],
+                sg.Column(
+                    [
+                        [
+                            sg.Text(
+                                "DONADOPTION",
+                                font=["Inter", 30, "bold"],
+                                size=[20, 2],
+                                justification="center",
+                                pad=((0, 0), (40, 0)),
+                                background_color="#3F3F3F",
+                            )
+                        ],
+                    ],
                     justification="center",
-                    pad=((0, 0), (40, 0)),
                     background_color="#3F3F3F",
                 )
             ],
@@ -113,5 +121,5 @@ class SistemaView:
         ]
 
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
         )

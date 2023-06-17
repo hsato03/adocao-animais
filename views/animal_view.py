@@ -36,12 +36,20 @@ class AnimalView:
     def init_components(self):
         layout = [
             [
-                sg.Text(
-                    "Animais",
-                    font=["Inter", 30, "bold"],
-                    size=[20, 2],
+                sg.Column(
+                    [
+                        [
+                            sg.Text(
+                                "Animais",
+                                font=["Inter", 30, "bold"],
+                                size=[20, 2],
+                                justification="center",
+                                pad=((0, 0), (25, 0)),
+                                background_color="#3F3F3F",
+                            )
+                        ],
+                    ],
                     justification="center",
-                    pad=((0, 0), (25, 0)),
                     background_color="#3F3F3F",
                 )
             ],
@@ -118,7 +126,7 @@ class AnimalView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
         )
 
     def telar_opcoes_tipo_animal(self, listagem: bool):

@@ -32,12 +32,20 @@ class AdotanteView:
     def init_components(self):
         layout = [
             [
-                sg.Text(
-                    "Adotantes",
-                    font=["Inter", 30, "bold"],
-                    size=[20, 2],
+                sg.Column(
+                    [
+                        [
+                            sg.Text(
+                                "Adotantes",
+                                font=["Inter", 30, "bold"],
+                                size=[20, 2],
+                                justification="center",
+                                pad=((0, 0), (25, 0)),
+                                background_color="#3F3F3F",
+                            )
+                        ],
+                    ],
                     justification="center",
-                    pad=((0, 0), (25, 0)),
                     background_color="#3F3F3F",
                 )
             ],
@@ -106,13 +114,13 @@ class AdotanteView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
         )
 
     def pegar_dados_adotante(self, adotante):
         if adotante:
             layout = [
-                [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
+                [sg.Text("ALTERAR ADOTANTE", font=("Inter", 25), justification="center")],
                 [sg.Text("CPF:", size=(17, 1)), sg.InputText(adotante.cpf, key="cpf")],
                 [sg.Text("Nome:", size=(17, 1)), sg.InputText(adotante.nome, key="nome")],
                 [sg.Text("Data de nascimento", size=(17, 1)),

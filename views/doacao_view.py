@@ -32,12 +32,20 @@ class DoacaoView:
     def init_components(self):
         layout = [
             [
-                sg.Text(
-                    "Doacoes",
-                    font=["Inter", 30, "bold"],
-                    size=[20, 2],
+                sg.Column(
+                    [
+                        [
+                            sg.Text(
+                                "Doacoes",
+                                font=["Inter", 30, "bold"],
+                                size=[20, 2],
+                                justification="center",
+                                pad=((0, 0), (25, 0)),
+                                background_color="#3F3F3F",
+                            )
+                        ],
+                    ],
                     justification="center",
-                    pad=((0, 0), (25, 0)),
                     background_color="#3F3F3F",
                 )
             ],
@@ -106,7 +114,7 @@ class DoacaoView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F"
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
         )
 
     def pegar_dados_doacao(self, doacao):
