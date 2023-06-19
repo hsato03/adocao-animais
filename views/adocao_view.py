@@ -122,34 +122,64 @@ class AdocaoView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", font=("Inter", 12)
         )
 
     def pegar_dados_adocao(self, adocao):
         if adocao:
             layout = [
-                [sg.Text("ALTERAR ADOCAO", font=("Inter", 25), justification="center")],
-                [sg.Text("Data de adocao:", size=(17, 1)),
+                [sg.Text("ALTERAR ADOCAO", font=("Inter", 25), justification="center",
+                         background_color="#3F3F3F", pad=15)],
+                [sg.Text("Data de adocao:", size=(17, 1), background_color="#3F3F3F"),
                  sg.Input(adocao.data.strftime('%d/%m/%Y'), size=(26, 1), key="data"),
-                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y")],
+                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y",
+                                   button_color=("white", "#2B2B2B"))],
                 [self.termo_assinado_padrao(adocao.termo_assinado)],
-                [sg.Button("Confirmar", key="confirmar"),
-                 sg.Cancel("Cancelar", key="cancelar")]
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("white", "green"),
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
         else:
             layout = [
-                [sg.Text("CADASTRO ADOCAO", font=("Inter", 25), justification="center")],
-                [sg.Text("Data de adocao:", size=(12, 1)),
+                [sg.Text("CADASTRO ADOCAO", font=("Inter", 25), justification="center",
+                         background_color="#3F3F3F", pad=15)],
+                [sg.Text("Data de adocao:", size=(12, 1), background_color="#3F3F3F"),
                  sg.Input("", size=(26, 1), key="data"),
-                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y")],
-                [sg.Text("Assinar termo:", size=(12, 1)),
-                 sg.Radio("Sim", "RD1", key="assinar"),
-                 sg.Radio("Nao", "RD1", key="nao_assinar")],
-                [sg.Button("Confirmar", key="confirmar"),
-                 sg.Cancel("Cancelar", key="cancelar")]
+                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y",
+                                   button_color=("white", "#2B2B2B"))],
+                [sg.Text("Assinar termo:", size=(12, 1), background_color="#3F3F3F"),
+                 sg.Radio("Sim", "RD1", key="assinar", background_color="#3F3F3F"),
+                 sg.Radio("Nao", "RD1", key="nao_assinar", background_color="#3F3F3F")],
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("white", "green"),
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
 
         while True:
             try:
@@ -157,7 +187,7 @@ class AdocaoView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e)
+                sg.popup(e, background_color="#3F3F3F", font=("Inter", 12))
 
         self.__window.close()
 
@@ -176,29 +206,44 @@ class AdocaoView:
     def termo_assinado_padrao(self, termo_assinado):
         if termo_assinado:
             return [
-                sg.Text("Assinar termo:"),
-                sg.Radio("Sim", "RD1", default=True, key="assinar"),
-                sg.Radio("Nao", "RD1", key="nao_assinar")
+                sg.Text("Assinar termo:", background_color="#3F3F3F"),
+                sg.Radio("Sim", "RD1", default=True, key="assinar", background_color="#3F3F3F"),
+                sg.Radio("Nao", "RD1", key="nao_assinar", background_color="#3F3F3F")
             ],
         return [
-            sg.Text("Assinar termo:"),
-            sg.Radio("Sim", "RD1", key="assinar"),
-            sg.Radio("Nao", "RD1", default=True, key="nao_assinar")
+            sg.Text("Assinar termo:", background_color="#3F3F3F"),
+            sg.Radio("Sim", "RD1", key="assinar", background_color="#3F3F3F"),
+            sg.Radio("Nao", "RD1", default=True, key="nao_assinar", background_color="#3F3F3F")
         ],
 
     def pegar_dados_periodo(self):
         layout = [
-            [sg.Text("Data de inicio:", size=(20, 1)),
+            [sg.Text("Data de inicio:", size=(20, 1), background_color="#3F3F3F"),
              sg.Input("", size=(26, 1), key="data_inicio"),
-             sg.CalendarButton("Abrir calendario", target="data_inicio", format="%d/%m/%Y")],
-            [sg.Text("Data de fim:", size=(20, 1)),
+             sg.CalendarButton("Abrir calendario", target="data_inicio", format="%d/%m/%Y",
+                               button_color=("white", "#2B2B2B"))],
+            [sg.Text("Data de fim:", size=(20, 1), background_color="#3F3F3F"),
              sg.Input("", size=(26, 1), key="data_fim"),
-             sg.CalendarButton("Abrir calendario", target="data_fim", format="%d/%m/%Y")],
-            [sg.Button("Confirmar", key="confirmar"),
-             sg.Button("Cancelar", key="cancelar", button_color="red")],
+             sg.CalendarButton("Abrir calendario", target="data_fim", format="%d/%m/%Y",
+                               button_color=("white", "#2B2B2B"))],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green"),
+                        ),
+                        sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=20
+            ),
+            ],
         ]
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         while True:
             try:
                 button, values = self.__window.read()
@@ -212,7 +257,7 @@ class AdocaoView:
                 self.__window.close()
                 return {"data_inicio": data_inicio_convertida, "data_fim": data_fim_convertida}
             except ValueError:
-                sg.popup("", "ERRO: Data em formato invalido")
+                sg.popup("", "ERRO: Data em formato invalido", background_color="#3F3F3F", font=("Inter", 12))
 
     def mostrar_adocao(self, adocao):
         output_adotante = f"\t - Adotante: {adocao.adotante.cpf}\n"
@@ -220,7 +265,7 @@ class AdocaoView:
         output_adotante += f"\t - Data de adocao: {adocao.data.strftime('%d/%m/%Y')}\n"
         output_adotante += f"\t - Termo assinado: {'Sim' if adocao.termo_assinado else 'Nao'}\n"
 
-        sg.Popup("", output_adotante)
+        sg.Popup("", output_adotante, background_color="#3F3F3F", font=("Inter", 12))
 
     def mostrar_adocoes(self, adocoes: list):
         dados_adocoes = [
@@ -241,7 +286,7 @@ class AdocaoView:
         layout = self.layout_tabela_mostrar_adocoes(dados_adocoes)
         layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         self.__window.read()
         self.__window.close()
 
@@ -264,6 +309,13 @@ class AdocaoView:
                     justification="center",
                     display_row_numbers=True,
                     key="table",
+                    background_color="#FEFEFE",
+                    text_color="#000",
+                    alternating_row_color="#BDBDBD",
+                    selected_row_colors=("#FFF", "#2B2B2B"),
+                    font=("Inter", 12),
+                    sbar_background_color="#2B2B2B",
+                    num_rows=10,
                 )
             ],
         ]
@@ -286,12 +338,30 @@ class AdocaoView:
         layout = self.layout_tabela_mostrar_adocoes(dados_adocoes)
 
         layout.append([
-            [sg.Text("Adocao que deseja selecionar: ")],
-            [sg.Combo(values=[i for i in range(len(adocoes))], default_value=0, key="row")],
-            [sg.Button("Confirmar", key="confirmar"),
-             sg.Button("Cancelar", key="cancelar", button_color="red")],
+            [sg.Text("Adocao que deseja selecionar: ", background_color="#3F3F3F")],
+            [sg.Combo(values=[i for i in range(len(adocoes))], default_value=0,
+                      size=(22, 10),
+                      font=("Inter", 14),
+                      button_background_color="#2B2B2B",
+                      pad=((15, 0), (0, 0)),
+                      key="row")],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green")
+                        ),
+                        sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=15
+            ),
+            ],
         ])
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         button, values = self.__window.read()
         print(values["row"])
         adocao = dados_adocoes[int(values["row"])]
@@ -304,7 +374,7 @@ class AdocaoView:
         return int(numero_chip)
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg)
+        sg.popup("", msg, background_color="#3F3F3F", font=("Inter", 12))
 
     def input_valido(self):
         data_formato_valido = True
@@ -316,7 +386,7 @@ class AdocaoView:
             data_adocao = self.__window["data"].get().strip()
             datetime.strptime(data_adocao, "%d/%m/%Y").date()
         except ValueError:
-            sg.popup("Data em formato invalido! Tente novamente.")
+            sg.popup("Data em formato invalido! Tente novamente.", background_color="#3F3F3F", font=("Inter", 12))
             data_formato_valido = False
 
         if not termo_assinado:
