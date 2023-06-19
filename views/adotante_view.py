@@ -120,12 +120,14 @@ class AdotanteView:
     def pegar_dados_adotante(self, adotante):
         if adotante:
             layout = [
-                [sg.Text("ALTERAR ADOTANTE", font=("Inter", 25), justification="center", background_color="#3F3F3F", pad=15)],
+                [sg.Text("ALTERAR ADOTANTE", font=("Inter", 25), justification="center",
+                         background_color="#3F3F3F", pad=15)],
                 [sg.Text("CPF:", size=(17, 1), background_color="#3F3F3F"), sg.InputText(adotante.cpf, key="cpf")],
                 [sg.Text("Nome:", size=(17, 1), background_color="#3F3F3F"), sg.InputText(adotante.nome, key="nome")],
                 [sg.Text("Data de nascimento", size=(17, 1), background_color="#3F3F3F"),
                  sg.Input(adotante.data_nascimento.strftime('%d/%m/%Y'), size=(30, 1), key="data_nascimento"),
-                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y", button_color=("white", "#2B2B2B"))],
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y",
+                                   button_color=("white", "#2B2B2B"))],
                 [sg.Text("Logradouro:", size=(17, 1), background_color="#3F3F3F"),
                  sg.InputText(adotante.endereco.logradouro, key="logradouro")],
                 [sg.Text("Numero:", size=(17, 1), background_color="#3F3F3F"),
@@ -151,12 +153,14 @@ class AdotanteView:
             ]
         else:
             layout = [
-                [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center", background_color="#3F3F3F", pad=15)],
+                [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center", background_color="#3F3F3F",
+                         pad=15)],
                 [sg.Text("CPF:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="cpf")],
                 [sg.Text("Nome:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="nome")],
                 [sg.Text("Data de nascimento:", size=(17, 1), background_color="#3F3F3F"),
                  sg.Input(size=(30, 1), key="data_nascimento"),
-                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y", button_color=("white", "#2B2B2B"))],
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y",
+                                   button_color=("white", "#2B2B2B"))],
                 [sg.Text("Logradouro:", size=(17, 1), background_color="#3F3F3F"),
                  sg.InputText("", key="logradouro")],
                 [sg.Text("Numero:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="numero")],
@@ -430,7 +434,8 @@ class AdotanteView:
             layout.append(self.layout_tabela_mostrar_adotantes(adotantes))
 
         layout.append([
-            [sg.Text("CPF do adotante que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F", pad=10)],
+            [sg.Text("CPF do adotante que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F",
+                     pad=10)],
             [sg.Combo(values=[adotante.cpf for adotante in adotantes],
                       default_value=adotantes[0].cpf,
                       size=(22, 10),
@@ -487,7 +492,8 @@ class AdotanteView:
             data_nascimento = self.__window["data_nascimento"].get().strip()
             datetime.strptime(data_nascimento, "%d/%m/%Y").date()
         except ValueError:
-            sg.popup("Data em formato invalido! Tente novamente.", background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+            sg.popup("Data em formato invalido! Tente novamente.", background_color="#3F3F3F",
+                     button_color=("white", "green"), font=("Inter", 12))
             data_formato_valido = False
 
         if not cpf:

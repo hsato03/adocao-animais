@@ -7,6 +7,7 @@ from exceptions import CampoObrigatorioException
 TIPO_CACHORRO = 1
 TIPO_GATO = 2
 
+
 class AnimalView:
     def __init__(self):
         self.__window = None
@@ -126,7 +127,7 @@ class AnimalView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", font=("Inter", 12)
         )
 
     def telar_opcoes_tipo_animal(self, listagem: bool):
@@ -134,11 +135,30 @@ class AnimalView:
         if listagem:
             values += ["Todos"]
         layout = [
-            [sg.Text("Tipo do animal que deseja selecionar: ")],
-            [sg.Combo(values=values, default_value=values[0], key="tipo_animal")],
-            [sg.Button("Confirmar", key="confirmar")],
+            [sg.Text("Tipo do animal que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F")],
+            [sg.Combo(values=values, default_value=values[0],
+                      size=(22, 10),
+                      font=("Inter", 14),
+                      button_background_color="#2B2B2B",
+                      pad=((15, 0), (0, 0)),
+                      key="tipo_animal")
+             ],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green")
+                        ),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=15
+            ),
+            ],
         ]
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         button, values = self.__window.read()
         self.__window.close()
 
@@ -154,10 +174,12 @@ class AnimalView:
     def pegar_dados_animal(self, animal, tipo_animal):
         if animal:
             layout = [
-                [sg.Text("ALTERAR ANIMAL", font=("Inter", 25), justification="center")],
-                [sg.Text("N° Chip:", size=(17, 1)), sg.InputText(animal.numero_chip, key="numero_chip")],
-                [sg.Text("Nome:", size=(17, 1)), sg.InputText(animal.nome, key="nome")],
-                [sg.Text("Raca:", size=(17, 1)), sg.InputText(animal.raca, key="raca")],
+                [sg.Text("ALTERAR ANIMAL", font=("Inter", 25), justification="center", background_color="#3F3F3F",
+                         pad=15)],
+                [sg.Text("N° Chip:", size=(17, 1), background_color="#3F3F3F"),
+                 sg.InputText(animal.numero_chip, key="numero_chip")],
+                [sg.Text("Nome:", size=(17, 1), background_color="#3F3F3F"), sg.InputText(animal.nome, key="nome")],
+                [sg.Text("Raca:", size=(17, 1), background_color="#3F3F3F"), sg.InputText(animal.raca, key="raca")],
             ]
 
             if tipo_animal == TIPO_CACHORRO:
@@ -165,28 +187,43 @@ class AnimalView:
 
         else:
             layout = [
-                [sg.Text("CADASTRAR ANIMAL", font=("Inter", 25), justification="center")],
-                [sg.Text("N° Chip:", size=(17, 1)), sg.InputText("", key="numero_chip")],
-                [sg.Text("Nome:", size=(17, 1)), sg.InputText("", key="nome")],
-                [sg.Text("Raca:", size=(17, 1)), sg.InputText("", key="raca")],
+                [sg.Text("CADASTRAR ANIMAL", font=("Inter", 25), justification="center", background_color="#3F3F3F",
+                         pad=15)],
+                [sg.Text("N° Chip:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="numero_chip")],
+                [sg.Text("Nome:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="nome")],
+                [sg.Text("Raca:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="raca")],
             ]
 
             if tipo_animal == TIPO_CACHORRO:
                 layout.append([
                     sg.Column(
                         [
-                            [sg.Text("Tamanho: ")],
-                            [sg.Radio("Pequeno", "RD1", key="pequeno")],
-                            [sg.Radio("Medio", "RD1", key="medio")],
-                            [sg.Radio("Grande", "RD1", key="grande")],
-                        ]
+                            [sg.Text("Tamanho: ", background_color="#3F3F3F")],
+                            [sg.Radio("Pequeno", "RD1", key="pequeno", background_color="#3F3F3F")],
+                            [sg.Radio("Medio", "RD1", key="medio", background_color="#3F3F3F")],
+                            [sg.Radio("Grande", "RD1", key="grande", background_color="#3F3F3F")],
+                        ],
+                        background_color="#3F3F3F"
                     )
                 ])
 
-        layout.append([sg.Button("Confirmar", key="confirmar"),
-                       sg.Cancel("Cancelar", key="cancelar")])
+        layout.append([sg.Column(
+            [
+                [
+                    sg.Button(
+                        "Confirmar",
+                        key="confirmar",
+                        font=("Inter", 12),
+                        button_color=("white", "green"),
+                    ),
+                    sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                ],
+            ],
+            justification="right", background_color="#3F3F3F", pad=20
+        ),
+        ])
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
 
         while True:
             try:
@@ -194,7 +231,7 @@ class AnimalView:
                 if (button == "confirmar" and self.input_valido(tipo_animal == TIPO_CACHORRO)) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e)
+                sg.popup(e, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
 
         self.__window.close()
 
@@ -222,44 +259,61 @@ class AnimalView:
             return [
                 sg.Column(
                     [
-                        [sg.Text("Tamanho: ")],
-                        [sg.Radio("Pequeno", "RD1", default=True, key="pequeno")],
-                        [sg.Radio("Medio", "RD1", key="medio")],
-                        [sg.Radio("Grande", "RD1", key="grande")],
-                    ]
+                        [sg.Text("Tamanho: ", background_color="#3F3F3F")],
+                        [sg.Radio("Pequeno", "RD1", default=True, key="pequeno", background_color="#3F3F3F")],
+                        [sg.Radio("Medio", "RD1", key="medio", background_color="#3F3F3F")],
+                        [sg.Radio("Grande", "RD1", key="grande", background_color="#3F3F3F")],
+                    ],
+                    background_color="#3F3F3F"
                 )
             ]
         elif tamanho_cachorro.name == "MEDIO":
             return [
-                    sg.Column(
-                        [
-                            [sg.Text("Tamanho: ")],
-                            [sg.Radio("Pequeno", "RD1", key="pequeno")],
-                            [sg.Radio("Medio", "RD1", default=True, key="medio")],
-                            [sg.Radio("Grande", "RD1", key="grande")],
-                        ]
-                    )
-                ]
-        return [
                 sg.Column(
                     [
-                        [sg.Text("Tamanho: ")],
-                        [sg.Radio("Pequeno", "RD1", key="pequeno")],
-                        [sg.Radio("Medio", "RD1", key="medio")],
-                        [sg.Radio("Grande", "RD1", default=True, key="grande")],
-                    ]
+                        [sg.Text("Tamanho: ", background_color="#3F3F3F")],
+                        [sg.Radio("Pequeno", "RD1", key="pequeno", background_color="#3F3F3F")],
+                        [sg.Radio("Medio", "RD1", default=True, key="medio", background_color="#3F3F3F")],
+                        [sg.Radio("Grande", "RD1", key="grande", background_color="#3F3F3F")],
+                    ],
+                    background_color="#3F3F3F"
                 )
             ]
+        return [
+            sg.Column(
+                [
+                    [sg.Text("Tamanho: ", background_color="#3F3F3F")],
+                    [sg.Radio("Pequeno", "RD1", key="pequeno", background_color="#3F3F3F")],
+                    [sg.Radio("Medio", "RD1", key="medio", background_color="#3F3F3F")],
+                    [sg.Radio("Grande", "RD1", default=True, key="grande", background_color="#3F3F3F")],
+                ],
+                background_color="#3F3F3F"
+            )
+        ]
 
     def pegar_data_aplicacao_vacina(self):
         layout = [
-            [sg.Text("Data de aplicao da vacina:", size=(20, 1)),
+            [sg.Text("Data de aplicao da vacina:", size=(20, 1), background_color="#3F3F3F"),
              sg.Input("", size=(26, 1), key="data_aplicacao"),
-             sg.CalendarButton("Abrir calendario", target="data_aplicacao", format="%d/%m/%Y")],
-            [sg.Button("Confirmar", key="confirmar")],
+             sg.CalendarButton("Abrir calendario", target="data_aplicacao", format="%d/%m/%Y",
+                               button_color=("white", "#2B2B2B"))],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green")
+                        ),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=15
+            ),
+            ],
         ]
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         while True:
             try:
                 button, values = self.__window.read()
@@ -267,8 +321,8 @@ class AnimalView:
                 self.__window.close()
                 return data_aplicacao_convertida
             except ValueError:
-                sg.popup("", "ERRO: Data em formato invalido")
-
+                sg.popup("", "ERRO: Data em formato invalido", background_color="#3F3F3F",
+                         button_color=("white", "green"), font=("Inter", 12))
 
     def mostrar_animal(self, animal):
         nome = animal.nome
@@ -291,14 +345,14 @@ class AnimalView:
 
         sg.Popup(
             f"Dados do animal {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:",
-            output_animal,
+            output_animal, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12)
         )
 
     def mostrar_animais(self, animais: list):
         layout = self.layout_tabela_mostrar_animais(animais)
-        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red", font=("Inter", 12))], )
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         self.__window.read()
         self.__window.close()
 
@@ -353,6 +407,13 @@ class AnimalView:
                     expand_y=True,
                     expand_x=True,
                     justification="center",
+                    background_color="#FEFEFE",
+                    text_color="#000",
+                    alternating_row_color="#BDBDBD",
+                    selected_row_colors=("#FFF", "#2B2B2B"),
+                    font=("Inter", 12),
+                    sbar_background_color="#2B2B2B",
+                    num_rows=10,
                 )
             ],
 
@@ -365,13 +426,31 @@ class AnimalView:
             layout.append(self.layout_tabela_mostrar_animais(animais))
 
         layout.append([
-            [sg.Text("N° chip do animal que deseja selecionar: ")],
-            [sg.Combo(values=[animal.numero_chip for animal in animais], default_value=animais[0].numero_chip,
-             key="numero_chip")],
-            [sg.Button("Confirmar", key="confirmar"),
-             sg.Button("Cancelar", key="cancelar", button_color="red")],
+            [sg.Text("N° chip do animal que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F")],
+            [sg.Combo(values=[animal.numero_chip for animal in animais],
+                      default_value=animais[0].numero_chip,
+                      size=(22, 10),
+                      font=("Inter", 14),
+                      button_background_color="#2B2B2B",
+                      pad=((15, 0), (0, 0)),
+                      key="numero_chip")],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green")
+                        ),
+                        sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=15
+            ),
+            ],
         ])
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         button, values = self.__window.read()
         self.__window.close()
 
@@ -381,7 +460,7 @@ class AnimalView:
         return values["numero_chip"]
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg)
+        sg.popup("", msg, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
 
     def input_valido(self, cachorro: bool):
         numero_chip_valido = True
@@ -391,11 +470,11 @@ class AnimalView:
         nome = self.__window["nome"].get().strip()
         raca = self.__window["raca"].get().strip()
 
-
         try:
             int(numero_chip)
         except ValueError:
-            sg.popup("", "Numero do chip deve ser um valor inteiro")
+            sg.popup("", "Numero do chip deve ser um valor inteiro", background_color="#3F3F3F",
+                     button_color=("white", "green"), font=("Inter", 12))
             numero_chip_valido = False
 
         if not numero_chip:
