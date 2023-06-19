@@ -179,7 +179,7 @@ class VacinaView:
 
     def mostrar_vacinas(self, vacinas: list):
         layout = self.layout_tabela_mostrar_vacinas(vacinas)
-        layout.append([sg.Button("Fechar", key="fechar", button_color="red")], )
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red", font=("Inter", 12))], )
 
         self.__window = sg.Window("Layout", layout, background_color="#3F3F3F")
         self.__window.read()
@@ -207,6 +207,7 @@ class VacinaView:
                     background_color="#FEFEFE",
                     text_color="#000",
                     alternating_row_color="#BDBDBD",
+                    selected_row_colors=("#FFF", "#2B2B2B"),
                     font=("Inter", 12),
                     sbar_background_color="#2B2B2B",
                     num_rows=10,

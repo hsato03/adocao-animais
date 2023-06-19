@@ -120,72 +120,99 @@ class AdotanteView:
     def pegar_dados_adotante(self, adotante):
         if adotante:
             layout = [
-                [sg.Text("ALTERAR ADOTANTE", font=("Inter", 25), justification="center")],
-                [sg.Text("CPF:", size=(17, 1)), sg.InputText(adotante.cpf, key="cpf")],
-                [sg.Text("Nome:", size=(17, 1)), sg.InputText(adotante.nome, key="nome")],
-                [sg.Text("Data de nascimento", size=(17, 1)),
-                 sg.Input(adotante.data_nascimento.strftime('%d/%m/%Y'), size=(26, 1), key="data_nascimento"),
-                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
-                [sg.Text("Logradouro:", size=(17, 1)),
+                [sg.Text("ALTERAR ADOTANTE", font=("Inter", 25), justification="center", background_color="#3F3F3F", pad=15)],
+                [sg.Text("CPF:", size=(17, 1), background_color="#3F3F3F"), sg.InputText(adotante.cpf, key="cpf")],
+                [sg.Text("Nome:", size=(17, 1), background_color="#3F3F3F"), sg.InputText(adotante.nome, key="nome")],
+                [sg.Text("Data de nascimento", size=(17, 1), background_color="#3F3F3F"),
+                 sg.Input(adotante.data_nascimento.strftime('%d/%m/%Y'), size=(30, 1), key="data_nascimento"),
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y", button_color=("white", "#2B2B2B"))],
+                [sg.Text("Logradouro:", size=(17, 1), background_color="#3F3F3F"),
                  sg.InputText(adotante.endereco.logradouro, key="logradouro")],
-                [sg.Text("Numero:", size=(17, 1)),
+                [sg.Text("Numero:", size=(17, 1), background_color="#3F3F3F"),
                  sg.InputText(adotante.endereco.numero, key="numero")],
                 self.tipo_habitacao_padrao(adotante.tipo_habitacao),
                 self.tamanho_habitacao_padrao(adotante.tamanho_habitacao),
                 self.possui_animal_padrao(adotante.possui_animal),
-                [sg.Button("Confirmar", key="confirmar"),
-                 sg.Cancel("Cancelar", key="cancelar")]
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("white", "green"),
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
         else:
             layout = [
-                [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center")],
-                [sg.Text("CPF:", size=(17, 1)), sg.InputText("", key="cpf")],
-                [sg.Text("Nome:", size=(17, 1)), sg.InputText("", key="nome")],
-                [sg.Text("Data de nascimento:", size=(17, 1)),
-                 sg.Input(size=(26, 1), key="data_nascimento"),
-                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y")],
-                [sg.Text("Logradouro:", size=(17, 1)),
+                [sg.Text("CADASTRO ADOTANTE", font=("Inter", 25), justification="center", background_color="#3F3F3F", pad=15)],
+                [sg.Text("CPF:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="cpf")],
+                [sg.Text("Nome:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="nome")],
+                [sg.Text("Data de nascimento:", size=(17, 1), background_color="#3F3F3F"),
+                 sg.Input(size=(30, 1), key="data_nascimento"),
+                 sg.CalendarButton("Abrir calendario", target="data_nascimento", format="%d/%m/%Y", button_color=("white", "#2B2B2B"))],
+                [sg.Text("Logradouro:", size=(17, 1), background_color="#3F3F3F"),
                  sg.InputText("", key="logradouro")],
-                [sg.Text("Numero:", size=(17, 1)), sg.InputText("", key="numero")],
+                [sg.Text("Numero:", size=(17, 1), background_color="#3F3F3F"), sg.InputText("", key="numero")],
                 [
                     [
                         sg.Column(
                             [
-                                [sg.Text("Tipo de habitacao: ")],
-                                [sg.Radio("Casa", "RD1", key="casa")],
-                                [sg.Radio("Apartamento", "RD1", key="apartamento")],
+                                [sg.Text("Tipo de habitacao: ", background_color="#3F3F3F")],
+                                [sg.Radio("Casa", "RD1", key="casa", background_color="#3F3F3F")],
+                                [sg.Radio("Apartamento", "RD1", key="apartamento", background_color="#3F3F3F")],
                                 [sg.HorizontalSeparator()],
-                            ]
+                            ],
+                            background_color="#3F3F3F"
                         )
                     ],
                     [
                         sg.Column(
                             [
-                                [sg.Text("Tamanho de habitacao: ")],
-                                [sg.Radio("Pequeno", "RD2", key="pequeno")],
-                                [sg.Radio("Medio", "RD2", key="medio")],
-                                [sg.Radio("Grande", "RD2", key="grande")],
+                                [sg.Text("Tamanho de habitacao: ", background_color="#3F3F3F")],
+                                [sg.Radio("Pequeno", "RD2", key="pequeno", background_color="#3F3F3F")],
+                                [sg.Radio("Medio", "RD2", key="medio", background_color="#3F3F3F")],
+                                [sg.Radio("Grande", "RD2", key="grande", background_color="#3F3F3F")],
                                 [sg.HorizontalSeparator()],
-                            ]
+                            ],
+                            background_color="#3F3F3F"
                         )
                     ],
                     [
                         sg.Column(
                             [
-                                [sg.Text("Possui animal?")],
-                                [sg.Radio("Sim", "RD3", key="possui")],
-                                [sg.Radio("Nao", "RD3", key="nao_possui")],
-                            ]
+                                [sg.Text("Possui animal?", background_color="#3F3F3F")],
+                                [sg.Radio("Sim", "RD3", key="possui", background_color="#3F3F3F")],
+                                [sg.Radio("Nao", "RD3", key="nao_possui", background_color="#3F3F3F")],
+                            ],
+                            background_color="#3F3F3F"
                         )
                     ],
                 ],
-                [
-                    sg.Button("Confirmar", key="confirmar"),
-                    sg.Cancel("Cancelar", key="cancelar"),
-                ],
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("white", "green"),
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
 
         while True:
             try:
@@ -193,7 +220,7 @@ class AdotanteView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except (CampoObrigatorioException, CpfInvalidoException) as e:
-                sg.popup(e)
+                sg.popup(e, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
 
         self.__window.close()
 
@@ -236,82 +263,89 @@ class AdotanteView:
             return [
                 sg.Column(
                     [
-                        [sg.Text("Tipo de habitacao: ")],
-                        [sg.Radio("Casa", "RD1", default=True, key="casa")],
-                        [sg.Radio("Apartamento", "RD1", key="apartamento")],
+                        [sg.Text("Tipo de habitacao: ", background_color="#3F3F3F")],
+                        [sg.Radio("Casa", "RD1", default=True, key="casa", background_color="#3F3F3F")],
+                        [sg.Radio("Apartamento", "RD1", key="apartamento", background_color="#3F3F3F")],
                         [sg.HorizontalSeparator()],
-                    ]
+                    ],
+                    background_color="#3F3F3F"
                 )
             ]
 
         return [
             sg.Column(
                 [
-                    [sg.Text("Tipo de habitacao: ")],
-                    [sg.Radio("Casa", "RD1", key="casa")],
-                    [sg.Radio("Apartamento", "RD1", default=True, key="apartamento")],
+                    [sg.Text("Tipo de habitacao: ", background_color="#3F3F3F")],
+                    [sg.Radio("Casa", "RD1", key="casa", background_color="#3F3F3F")],
+                    [sg.Radio("Apartamento", "RD1", default=True, key="apartamento", background_color="#3F3F3F")],
                     [sg.HorizontalSeparator()],
-                ]
+                ],
+                background_color="#3F3F3F"
             )
         ]
 
     def tamanho_habitacao_padrao(self, tamanho_habitacao):
         if tamanho_habitacao.name == "PEQUENO":
             return [
-                       sg.Column(
-                           [
-                               [sg.Text("Tamanho de habitacao: ")],
-                               [sg.Radio("Pequeno", "RD2", default=True, key="pequeno")],
-                               [sg.Radio("Medio", "RD2", key="medio")],
-                               [sg.Radio("Grande", "RD2", key="grande")],
-                               [sg.HorizontalSeparator()],
-                           ]
-                       )
+               sg.Column(
+                   [
+                       [sg.Text("Tamanho de habitacao: ", background_color="#3F3F3F")],
+                       [sg.Radio("Pequeno", "RD2", default=True, key="pequeno", background_color="#3F3F3F")],
+                       [sg.Radio("Medio", "RD2", key="medio", background_color="#3F3F3F")],
+                       [sg.Radio("Grande", "RD2", key="grande", background_color="#3F3F3F")],
+                       [sg.HorizontalSeparator()],
                    ],
+                   background_color="#3F3F3F"
+               )
+            ],
 
         elif tamanho_habitacao.name == "MEDIO":
             return [
-                       sg.Column(
-                           [
-                               [sg.Text("Tamanho de habitacao: ")],
-                               [sg.Radio("Pequeno", "RD2", key="pequeno")],
-                               [sg.Radio("Medio", "RD2", default=True, key="medio")],
-                               [sg.Radio("Grande", "RD2", key="grande")],
-                               [sg.HorizontalSeparator()],
-                           ]
-                       )
+               sg.Column(
+                   [
+                       [sg.Text("Tamanho de habitacao: ", background_color="#3F3F3F")],
+                       [sg.Radio("Pequeno", "RD2", key="pequeno", background_color="#3F3F3F")],
+                       [sg.Radio("Medio", "RD2", default=True, key="medio", background_color="#3F3F3F")],
+                       [sg.Radio("Grande", "RD2", key="grande", background_color="#3F3F3F")],
+                       [sg.HorizontalSeparator()],
                    ],
+                   background_color="#3F3F3F"
+               )
+            ],
 
         return [
-                   sg.Column(
-                       [
-                           [sg.Text("Tamanho de habitacao: ")],
-                           [sg.Radio("Pequeno", "RD2", key="pequeno")],
-                           [sg.Radio("Medio", "RD2", key="medio")],
-                           [sg.Radio("Grande", "RD2", default=True, key="grande")],
-                           [sg.HorizontalSeparator()],
-                       ]
-                   )
+           sg.Column(
+               [
+                   [sg.Text("Tamanho de habitacao: ", background_color="#3F3F3F")],
+                   [sg.Radio("Pequeno", "RD2", key="pequeno", background_color="#3F3F3F")],
+                   [sg.Radio("Medio", "RD2", key="medio", background_color="#3F3F3F")],
+                   [sg.Radio("Grande", "RD2", default=True, key="grande", background_color="#3F3F3F")],
+                   [sg.HorizontalSeparator()],
                ],
+               background_color="#3F3F3F"
+           )
+        ],
 
     def possui_animal_padrao(self, possui_animal):
         if possui_animal:
             return [
                sg.Column(
                    [
-                       [sg.Text("Possui animal?")],
-                       [sg.Radio("Sim", "RD3", default=True, key="possui")],
-                       [sg.Radio("Nao", "RD3", key="nao_possui")],
-                   ]
+                       [sg.Text("Possui animal?", background_color="#3F3F3F")],
+                       [sg.Radio("Sim", "RD3", default=True, key="possui", background_color="#3F3F3F")],
+                       [sg.Radio("Nao", "RD3", key="nao_possui", background_color="#3F3F3F")],
+                   ],
+                   background_color="#3F3F3F"
                )
-           ],
+            ],
         return [
            sg.Column(
                [
-                   [sg.Text("Possui animal?")],
-                   [sg.Radio("Sim", "RD3", key="possui")],
-                   [sg.Radio("Nao", "RD3", default=True, key="nao_possui")],
-               ]
+                   [sg.Text("Possui animal?", background_color="#3F3F3F")],
+                   [sg.Radio("Sim", "RD3", key="possui", background_color="#3F3F3F")],
+                   [sg.Radio("Nao", "RD3", default=True, key="nao_possui", background_color="#3F3F3F")],
+               ],
+               background_color="#3F3F3F"
            )
         ],
 
@@ -333,14 +367,14 @@ class AdotanteView:
 
         sg.Popup(
             f"Dados do adotante {nome[0:index_endfirstname if index_endfirstname > -1 else len(nome)]}:",
-            output_adotante,
+            output_adotante, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12)
         )
 
     def mostrar_adotantes(self, adotantes: list):
         layout = self.layout_tabela_mostrar_adotantes(adotantes)
-        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red", font=("Inter", 12))],)
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F")
         self.__window.read()
         self.__window.close()
 
@@ -375,6 +409,13 @@ class AdotanteView:
                     expand_y=True,
                     expand_x=True,
                     justification="center",
+                    background_color="#FEFEFE",
+                    text_color="#000",
+                    alternating_row_color="#BDBDBD",
+                    selected_row_colors=("#FFF", "#2B2B2B"),
+                    font=("Inter", 12),
+                    sbar_background_color="#2B2B2B",
+                    num_rows=10,
                 )
             ],
         ]
@@ -389,13 +430,32 @@ class AdotanteView:
             layout.append(self.layout_tabela_mostrar_adotantes(adotantes))
 
         layout.append([
-            [sg.Text("CPF do adotante que deseja selecionar: ")],
-            [sg.Combo(values=[adotante.cpf for adotante in adotantes], default_value=adotantes[0].cpf, key="cpf")],
-            [sg.Button("Confirmar", key="confirmar"),
-             sg.Button("Cancelar", key="cancelar", button_color="red")],
+            [sg.Text("CPF do adotante que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F", pad=10)],
+            [sg.Combo(values=[adotante.cpf for adotante in adotantes],
+                      default_value=adotantes[0].cpf,
+                      size=(22, 10),
+                      font=("Inter", 14),
+                      button_background_color="#2B2B2B",
+                      pad=((15, 0), (0, 0)),
+                      key="cpf")],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green")
+                        ),
+                        sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=15
+            ),
+            ],
         ])
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F")
         button, values = self.__window.read()
         self.__window.close()
 
@@ -405,7 +465,7 @@ class AdotanteView:
         return values["cpf"]
 
     def mostrar_mensagem(self, msg):
-        sg.popup("", msg)
+        sg.popup("", msg, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
 
     def input_valido(self):
         data_formato_valido = True
@@ -427,7 +487,7 @@ class AdotanteView:
             data_nascimento = self.__window["data_nascimento"].get().strip()
             datetime.strptime(data_nascimento, "%d/%m/%Y").date()
         except ValueError:
-            sg.popup("Data em formato invalido! Tente novamente.")
+            sg.popup("Data em formato invalido! Tente novamente.", background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
             data_formato_valido = False
 
         if not cpf:
