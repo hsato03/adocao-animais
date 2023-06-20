@@ -42,6 +42,10 @@ class DoacaoController:
         self.verificar_nenhuma_doacao_cadastrada()
 
         numero_chip = self.__tela_doacao.selecionar_doacao(doacoes=self.__doacao_dao.find_all())
+
+        if not numero_chip:
+            return
+
         doacao = self.buscar_doacao_por_numero_chip(numero_chip)
         novos_dados_doacao = self.__tela_doacao.pegar_dados_doacao(doacao=doacao)
 

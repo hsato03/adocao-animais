@@ -114,34 +114,64 @@ class DoacaoView:
             ],
         ]
         self.__window = sg.Window(
-            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", resizable=True,
+            "Window Layout", layout, size=(500, 650), background_color="#3F3F3F", font=("Inter", 12)
         )
 
     def pegar_dados_doacao(self, doacao):
         if doacao:
             layout = [
-                [sg.Text("ALTERAR DOACAO", font=("Inter", 25), justification="center")],
-                [sg.Text("Data de doacao:", size=(15, 1)),
+                [sg.Text("ALTERAR DOACAO", font=("Inter", 25), justification="center",
+                         background_color="#3F3F3F", pad=15)],
+                [sg.Text("Data de doacao:", size=(15, 1), background_color="#3F3F3F"),
                  sg.Input(doacao.data.strftime('%d/%m/%Y'), size=(26, 1), key="data"),
-                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y")],
-                [sg.Text("Motivo:", size=(15, 1)),
+                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y",
+                                   button_color=("white", "#2B2B2B"))],
+                [sg.Text("Motivo:", size=(15, 1), background_color="#3F3F3F"),
                  sg.Input(doacao.motivo, key="motivo")],
-                [sg.Button("Confirmar", key="confirmar"),
-                 sg.Cancel("Cancelar", key="cancelar")]
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("white", "green"),
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
         else:
             layout = [
-                [sg.Text("CADASTRO DOACAO", font=("Inter", 25), justification="center")],
-                [sg.Text("Data de doacao:", size=(15, 1)),
+                [sg.Text("CADASTRO DOACAO", font=("Inter", 25), justification="center",
+                         background_color="#3F3F3F", pad=15)],
+                [sg.Text("Data de doacao:", size=(15, 1), background_color="#3F3F3F"),
                  sg.Input("", size=(26, 1), key="data"),
-                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y")],
-                [sg.Text("Motivo:", size=(15, 1)),
+                 sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y",
+                                   button_color=("white", "#2B2B2B"))],
+                [sg.Text("Motivo:", size=(15, 1), background_color="#3F3F3F"),
                  sg.Input("", key="motivo")],
-                [sg.Button("Confirmar", key="confirmar"),
-                 sg.Cancel("Cancelar", key="cancelar")]
+                [sg.Column(
+                    [
+                        [
+                            sg.Button(
+                                "Confirmar",
+                                key="confirmar",
+                                font=("Inter", 12),
+                                button_color=("white", "green"),
+                            ),
+                            sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                        ],
+                    ],
+                    justification="right", background_color="#3F3F3F", pad=20
+                ),
+                ]
             ]
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
 
         while True:
             try:
@@ -149,7 +179,7 @@ class DoacaoView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e)
+                sg.popup(e, background_color="#3F3F3F", font=("Inter", 12))
 
         self.__window.close()
 
@@ -167,17 +197,32 @@ class DoacaoView:
 
     def pegar_dados_periodo(self):
         layout = [
-            [sg.Text("Data de inicio:", size=(20, 1)),
+            [sg.Text("Data de inicio:", size=(20, 1), background_color="#3F3F3F"),
              sg.Input("", size=(26, 1), key="data_inicio"),
-             sg.CalendarButton("Abrir calendario", target="data_inicio", format="%d/%m/%Y")],
-            [sg.Text("Data de fim:", size=(20, 1)),
+             sg.CalendarButton("Abrir calendario", target="data_inicio", format="%d/%m/%Y",
+                               button_color=("white", "#2B2B2B"))],
+            [sg.Text("Data de fim:", size=(20, 1), background_color="#3F3F3F"),
              sg.Input("", size=(26, 1), key="data_fim"),
-             sg.CalendarButton("Abrir calendario", target="data_fim", format="%d/%m/%Y")],
-            [sg.Button("Confirmar", key="confirmar"),
-             sg.Button("Cancelar", key="cancelar")],
+             sg.CalendarButton("Abrir calendario", target="data_fim", format="%d/%m/%Y",
+                               button_color=("white", "#2B2B2B"))],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green"),
+                        ),
+                        sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=20
+            ),
+            ],
         ]
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         while True:
             try:
                 button, values = self.__window.read()
@@ -190,7 +235,7 @@ class DoacaoView:
                 self.__window.close()
                 return {"data_inicio": data_inicio_convertida, "data_fim": data_fim_convertida}
             except ValueError:
-                sg.popup("", "ERRO: Data em formato invalido")
+                sg.popup("", "ERRO: Data em formato invalido", background_color="#3F3F3F", font=("Inter", 12))
 
     def mostrar_doacao(self, doacao):
         output_adotante = f"\t - Adotante: {doacao.doador.cpf}\n"
@@ -198,7 +243,7 @@ class DoacaoView:
         output_adotante += f"\t - Data de doacao: {doacao.data.strftime('%d/%m/%Y')}\n"
         output_adotante += f"\t - Motivo: {doacao.motivo}\n"
 
-        sg.Popup("", output_adotante)
+        sg.Popup("", output_adotante, background_color="#3F3F3F", font=("Inter", 12))
 
     def mostrar_doacoes(self, doacoes: list):
         dados_doacoes = [
@@ -219,7 +264,7 @@ class DoacaoView:
         layout = self.layout_tabela_mostrar_doacoes(dados_doacoes)
         layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
 
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         self.__window.read()
         self.__window.close()
 
@@ -241,6 +286,13 @@ class DoacaoView:
                     expand_x=True,
                     justification="center",
                     display_row_numbers=True,
+                    background_color="#FEFEFE",
+                    text_color="#000",
+                    alternating_row_color="#BDBDBD",
+                    selected_row_colors=("#FFF", "#2B2B2B"),
+                    font=("Inter", 12),
+                    sbar_background_color="#2B2B2B",
+                    num_rows=10,
                     key="table",
                 )
             ],
@@ -264,12 +316,31 @@ class DoacaoView:
         layout = self.layout_tabela_mostrar_doacoes(dados_doacoes)
 
         layout.append([
-            [sg.Text("Doacao que deseja selecionar: ")],
-            [sg.Combo(values=[i for i in range(len(doacoes))], default_value=0, key="row")],
-            [sg.Button("Confirmar", key="confirmar"),
-             sg.Button("Cancelar", key="cancelar", button_color="red")],
+            [sg.Text("Doacao que deseja selecionar: ", background_color="#3F3F3F")],
+            [sg.Combo(values=[i for i in range(len(doacoes))],
+                      default_value=0,
+                      size=(22, 10),
+                      font=("Inter", 14),
+                      button_background_color="#2B2B2B",
+                      pad=((15, 0), (0, 0)),
+                      key="row")],
+            [sg.Column(
+                [
+                    [
+                        sg.Button(
+                            "Confirmar",
+                            key="confirmar",
+                            font=("Inter", 12),
+                            button_color=("white", "green")
+                        ),
+                        sg.Cancel("Cancelar", key="cancelar", button_color="red", font=("Inter", 12)),
+                    ],
+                ],
+                justification="right", background_color="#3F3F3F", pad=15
+            ),
+            ],
         ])
-        self.__window = sg.Window("Layout", layout)
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         button, values = self.__window.read()
         print(values["row"])
         doacao = dados_doacoes[int(values["row"])]
@@ -282,7 +353,7 @@ class DoacaoView:
         return int(numero_chip)
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg)
+        sg.popup("", msg, background_color="#3F3F3F", font=("Inter", 12))
 
     def input_valido(self):
         data_formato_valido = True
@@ -294,7 +365,7 @@ class DoacaoView:
             data_doacao = self.__window["data"].get().strip()
             datetime.strptime(data_doacao, "%d/%m/%Y").date()
         except ValueError:
-            sg.popup("Data em formato invalido! Tente novamente.")
+            sg.popup("", "Data em formato invalido! Tente novamente.", background_color="#3F3F3F", font=("Inter", 12))
             data_formato_valido = False
 
         if not motivo:

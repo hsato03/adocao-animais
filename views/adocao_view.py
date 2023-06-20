@@ -339,7 +339,8 @@ class AdocaoView:
 
         layout.append([
             [sg.Text("Adocao que deseja selecionar: ", background_color="#3F3F3F")],
-            [sg.Combo(values=[i for i in range(len(adocoes))], default_value=0,
+            [sg.Combo(values=[i for i in range(len(adocoes))],
+                      default_value=0,
                       size=(22, 10),
                       font=("Inter", 14),
                       button_background_color="#2B2B2B",
