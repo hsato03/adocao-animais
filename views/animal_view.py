@@ -425,6 +425,7 @@ class AnimalView:
         if mostrar_opcoes:
             layout.append(self.layout_tabela_mostrar_animais(animais))
 
+        animais.sort(key=lambda obj: obj.numero_chip)
         layout.append([
             [sg.Text("N° chip do animal que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F")],
             [sg.Combo(values=[animal.numero_chip for animal in animais],

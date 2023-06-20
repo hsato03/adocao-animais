@@ -181,7 +181,7 @@ class VacinaView:
         layout = self.layout_tabela_mostrar_vacinas(vacinas)
         layout.append([sg.Button("Fechar", key="fechar", button_color="red", font=("Inter", 12))], )
 
-        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F")
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         self.__window.read()
         self.__window.close()
 
@@ -194,6 +194,8 @@ class VacinaView:
             ]
             for vacina in vacinas
         ]
+
+        dados_vacinas.sort(key=lambda attrs: attrs[0])
 
         return [
             [
@@ -223,8 +225,11 @@ class VacinaView:
 
     def selecionar_vacina(self, vacinas: list, mostrar_opcoes):
         layout = []
+
         if mostrar_opcoes:
             layout.append(self.layout_tabela_mostrar_vacinas(vacinas))
+
+        vacinas.sort(key=lambda vacina: vacina.identificador)
         layout.append([
             [sg.Text("ID da vacina que deseja selecionar: ", font=("Inter", 12), background_color="#3F3F3F", pad=10)],
             [sg.Combo(values=[vacina.identificador for vacina in vacinas],
@@ -250,7 +255,7 @@ class VacinaView:
             ),
             ],
         ])
-        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F")
+        self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         button, values = self.__window.read()
         self.__window.close()
 
