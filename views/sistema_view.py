@@ -33,8 +33,8 @@ class SistemaView:
                     [
                         [
                             sg.Text(
-                                "DONADOPTION",
-                                font=["Inter", 30, "bold"],
+                                "DONAPTION",
+                                font=["Inter", 30, "bold underline"],
                                 size=[20, 2],
                                 justification="center",
                                 pad=((0, 0), (40, 0)),
@@ -53,7 +53,7 @@ class SistemaView:
                             sg.Button(
                                 "Adotantes",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="adotantes",
                             )
@@ -62,7 +62,7 @@ class SistemaView:
                             sg.Button(
                                 "Adocoes",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="adocoes",
                             )
@@ -71,7 +71,7 @@ class SistemaView:
                             sg.Button(
                                 "Animais",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="animais",
                             )
@@ -80,7 +80,7 @@ class SistemaView:
                             sg.Button(
                                 "Doadores",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="doadores",
                             )
@@ -89,7 +89,7 @@ class SistemaView:
                             sg.Button(
                                 "Doacoes",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="doacoes",
                             )
@@ -98,7 +98,7 @@ class SistemaView:
                             sg.Button(
                                 "Vacinas",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="vacinas",
                             )
@@ -109,7 +109,7 @@ class SistemaView:
                                 size=(20, 2),
                                 button_color="#FF2929",
                                 mouseover_colors="#FF5454",
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 key="sair",
                             )
                         ],

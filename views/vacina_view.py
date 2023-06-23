@@ -53,7 +53,7 @@ class VacinaView:
                             sg.Button(
                                 "Incluir",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="incluir",
                             )
@@ -62,16 +62,17 @@ class VacinaView:
                             sg.Button(
                                 "Alterar",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="alterar",
+
                             )
                         ],
                         [
                             sg.Button(
                                 "Listar",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="listar",
                             )
@@ -80,7 +81,7 @@ class VacinaView:
                             sg.Button(
                                 "Excluir",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="excluir",
                             )
@@ -89,7 +90,7 @@ class VacinaView:
                             sg.Button(
                                 "Buscar por ID",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="buscar_por_id",
                             )
@@ -99,7 +100,7 @@ class VacinaView:
                                 "Retornar",
                                 size=(20, 2),
                                 button_color=("black", "#FAF000"),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 key="retornar",
                                 pad=((0, 0), (50, 0)),
                             )

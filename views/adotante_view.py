@@ -56,7 +56,7 @@ class AdotanteView:
                             sg.Button(
                                 "Incluir",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="incluir",
                             )
@@ -65,7 +65,7 @@ class AdotanteView:
                             sg.Button(
                                 "Alterar",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="alterar",
                             )
@@ -74,7 +74,7 @@ class AdotanteView:
                             sg.Button(
                                 "Listar",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="listar",
                             )
@@ -83,7 +83,7 @@ class AdotanteView:
                             sg.Button(
                                 "Excluir",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="excluir",
                             )
@@ -92,7 +92,7 @@ class AdotanteView:
                             sg.Button(
                                 "Buscar por CPF",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="buscar_por_cpf",
                             )
@@ -102,7 +102,7 @@ class AdotanteView:
                                 "Retornar",
                                 size=(20, 2),
                                 button_color=("black", "#FAF000"),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 key="retornar",
                                 pad=((0, 0), (50, 0)),
                             )

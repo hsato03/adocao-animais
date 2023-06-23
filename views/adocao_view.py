@@ -56,7 +56,7 @@ class AdocaoView:
                             sg.Button(
                                 "Incluir",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="incluir",
                             )
@@ -65,7 +65,7 @@ class AdocaoView:
                             sg.Button(
                                 "Alterar",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="alterar",
                             )
@@ -74,7 +74,7 @@ class AdocaoView:
                             sg.Button(
                                 "Listar",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="listar",
                             )
@@ -83,7 +83,7 @@ class AdocaoView:
                             sg.Button(
                                 "Excluir",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="excluir",
                             )
@@ -92,7 +92,7 @@ class AdocaoView:
                             sg.Button(
                                 "Animais disponiveis para adocao",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="animais_disponiveis",
                             )
@@ -101,7 +101,7 @@ class AdocaoView:
                             sg.Button(
                                 "Adocoes por periodo",
                                 size=(20, 2),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 button_color=("black", "#FEFEFE"),
                                 key="adocoes_periodo",
                             )
@@ -111,7 +111,7 @@ class AdocaoView:
                                 "Retornar",
                                 size=(20, 2),
                                 button_color=("black", "#FAF000"),
-                                font=("Inter", 12),
+                                font=("Inter", 13),
                                 key="retornar",
                             )
                         ],
