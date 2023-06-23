@@ -187,7 +187,7 @@ class AdocaoView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e, background_color="#3F3F3F", font=("Inter", 12))
+                self.mostrar_mensagem(e)
 
         self.__window.close()
 
@@ -257,7 +257,7 @@ class AdocaoView:
                 self.__window.close()
                 return {"data_inicio": data_inicio_convertida, "data_fim": data_fim_convertida}
             except ValueError:
-                sg.popup("", "ERRO: Data em formato invalido", background_color="#3F3F3F", font=("Inter", 12))
+                self.mostrar_mensagem("ERRO: Data em formato invalido")
 
     def mostrar_adocao(self, adocao):
         output_adotante = f"\t - Adotante: {adocao.adotante.cpf}\n"
@@ -265,7 +265,7 @@ class AdocaoView:
         output_adotante += f"\t - Data de adocao: {adocao.data.strftime('%d/%m/%Y')}\n"
         output_adotante += f"\t - Termo assinado: {'Sim' if adocao.termo_assinado else 'Nao'}\n"
 
-        sg.Popup("", output_adotante, background_color="#3F3F3F", font=("Inter", 12))
+        self.mostrar_mensagem(output_adotante)
 
     def mostrar_adocoes(self, adocoes: list):
         dados_adocoes = [
@@ -375,7 +375,12 @@ class AdocaoView:
         return int(numero_chip)
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg, background_color="#3F3F3F", font=("Inter", 12))
+        sg.popup("",
+                 msg,
+                 background_color="#3F3F3F",
+                 button_color=("white", "red"),
+                 font=("Inter", 13),
+                 custom_text="Fechar")
 
     def input_valido(self):
         data_formato_valido = True
@@ -387,7 +392,7 @@ class AdocaoView:
             data_adocao = self.__window["data"].get().strip()
             datetime.strptime(data_adocao, "%d/%m/%Y").date()
         except ValueError:
-            sg.popup("Data em formato invalido! Tente novamente.", background_color="#3F3F3F", font=("Inter", 12))
+            self.mostrar_mensagem("Data em formato invalido! Tente novamente.")
             data_formato_valido = False
 
         if not termo_assinado:

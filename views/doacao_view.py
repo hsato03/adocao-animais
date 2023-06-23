@@ -179,7 +179,7 @@ class DoacaoView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e, background_color="#3F3F3F", font=("Inter", 12))
+                self.mostrar_mensagem(e)
 
         self.__window.close()
 
@@ -235,7 +235,7 @@ class DoacaoView:
                 self.__window.close()
                 return {"data_inicio": data_inicio_convertida, "data_fim": data_fim_convertida}
             except ValueError:
-                sg.popup("", "ERRO: Data em formato invalido", background_color="#3F3F3F", font=("Inter", 12))
+                self.mostrar_mensagem("ERRO: Data em formato invalido")
 
     def mostrar_doacao(self, doacao):
         output_adotante = f"\t - Adotante: {doacao.doador.cpf}\n"
@@ -243,7 +243,7 @@ class DoacaoView:
         output_adotante += f"\t - Data de doacao: {doacao.data.strftime('%d/%m/%Y')}\n"
         output_adotante += f"\t - Motivo: {doacao.motivo}\n"
 
-        sg.Popup("", output_adotante, background_color="#3F3F3F", font=("Inter", 12))
+        self.mostrar_mensagem(output_adotante)
 
     def mostrar_doacoes(self, doacoes: list):
         dados_doacoes = [
@@ -262,7 +262,7 @@ class DoacaoView:
         ]
 
         layout = self.layout_tabela_mostrar_doacoes(dados_doacoes)
-        layout.append([sg.Button("Fechar", key="fechar", button_color="red")],)
+        layout.append([sg.Button("Fechar", key="fechar", button_color="red")], )
 
         self.__window = sg.Window("Layout", layout, background_color="#3F3F3F", font=("Inter", 12))
         self.__window.read()
@@ -353,7 +353,12 @@ class DoacaoView:
         return int(numero_chip)
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg, background_color="#3F3F3F", font=("Inter", 12))
+        sg.popup("",
+                 msg,
+                 background_color="#3F3F3F",
+                 button_color=("white", "red"),
+                 font=("Inter", 13),
+                 custom_text="Fechar")
 
     def input_valido(self):
         data_formato_valido = True
@@ -365,7 +370,7 @@ class DoacaoView:
             data_doacao = self.__window["data"].get().strip()
             datetime.strptime(data_doacao, "%d/%m/%Y").date()
         except ValueError:
-            sg.popup("", "Data em formato invalido! Tente novamente.", background_color="#3F3F3F", font=("Inter", 12))
+            self.mostrar_mensagem("Data em formato invalido! Tente novamente.")
             data_formato_valido = False
 
         if not motivo:

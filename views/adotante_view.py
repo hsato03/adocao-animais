@@ -224,7 +224,7 @@ class AdotanteView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except (CampoObrigatorioException, CpfInvalidoException) as e:
-                sg.popup(e, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+                self.mostrar_mensagem(e)
 
         self.__window.close()
 
@@ -470,7 +470,12 @@ class AdotanteView:
         return values["cpf"]
 
     def mostrar_mensagem(self, msg):
-        sg.popup("", msg, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+        sg.popup("",
+                 msg,
+                 background_color="#3F3F3F",
+                 button_color=("white", "red"),
+                 font=("Inter", 13),
+                 custom_text="Fechar")
 
     def input_valido(self):
         data_formato_valido = True
@@ -492,8 +497,7 @@ class AdotanteView:
             data_nascimento = self.__window["data_nascimento"].get().strip()
             datetime.strptime(data_nascimento, "%d/%m/%Y").date()
         except ValueError:
-            sg.popup("Data em formato invalido! Tente novamente.", background_color="#3F3F3F",
-                     button_color=("white", "green"), font=("Inter", 12))
+            self.mostrar_mensagem("Data em formato invalido! Tente novamente.")
             data_formato_valido = False
 
         if not cpf:

@@ -231,7 +231,7 @@ class AnimalView:
                 if (button == "confirmar" and self.input_valido(tipo_animal == TIPO_CACHORRO)) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+                self.mostrar_mensagem(e)
 
         self.__window.close()
 
@@ -321,8 +321,7 @@ class AnimalView:
                 self.__window.close()
                 return data_aplicacao_convertida
             except ValueError:
-                sg.popup("", "ERRO: Data em formato invalido", background_color="#3F3F3F",
-                         button_color=("white", "green"), font=("Inter", 12))
+                self.mostrar_mensagem("ERRO: Data em formato invalido")
 
     def mostrar_animal(self, animal):
         nome = animal.nome
@@ -461,7 +460,12 @@ class AnimalView:
         return values["numero_chip"]
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+        sg.popup("",
+                 msg,
+                 background_color="#3F3F3F",
+                 button_color=("white", "red"),
+                 font=("Inter", 13),
+                 custom_text="Fechar")
 
     def input_valido(self, cachorro: bool):
         numero_chip_valido = True
@@ -474,8 +478,7 @@ class AnimalView:
         try:
             int(numero_chip)
         except ValueError:
-            sg.popup("", "Numero do chip deve ser um valor inteiro", background_color="#3F3F3F",
-                     button_color=("white", "green"), font=("Inter", 12))
+            self.mostrar_mensagem("Numero do chip deve ser um valor inteiro")
             numero_chip_valido = False
 
         if not numero_chip:

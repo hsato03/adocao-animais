@@ -166,7 +166,7 @@ class VacinaView:
                 if (button == "confirmar" and self.input_valido()) or button == "cancelar":
                     break
             except CampoObrigatorioException as e:
-                sg.popup(e, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+                self.mostrar_mensagem(e)
 
         self.__window.close()
 
@@ -222,7 +222,7 @@ class VacinaView:
         output_vacina = f"\t - ID: {vacina.identificador}\n"
         output_vacina += f"\t - Nome: {vacina.nome}\n"
 
-        sg.Popup("", output_vacina, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+        self.mostrar_mensagem(output_vacina)
 
     def selecionar_vacina(self, vacinas: list, mostrar_opcoes):
         layout = []
@@ -266,7 +266,12 @@ class VacinaView:
         return values["id"]
 
     def mostrar_mensagem(self, msg: str):
-        sg.popup("", msg, background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+        sg.popup("",
+                 msg,
+                 background_color="#3F3F3F",
+                 button_color=("white", "red"),
+                 font=("Inter", 13),
+                 custom_text="Fechar")
 
     def input_valido(self):
         campos_nao_preenchidos = []
@@ -278,7 +283,7 @@ class VacinaView:
         try:
             int(identificador)
         except ValueError:
-            sg.popup("", "ID deve ser um valor inteiro", background_color="#3F3F3F", button_color=("white", "green"), font=("Inter", 12))
+            self.mostrar_mensagem("ID deve ser um valor inteiro")
             id_valido = False
 
         if not identificador:
