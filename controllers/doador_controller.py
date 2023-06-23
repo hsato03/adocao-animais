@@ -10,7 +10,7 @@ from persistence import DoadorDAO
 
 class DoadorController:
     def __init__(self, controlador_sistema):
-        self.__doador_dao = DoadorDAO("datasources/doadores.pkl")
+        self.__doador_dao = DoadorDAO("doadores.pkl")
         self.__tela_doador = DoadorView()
         self.__controlador_sistema = controlador_sistema
 

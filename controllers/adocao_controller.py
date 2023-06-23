@@ -17,7 +17,7 @@ from persistence import AdocaoDAO
 
 class AdocaoController:
     def __init__(self, controlador_sistema):
-        self.__adocao_dao = AdocaoDAO("datasources/adocoes.pkl")
+        self.__adocao_dao = AdocaoDAO("adocoes.pkl")
         self.__tela_adocao = AdocaoView()
         self.__controlador_sistema = controlador_sistema
 

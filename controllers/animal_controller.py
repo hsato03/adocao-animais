@@ -9,7 +9,7 @@ from exceptions import (
 
 class AnimalController:
     def __init__(self, controlador_sistema):
-        self.__animal_dao = AnimalDAO("datasources/animais.pkl")
+        self.__animal_dao = AnimalDAO("animais.pkl")
         self.__controlador_sistema = controlador_sistema
         self.__tela_animal = AnimalView()
 

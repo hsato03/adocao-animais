@@ -4,7 +4,7 @@ from abc import ABC
 
 class GenericDAO(ABC):
     def __init__(self, datasource=""):
-        self.__datasource = datasource
+        self.__datasource = f"datasources/{datasource}"
         self.__cache = {}
         try:
             self.__load()

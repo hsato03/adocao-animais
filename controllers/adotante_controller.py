@@ -10,8 +10,8 @@ from exceptions import (
 
 class AdotanteController:
     def __init__(self, controlador_sistema):
-        self.__adotante_dao = AdotanteDAO("datasources/adotantes.pkl")
         self.__tela_adotante = AdotanteView()
+        self.__adotante_dao = AdotanteDAO("adotantes.pkl")
         self.__controlador_sistema = controlador_sistema
 
     def buscar_adotante_por_cpf(self, cpf: str):

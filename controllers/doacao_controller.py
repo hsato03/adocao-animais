@@ -6,7 +6,7 @@ from persistence import DoacaoDAO
 
 class DoacaoController:
     def __init__(self, controlador_sistema):
-        self.__doacao_dao = DoacaoDAO("datasources/doacoes.pkl")
+        self.__doacao_dao = DoacaoDAO("doacoes.pkl")
         self.__tela_doacao = DoacaoView()
         self.__controlador_sistema = controlador_sistema
 

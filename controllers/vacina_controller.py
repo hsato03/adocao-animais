@@ -6,7 +6,7 @@ from exceptions import EntidadeNaoEncontradaException, IdentificadorJaExistenteE
 
 class VacinaController:
     def __init__(self, controlador_sistema):
-        self.__vacina_dao = VacinaDAO("datasources/vacinas.pkl")
+        self.__vacina_dao = VacinaDAO("vacinas.pkl")
         self.__tela_vacina = VacinaView()
         self.__controlador_sistema = controlador_sistema
 
