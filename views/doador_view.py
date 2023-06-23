@@ -94,6 +94,14 @@ class DoadorView:
                                 key="buscar_por_cpf",
                             )
                         ],
+                    ],
+                    justification="center",
+                    background_color="#3F3F3F",
+                )
+            ],
+            [
+                sg.Column(
+                    [
                         [
                             sg.Button(
                                 "Retornar",
@@ -101,7 +109,7 @@ class DoadorView:
                                 button_color=("black", "#FAF000"),
                                 font=("Inter", 13),
                                 key="retornar",
-                                pad=((0, 0), (50, 0)),
+                                pad=((0, 0), (60, 0)),
                             )
                         ],
                     ],
