@@ -9,6 +9,8 @@ from controllers import (
 )
 
 class SistemaController:
+    __instance = None
+
     def __init__(self):
         self.__controlador_adotantes = AdotanteController(self)
         self.__controlador_adocoes = AdocaoController(self)
@@ -17,6 +19,11 @@ class SistemaController:
         self.__controlador_doacoes = DoacaoController(self)
         self.__controlador_vacinas = VacinaController(self)
         self.__tela_sistema = SistemaView()
+
+    def __new__(cls, *args, **kwargs):
+        if SistemaController.__instance is None:
+            SistemaController.__instance = object.__new__(cls)
+        return SistemaController.__instance
 
     @property
     def controlador_adotantes(self):
