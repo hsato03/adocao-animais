@@ -157,7 +157,7 @@ class DoacaoView:
                 [sg.Text("CADASTRO DOACAO", font=("Inter", 25), justification="center",
                          background_color="#3F3F3F", pad=15)],
                 [sg.Text("Data de doacao:", size=(15, 1), background_color="#3F3F3F"),
-                 sg.Input("", size=(26, 1), key="data"),
+                 sg.Input("", size=(28, 1), key="data"),
                  sg.CalendarButton("Abrir calendario", target="data", format="%d/%m/%Y",
                                    button_color=("white", "#2B2B2B"))],
                 [sg.Text("Motivo:", size=(15, 1), background_color="#3F3F3F"),
