@@ -33,7 +33,7 @@ class SistemaView:
                     [
                         [
                             sg.Text(
-                                "DONAPTION",
+                                " DONAPTION ",
                                 font=["Inter", 30, "bold underline"],
                                 size=[20, 2],
                                 justification="center",
