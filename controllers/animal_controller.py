@@ -1,6 +1,6 @@
 from views import AnimalView
-from persistence import AnimalDAO
-from model import Cachorro, TamanhoCachorro, Gato, TIPO_CACHORRO, TIPO_GATO
+from persistence import GenericDAO
+from model import Animal, Cachorro, TamanhoCachorro, Gato, TIPO_CACHORRO, TIPO_GATO
 from exceptions import (
     EntidadeNaoEncontradaException,
     IdentificadorJaExistenteException,
@@ -9,7 +9,7 @@ from exceptions import (
 
 class AnimalController:
     def __init__(self, controlador_sistema):
-        self.__animal_dao = AnimalDAO("animais.pkl")
+        self.__animal_dao = GenericDAO(Animal)
         self.__controlador_sistema = controlador_sistema
         self.__tela_animal = AnimalView()
 
@@ -178,7 +178,7 @@ class AnimalController:
 
     def possui_todas_vacinas_para_adocao(self, animal):
         vacinas_aplicadas = [vacina["vacina"].nome for vacina in animal.historico_vacinacao.vacinas]
-        if "hepatite infecciosa" and "leptospirose" and "raiva" in vacinas_aplicadas:
+        if vacinas_aplicadas in ("hepatite infecciosa", "leptospirose", "raiva"):
             return True
         return False
 

@@ -5,12 +5,12 @@ from exceptions import (
 )
 from model import Doador
 from views import DoadorView
-from persistence import DoadorDAO
+from persistence import GenericDAO
 
 
 class DoadorController:
     def __init__(self, controlador_sistema):
-        self.__doador_dao = DoadorDAO("doadores.pkl")
+        self.__doador_dao = GenericDAO(Doador)
         self.__tela_doador = DoadorView()
         self.__controlador_sistema = controlador_sistema
 

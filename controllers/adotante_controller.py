@@ -1,6 +1,6 @@
 from views import AdotanteView
 from model import Adotante, TipoHabitacao, TamanhoHabitacao
-from persistence import AdotanteDAO
+from persistence import GenericDAO
 from exceptions import (
     EntidadeNaoEncontradaException,
     CpfInvalidoException,
@@ -11,7 +11,7 @@ from exceptions import (
 class AdotanteController:
     def __init__(self, controlador_sistema):
         self.__tela_adotante = AdotanteView()
-        self.__adotante_dao = AdotanteDAO("adotantes.pkl")
+        self.__adotante_dao = GenericDAO(Adotante)
         self.__controlador_sistema = controlador_sistema
 
     def buscar_adotante_por_cpf(self, cpf: str):

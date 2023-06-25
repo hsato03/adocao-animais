@@ -1,12 +1,12 @@
 from exceptions import EntidadeNaoEncontradaException
 from model import Doacao
 from views import DoacaoView
-from persistence import DoacaoDAO
+from persistence import GenericDAO
 
 
 class DoacaoController:
     def __init__(self, controlador_sistema):
-        self.__doacao_dao = DoacaoDAO("doacoes.pkl")
+        self.__doacao_dao = GenericDAO(Doacao)
         self.__tela_doacao = DoacaoView()
         self.__controlador_sistema = controlador_sistema
 

@@ -1,12 +1,12 @@
 from views import VacinaView
 from model import Vacina
-from persistence import VacinaDAO
+from persistence import GenericDAO
 from exceptions import EntidadeNaoEncontradaException, IdentificadorJaExistenteException
 
 
 class VacinaController:
     def __init__(self, controlador_sistema):
-        self.__vacina_dao = VacinaDAO("vacinas.pkl")
+        self.__vacina_dao = GenericDAO(Vacina)
         self.__tela_vacina = VacinaView()
         self.__controlador_sistema = controlador_sistema
 

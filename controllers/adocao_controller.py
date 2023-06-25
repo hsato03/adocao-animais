@@ -12,12 +12,12 @@ from model import (
     TipoHabitacao,
 )
 from views import AdocaoView
-from persistence import AdocaoDAO
+from persistence import GenericDAO
 
 
 class AdocaoController:
     def __init__(self, controlador_sistema):
-        self.__adocao_dao = AdocaoDAO("adocoes.pkl")
+        self.__adocao_dao = GenericDAO(Adocao)
         self.__tela_adocao = AdocaoView()
         self.__controlador_sistema = controlador_sistema
 
