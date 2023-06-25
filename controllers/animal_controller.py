@@ -178,7 +178,8 @@ class AnimalController:
 
     def possui_todas_vacinas_para_adocao(self, animal):
         vacinas_aplicadas = [vacina["vacina"].nome for vacina in animal.historico_vacinacao.vacinas]
-        if vacinas_aplicadas in ("hepatite infecciosa", "leptospirose", "raiva"):
+        vacinas_necessarias = ["hepatite infecciosa", "leptospirose", "raiva"]
+        if set(vacinas_necessarias).issubset(vacinas_aplicadas):
             return True
         return False
 
